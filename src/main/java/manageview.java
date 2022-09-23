@@ -86,7 +86,7 @@ public class manageview {
     /**
      * Create a list to choose a ship .
      * Showing GUI Ship to pick.
-     * 
+     *
      * @return a Hbox
      */
     private HBox createShipsToChoose() {
@@ -118,6 +118,16 @@ public class manageview {
         ButtonRunner startButton = new ButtonRunner("Start");
         startButton.setLayoutX(200);
         startButton.setLayoutY(300);
+
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if(chosenShip != null) {
+                    GameViewManager gameViewManager = new GameViewManager();
+                    gameViewManager.createNewGame(mainStage, chosenShip);
+                }
+            }
+        });
         return startButton;
     }
     public Stage getMainStage() {

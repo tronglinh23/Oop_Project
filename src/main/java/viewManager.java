@@ -93,6 +93,12 @@ public class viewManager {
 
     private void createExitMenu() {
         ButtonGame exitButton = new ButtonGame("Exit");
+        exitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mainStage.close();
+            }
+        });
         addMenuButton(exitButton);
     }
 }

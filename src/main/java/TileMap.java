@@ -2,8 +2,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class TileMap {
@@ -25,7 +23,7 @@ public class TileMap {
 
     private int x;
     private int y;
-    private int locate_bit;
+    public int locate_bit;
     public static final int SIZE = 45;
 
     public TileMap(int x ,int y, int locate_bit) {
@@ -50,9 +48,10 @@ public class TileMap {
         this.y = y;
     }
 
-//    public Rectangle getRect() {
-//        Rectangle rectangle = new Rectangle(x, y, )
-//    }
+    public Rectangle getRect() {
+        Rectangle rectangle = new Rectangle(x + 5, y + 20, SIZE - 10, SIZE - 10);
+        return  rectangle;
+    }
     
     public void drawImageStage(AnchorPane mainPain) {
         ImageView IMG = new ImageView("/images/background.jpg");

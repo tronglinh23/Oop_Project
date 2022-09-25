@@ -1,9 +1,8 @@
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
-import javax.swing.text.html.ImageView;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Enemy {
@@ -11,6 +10,7 @@ public class Enemy {
     private int y;
     private int speed = 3;
     private int orient;
+    private final int size_enemy = 50;
     private AnchorPane enemyPane;
     private ImageView enemy;
     private Scene enemyScene;
@@ -22,12 +22,17 @@ public class Enemy {
     public static final int UP = 2;
     public static final int DOWN = 3;
 
-    public void Enemy(int x, int y, int orient, AnchorPane enemyPane, Scene enemyScene) {
+    public Enemy(int x, int y, int orient, AnchorPane enemyPane, Scene enemyScene) {
         this.x = x;
         this.y = y;
         this.orient = orient;
         this.enemyPane = enemyPane;
         this.enemyScene = enemyScene;
+    }
+
+    Rectangle getRect() {
+        Rectangle theEnemy = new Rectangle(x,y, size_enemy - 10, size_enemy - 10);
+        return theEnemy;
     }
 
     public void setX(int x) {
@@ -53,8 +58,17 @@ public class Enemy {
         return this.orient;
     }
 
-    public void moveEnemy(ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom, int t) {
-        int speed = 2;
+    public void drawEnemy() {
+        enemy = new ImageView("/images/boss_ donw_1.png");
+        enemy.setLayoutX(x);
+        enemy.setLayoutY(y);
+        enemy.setFitWidth(size_enemy);
+        enemy.setFitHeight(size_enemy);
+        enemyPane.getChildren().add(enemy);
+    }
+
+    public void moveEnemy(ArrayList<TileMap> arrTileMap) {
+        int speed = 3;
         int xRaw = x;
         int yRaw = y;
         switch (orient) {
@@ -71,4 +85,28 @@ public class Enemy {
                 yRaw += speed;
             default:
         }
+        int xChange = x;
+        int yChange = y;
+        x = xRaw;
+        y = yRaw;
+
+        boolean checkEnemyMove = checkMoveMap(arrTileMap);
+
+    }
+
+    public boolean checkMoveMap(ArrayList<TileMap> arrtileMap) {
+        for (TileMap tileMap : arrtileMap) {
+            if (tileMap.locate_bit == 5 || tileMap.locate_bit == 1 || tileMap.locate_bit == 2 ||
+                tileMap.locate_bit == 3 || tileMap.locate_bit == 4 || tileMap.locate_bit == 6 ||
+                tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
+                if (getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
 }
+

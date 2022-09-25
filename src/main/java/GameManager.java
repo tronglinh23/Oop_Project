@@ -28,6 +28,7 @@ public class GameManager {
     private ArrayList<Integer> TimeBombStart;
 
     private MainPlayer player;
+    private Enemy enemy;
 
 
     public final ImageView[] MY_IMAGE={
@@ -80,6 +81,7 @@ public class GameManager {
             @Override
             public void handle(long now) {
                 player.movePlayer(arrTileMap,arrBoom);
+                enemy.moveEnemy(arrTileMap);
                 checkifoutoftime();
             }
         };
@@ -103,6 +105,7 @@ public class GameManager {
     }
     public void draw() {
         player.movePlayer(arrTileMap,arrBoom);
+        enemy.moveEnemy(arrTileMap);
     }
     public Stage getGameStage() {
         return this.mainStage;
@@ -115,10 +118,12 @@ public class GameManager {
         arrBoom = new ArrayList<>();
         TimeBombStart = new ArrayList<>();
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
+        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
         createBackground();
         readTxtMap();
 //        drawStage();
         player.drawMainPlayer();
+        enemy.drawEnemy();
         createGameLoop();
         mainStage.show();
     }

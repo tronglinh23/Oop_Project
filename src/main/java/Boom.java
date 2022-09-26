@@ -1,3 +1,4 @@
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
@@ -54,9 +55,12 @@ public class Boom {
         boomPane.getChildren().add(boomIMG);
     }
 
-    public void checkoutoftime(ArrayList<Boom> arrBoom) {
-        if(arrBoom.size() > 2) {
-            boomPane.getChildren().remove(boomIMG);
-        }
-    }
+    public ImageView getImageView() {return boomIMG;}
+
+    public WaveBoom boomBang() {
+        int locateX = x - 5;
+        int locateY = y - 5;
+        WaveBoom waveBoom = new WaveBoom(locateX, locateY, length_boom);
+        return waveBoom;
+    };
 }

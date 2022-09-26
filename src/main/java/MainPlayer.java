@@ -26,6 +26,7 @@ public class MainPlayer {
 
     private int amountBomb = 2;
 
+    private static boolean isCoBombSan = false;
     private AnchorPane playerPane;
     private Scene playerScene;
     private Stage playerStage;
@@ -208,16 +209,19 @@ public class MainPlayer {
         for (Boom boom : arrBoom) {
             if(!getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())) {
                 boom.setIsCheckBomb(0);
+                isCoBombSan = false;
             }
         }
     }
-
+    public static boolean getIscoBomb() {return isCoBombSan;}
     public boolean checkMoveBomb(ArrayList<Boom> arrBoom) {
         setMoveBomb(arrBoom);
         for (Boom boom : arrBoom) {
             if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())
                     && boom.getIsCheckBomb() == 0) {
                 return true;
+            } else if (getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())) {
+                isCoBombSan = true;
             }
         }
         return false;
@@ -236,8 +240,7 @@ public class MainPlayer {
         int yRaw = this.y + Boom.Size/2;
         int locateX = xRaw - xRaw % Boom.Size;
         int locateY = yRaw - yRaw % Boom.Size;
-
-        Boom bomb = new Boom(locateX, locateY, 2 ,playerPane);
+        Boom bomb = new Boom(locateX, locateY, 4 ,playerPane);
         return bomb;
     }
 

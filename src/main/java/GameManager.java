@@ -36,7 +36,7 @@ public class GameManager {
     private MainPlayer player;
     private Enemy enemy;
 
-    private final static int time_Bomb = 1;
+    private final static int time_Bomb = 2;
     private final static int wave_Bomb = 1;
 
 
@@ -121,13 +121,18 @@ public class GameManager {
         for(int i = 0 ; i < arrBoom.size() ; i++) {
             double time = (System.nanoTime() - TimeBombStart.get(i)) / Math.pow(10,9);
             if(time >= time_Bomb) {
-                WaveBoom waveBoom = arrBoom.get(0).boomBang();
-                arrWaveBoom.add(waveBoom);
-                timeWaveBoom.add(System.nanoTime());
-                waveBoom.draw(mainPain,arrTileMap);
-                mainPain.getChildren().remove(arrBoom.get(0).getImageView());
+                WaveBoom waveBoom = arrBoom.get(i).boomBang();
+                waveBoom.draw(arrTileMap);
+                mainPain.getChildren().remove(arrBoom.get(i).getImageView());
                 arrBoom.remove(i);
                 TimeBombStart.remove(i);
+                arrWaveBoom.add(waveBoom);
+                try {
+                    waveBoom.checkExplodeBoom_Boom(arrBoom, TimeBombStart);
+                } catch (IndexOutOfBoundsException e) {
+
+                }
+                timeWaveBoom.add(System.nanoTime());
             }
         }
 
@@ -137,7 +142,7 @@ public class GameManager {
         for(int i = 0 ; i < timeWaveBoom.size() ; i++) {
             double k = (System.nanoTime() - timeWaveBoom.get(i)) / Math.pow(10,9);
             if(k >= wave_Bomb) {
-                arrWaveBoom.get(i).update(mainPain);
+                arrWaveBoom.get(i).update();
                 arrWaveBoom.remove(i);
                 timeWaveBoom.remove(i);
             }
@@ -148,7 +153,7 @@ public class GameManager {
     }
     public void addBombToPlayer(long time_start) {
         if(arrBoom.size() < player.getAmountBomb() + 2) {
-            if(!MainPlayer.getIscoBomb()) {
+            if(player.getIscoBomb(arrBoom)) {
                 Boom boom = player.setupBoom();
                 arrBoom.add(boom);
                 Clip clip = SoundLoad.getSound(getClass().getResource("sounds/set_boom.wav"));

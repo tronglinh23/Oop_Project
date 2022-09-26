@@ -111,7 +111,7 @@ public class MainPlayer {
     public int getAmountBomb() { return this.amountBomb;}
     public void setAmountBomb(int k) {this.amountBomb += k;}
 
-    Rectangle getRect() {
+    public Rectangle getRect() {
         Rectangle mainPlayer = new Rectangle(x,y+25, size_player - 10, size_player - 10);
         return mainPlayer;
     }
@@ -196,6 +196,14 @@ public class MainPlayer {
         return false;
     }
 
+    public boolean getIscoBomb(ArrayList<Boom> arrBoom) {
+        for (Boom boom : arrBoom) {
+            if (getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())) {
+                return false;
+            }
+        }
+        return  true;
+    }
     /**
      * Y tuong check va cham bomb.
      * ban đầu va chạm là lúc đặt bomb, ta sẽ thêm một kiểu int để lưu việc nó đã hết chạm lần đầu chưa
@@ -209,19 +217,14 @@ public class MainPlayer {
         for (Boom boom : arrBoom) {
             if(!getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())) {
                 boom.setIsCheckBomb(0);
-                isCoBombSan = false;
             }
         }
     }
-    public static boolean getIscoBomb() {return isCoBombSan;}
     public boolean checkMoveBomb(ArrayList<Boom> arrBoom) {
         setMoveBomb(arrBoom);
         for (Boom boom : arrBoom) {
-            if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())
-                    && boom.getIsCheckBomb() == 0) {
+            if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent()) && boom.getIsCheckBomb() == 0) {
                 return true;
-            } else if (getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())) {
-                isCoBombSan = true;
             }
         }
         return false;

@@ -16,7 +16,7 @@ public class Boom {
     private ImageView boomIMG;
 
     private int isCheckBomb = 1;
-    private final static String BOOM_IMG = "images/boom1.png";
+    private final static String BOOM_IMG = "Bomb/boom1.png";
 
     public Boom(int x, int y, int length_boom, AnchorPane mainPain) {
         this.x = x;
@@ -52,6 +52,8 @@ public class Boom {
         boomIMG = new ImageView(BOOM_IMG);
         boomIMG.setLayoutX(x);
         boomIMG.setLayoutY(y);
+        boomIMG.setFitHeight(Size);
+        boomIMG.setFitWidth(Size);
         boomPane.getChildren().add(boomIMG);
     }
 
@@ -60,7 +62,7 @@ public class Boom {
     public WaveBoom boomBang() {
         int locateX = x - 5;
         int locateY = y - 5;
-        WaveBoom waveBoom = new WaveBoom(locateX, locateY, length_boom);
+        WaveBoom waveBoom = new WaveBoom(locateX, locateY, length_boom, boomPane);
         return waveBoom;
     };
 }

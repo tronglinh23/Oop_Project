@@ -53,16 +53,12 @@ public class Enemy {
         return this.y;
     }
 
-    public void changeOrient(int newOrient){
-        orient=newOrient;
+    public void setOrient(int orient) {
+        this.orient = orient;
     }
 
-    public void creatOrient(){
-        int percent = random.nextInt(100);
-        if (percent>95){
-            int newOrient=random.nextInt(4);
-            changeOrient(newOrient);
-        }
+    public int getOrient() {
+        return this.orient;
     }
 
     public void drawEnemy() {

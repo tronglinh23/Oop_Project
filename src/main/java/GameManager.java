@@ -5,10 +5,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.Clip;
+import java.awt.*;
 import java.io.*;
+import java.time.Duration;
 import java.util.ArrayList;
 
 public class GameManager {
@@ -25,10 +28,16 @@ public class GameManager {
 
     private ArrayList<TileMap> arrTileMap;
     private ArrayList<Boom> arrBoom;
-    private ArrayList<Integer> TimeBombStart;
+    private ArrayList<Long> TimeBombStart;
+
+    private ArrayList<WaveBoom> arrWaveBoom;
+    private ArrayList<Long> timeWaveBoom;
 
     private MainPlayer player;
     private Enemy enemy;
+
+    private final static int time_Bomb = 1;
+    private final static int wave_Bomb = 1;
 
 
     public final ImageView[] MY_IMAGE={
@@ -43,6 +52,24 @@ public class GameManager {
         createKeyListeners();
     }
 
+    public void createNewGame(Stage menuStage) {
+        this.menuStage = menuStage;
+        this.menuStage.hide();
+        arrTileMap = new ArrayList<>();
+        arrBoom = new ArrayList<>();
+        TimeBombStart = new ArrayList<>();
+        arrWaveBoom = new ArrayList<>();
+        timeWaveBoom = new ArrayList<>();
+        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
+        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
+        createBackground();
+        readTxtMap();
+        drawStage();
+        player.drawMainPlayer();
+        enemy.drawEnemy();
+        createGameLoop();
+        mainStage.show();
+    }
     private void createKeyListeners() {
         mainScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -56,7 +83,7 @@ public class GameManager {
                 } else if (keyEvent.getCode() == KeyCode.DOWN) {
                     player.setDownKeyPressed(true);
                 } else if (keyEvent.getCode() == KeyCode.SPACE) {
-                    addBombToPlayer(0);
+                    addBombToPlayer(System.nanoTime());
                 }
             }
         });
@@ -77,30 +104,57 @@ public class GameManager {
         });
     }
     private void createGameLoop() {
+        long time;
         gameTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 player.movePlayer(arrTileMap,arrBoom);
                 enemy.moveEnemy(arrTileMap);
-                checkifoutoftime();
+                checkTimeBombExplode();
+                bombBangTime();
             }
         };
         gameTimer.start();
+
     }
-    public void checkifoutoftime() {
-        if(arrBoom.size() > 2) {
-            arrBoom.get(0).checkoutoftime(arrBoom);
-            arrBoom.remove(0);
+    public void checkTimeBombExplode() {
+        for(int i = 0 ; i < arrBoom.size() ; i++) {
+            double time = (System.nanoTime() - TimeBombStart.get(i)) / Math.pow(10,9);
+            if(time >= time_Bomb) {
+                WaveBoom waveBoom = arrBoom.get(0).boomBang();
+                arrWaveBoom.add(waveBoom);
+                timeWaveBoom.add(System.nanoTime());
+                waveBoom.draw(mainPain,arrTileMap);
+                mainPain.getChildren().remove(arrBoom.get(0).getImageView());
+                arrBoom.remove(i);
+                TimeBombStart.remove(i);
+            }
         }
+
     }
 
-    public void addBombToPlayer(int time_start) {
+    public void bombBangTime () {
+        for(int i = 0 ; i < timeWaveBoom.size() ; i++) {
+            double k = (System.nanoTime() - timeWaveBoom.get(i)) / Math.pow(10,9);
+            if(k >= wave_Bomb) {
+                arrWaveBoom.get(i).update(mainPain);
+                arrWaveBoom.remove(i);
+                timeWaveBoom.remove(i);
+            }
+        }
+    }
+    public void update() {
+
+    }
+    public void addBombToPlayer(long time_start) {
         if(arrBoom.size() < player.getAmountBomb() + 2) {
-            Boom boom = player.setupBoom();
-            arrBoom.add(boom);
-            Clip clip = SoundLoad.getSound(getClass().getResource("sounds/set_boom.wav"));
-            clip.start();
-            TimeBombStart.add(time_start);
+            if(!MainPlayer.getIscoBomb()) {
+                Boom boom = player.setupBoom();
+                arrBoom.add(boom);
+                Clip clip = SoundLoad.getSound(getClass().getResource("sounds/set_boom.wav"));
+                clip.start();
+                TimeBombStart.add(time_start);
+            }
         }
     }
     public void draw() {
@@ -109,23 +163,6 @@ public class GameManager {
     }
     public Stage getGameStage() {
         return this.mainStage;
-    }
-
-    public void createNewGame(Stage menuStage) {
-        this.menuStage = menuStage;
-        this.menuStage.hide();
-        arrTileMap = new ArrayList<>();
-        arrBoom = new ArrayList<>();
-        TimeBombStart = new ArrayList<>();
-        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
-        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
-        createBackground();
-        readTxtMap();
-//        drawStage();
-        player.drawMainPlayer();
-        enemy.drawEnemy();
-        createGameLoop();
-        mainStage.show();
     }
 
     public void createBackground() {
@@ -163,4 +200,6 @@ public class GameManager {
             e.printStackTrace();
         }
     }
+
+
 }

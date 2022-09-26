@@ -6,19 +6,19 @@ import java.util.ArrayList;
 
 public class TileMap {
     private final static String[] IMG_MAP_VIEW = {
-           "/images/goccay1.png",
-           "/images/cay1.png",
-           "/images/da1.png",
-           "/images/namdo1.png",
-           "/images/namxanh1.png",
-           "/images/vienDuoi.png",
-           "/images/vienTren.png",
-           "/images/vienPhai.png",
-           "/images/vienTrai.png",
-           "/images/gocTrenTrai.png",
-           "/images/gocTrenPhai.png",
-           "/images/gocDuoiTrai.png",
-           "/images/gocDuoiPhai.png",
+           "TileMapBox/goccay1.png",
+           "TileMapBox/cay1.png",
+           "TileMapBox/da1.png",
+           "TileMapBox/namdo1.png",
+           "TileMapBox/namxanh1.png",
+           "TileMapBox/vienDuoi.png",
+           "TileMapBox/vienTren.png",
+           "TileMapBox/vienPhai.png",
+           "TileMapBox/vienTrai.png",
+           "TileMapBox/gocTrenTrai.png",
+           "TileMapBox/gocTrenPhai.png",
+           "TileMapBox/gocDuoiTrai.png",
+           "TileMapBox/gocDuoiPhai.png",
     };
 
     private int x;

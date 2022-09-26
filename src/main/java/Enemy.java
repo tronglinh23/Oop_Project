@@ -4,6 +4,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Enemy {
     private int x;
@@ -16,6 +17,7 @@ public class Enemy {
     private Scene enemyScene;
     private Stage enemyStage;
     private int imageIndex;
+    private Random random= new Random();
 
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
@@ -51,11 +53,16 @@ public class Enemy {
         return this.y;
     }
 
-    public void setOrient(int orient){
-        this.orient = orient;
+    public void changeOrient(int newOrient){
+        orient=newOrient;
     }
-    public int getOrient() {
-        return this.orient;
+
+    public void creatOrient(){
+        int percent = random.nextInt(100);
+        if (percent>95){
+            int newOrient=random.nextInt(4);
+            changeOrient(newOrient);
+        }
     }
 
     public void drawEnemy() {

@@ -33,7 +33,7 @@ public class Enemy {
     }
 
     Rectangle getRect() {
-        Rectangle theEnemy = new Rectangle(x,y, size_enemy - 10, size_enemy - 10);
+        Rectangle theEnemy = new Rectangle(x,y + 25, size_enemy - 10, size_enemy - 10);
         return theEnemy;
     }
 

@@ -99,6 +99,8 @@ public class Enemy {
 
         boolean checkEnemyMove = checkMoveMap(arrTileMap);
 
+        enemy.setLayoutX(x);
+        enemy.setLayoutY(y);
     }
 
     public boolean checkMoveMap(ArrayList<TileMap> arrtileMap) {

@@ -1,25 +1,28 @@
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.Clip;
-import java.awt.*;
 import java.io.*;
-import java.time.Duration;
 import java.util.ArrayList;
 
 public class GameManager {
     private static int WIDTH_SCREEN = 765;
     private static int HEIGHT_SCREEN = 675;
 
+    private ArrayList<KeyCode> keyCodes = new ArrayList<>();
+    GraphicsContext gContext;
+    Canvas canvas;
+
     private Stage menuStage;
-    private AnchorPane mainPain;
     private Stage mainStage;
     private Scene mainScene;
     private final static String Title_game = "Boom";
@@ -33,85 +36,83 @@ public class GameManager {
     private ArrayList<WaveBoom> arrWaveBoom;
     private ArrayList<Long> timeWaveBoom;
 
+
     private MainPlayer player;
     private Enemy enemy;
 
+    private ArrayList<Integer> KeyCodeEvent;
     private final static int time_Bomb = 2;
     private final static int wave_Bomb = 1;
 
 
-    public final ImageView[] MY_IMAGE={
-           new ImageView("/images/background.jpg"),
-    };
+    public final Image MY_IMAGE= ImageUtils.loadImage("src/main/resources/images/background.jpg");
     public GameManager() {
-        mainPain = new AnchorPane();
-        mainScene = new Scene(mainPain, WIDTH_SCREEN, HEIGHT_SCREEN);
-        mainStage = new Stage();
-        mainStage.setTitle(Title_game);
-        mainStage.setScene(mainScene);
-        createKeyListeners();
+//        mainPain = new AnchorPane();
+//        mainScene = new Scene(mainPain, WIDTH_SCREEN, HEIGHT_SCREEN);
+//        mainStage = new Stage();
+//        mainStage.setTitle(Title_game);
+//        mainStage.setScene(mainScene);
+//        createKeyListeners();
     }
 
     public void createNewGame(Stage menuStage) {
         this.menuStage = menuStage;
         this.menuStage.hide();
+
+
+        canvas = new Canvas(WIDTH_SCREEN,HEIGHT_SCREEN);
+        gContext = canvas.getGraphicsContext2D();
+        Group root = new Group(canvas);
+
+        mainScene = new Scene(root, WIDTH_SCREEN, HEIGHT_SCREEN);
+        mainStage = new Stage();
+        mainStage.setTitle(Title_game);
+        mainStage.setScene(mainScene);
+
         arrTileMap = new ArrayList<>();
         arrBoom = new ArrayList<>();
         TimeBombStart = new ArrayList<>();
         arrWaveBoom = new ArrayList<>();
         timeWaveBoom = new ArrayList<>();
-        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
-        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
-        createBackground();
+        KeyCodeEvent = new ArrayList<>();
+
+        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
+        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0);
+
         readTxtMap();
-        drawStage();
-        player.drawMainPlayer();
-        enemy.drawEnemy();
         createGameLoop();
+        createKeyListeners();
         mainStage.show();
     }
     private void createKeyListeners() {
         mainScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == KeyCode.LEFT) {
-                    player.setLeftKeyPressed(true);
-                } else if (keyEvent.getCode() == KeyCode.RIGHT) {
-                    player.setRightKeyPressed(true);
-                } else if (keyEvent.getCode() == KeyCode.UP) {
-                    player.setUpKeyPressed(true);
-                } else if (keyEvent.getCode() == KeyCode.DOWN) {
-                    player.setDownKeyPressed(true);
-                } else if (keyEvent.getCode() == KeyCode.SPACE) {
-                    addBombToPlayer(System.nanoTime());
-                }
-            }
+              @Override
+              public void handle(KeyEvent keyEvent) {
+                  KeyCode code = keyEvent.getCode();
+                  if (!keyCodes.contains(code)) keyCodes.add(code);
+                  if(code == KeyCode.SPACE) {
+                      addBombToPlayer(System.nanoTime());
+                  }
+              }
         });
 
         mainScene.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == KeyCode.LEFT) {
-                    player.setLeftKeyPressed(false);
-                } else if (keyEvent.getCode() == KeyCode.RIGHT) {
-                    player.setRightKeyPressed(false);
-                } else if (keyEvent.getCode() == KeyCode.UP) {
-                    player.setUpKeyPressed(false);
-                } else if (keyEvent.getCode() == KeyCode.DOWN) {
-                    player.setDownKeyPressed(false);
-                }
+                KeyCode code = keyEvent.getCode();
+                if (keyCodes.contains(code)) keyCodes.remove(code);
             }
         });
     }
+
     private void createGameLoop() {
         long time;
         gameTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                player.movePlayer(arrTileMap,arrBoom);
-                enemy.moveEnemy(arrTileMap);
-                checkTimeBombExplode();
-                bombBangTime();
+                gContext.clearRect(0,0, WIDTH_SCREEN, HEIGHT_SCREEN);
+                update();
+                renderer();
             }
         };
         gameTimer.start();
@@ -122,8 +123,6 @@ public class GameManager {
             double time = (System.nanoTime() - TimeBombStart.get(i)) / Math.pow(10,9);
             if(time >= time_Bomb) {
                 WaveBoom waveBoom = arrBoom.get(i).boomBang();
-                waveBoom.draw(arrTileMap);
-                mainPain.getChildren().remove(arrBoom.get(i).getImageView());
                 arrBoom.remove(i);
                 TimeBombStart.remove(i);
                 arrWaveBoom.add(waveBoom);
@@ -142,14 +141,16 @@ public class GameManager {
         for(int i = 0 ; i < timeWaveBoom.size() ; i++) {
             double k = (System.nanoTime() - timeWaveBoom.get(i)) / Math.pow(10,9);
             if(k >= wave_Bomb) {
-                arrWaveBoom.get(i).update();
                 arrWaveBoom.remove(i);
                 timeWaveBoom.remove(i);
             }
         }
     }
     public void update() {
-
+        player.movePlayer(arrTileMap,arrBoom,keyCodes);
+        enemy.moveEnemy(arrTileMap);
+        checkTimeBombExplode();
+        bombBangTime();
     }
     public void addBombToPlayer(long time_start) {
         if(arrBoom.size() < player.getAmountBomb() + 2) {
@@ -162,24 +163,35 @@ public class GameManager {
             }
         }
     }
-    public void draw() {
-        player.movePlayer(arrTileMap,arrBoom);
+    public void renderer() {
+        createBackground();
+
+        for (Boom boom : arrBoom) {
+            boom.draw(gContext);
+        }
+        for (WaveBoom waveBoom : arrWaveBoom) {
+            waveBoom.draw(arrTileMap, gContext);
+        }
         enemy.moveEnemy(arrTileMap);
+
+        drawStage();
+        enemy.drawEnemy(gContext);
+        player.drawMainPlayer(gContext);
+
     }
     public Stage getGameStage() {
         return this.mainStage;
     }
 
     public void createBackground() {
-        MY_IMAGE[0].setFitWidth(WIDTH_SCREEN);
-        MY_IMAGE[0].setFitHeight(HEIGHT_SCREEN);
-        mainPain.getChildren().add(MY_IMAGE[0]);
+        gContext.drawImage(MY_IMAGE,0,0,WIDTH_SCREEN,HEIGHT_SCREEN);
     }
 
     public void drawStage() {
+        int i = 0;
         try {
             for(TileMap obstacle : arrTileMap) {
-                obstacle.drawImageStage(mainPain);
+                obstacle.drawImageStage(gContext);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,6 +217,7 @@ public class GameManager {
             e.printStackTrace();
         }
     }
+
 
 
 }

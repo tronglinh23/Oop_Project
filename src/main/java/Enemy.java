@@ -1,6 +1,7 @@
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.util.ArrayList;
@@ -12,11 +13,10 @@ public class Enemy {
     private int speed = 3;
     private int orient;
     private final int size_enemy = 50;
-    private AnchorPane enemyPane;
-    private ImageView enemy;
-    private Scene enemyScene;
-    private Stage enemyStage;
+    private Image enemy;
+
     private int imageIndex;
+
     private Random random= new Random();
 
     public static final int LEFT = 0;
@@ -24,12 +24,10 @@ public class Enemy {
     public static final int UP = 2;
     public static final int DOWN = 3;
 
-    public Enemy(int x, int y, int orient, AnchorPane enemyPane, Scene enemyScene) {
+    public Enemy(int x, int y, int orient) {
         this.x = x;
         this.y = y;
         this.orient = orient;
-        this.enemyPane = enemyPane;
-        this.enemyScene = enemyScene;
     }
 
     Rectangle getRect() {
@@ -61,13 +59,9 @@ public class Enemy {
         return this.orient;
     }
 
-    public void drawEnemy() {
-        enemy = new ImageView("/images/boss_ donw_1.png");
-        enemy.setLayoutX(x);
-        enemy.setLayoutY(y);
-        enemy.setFitWidth(size_enemy);
-        enemy.setFitHeight(size_enemy);
-        enemyPane.getChildren().add(enemy);
+    public void drawEnemy(GraphicsContext gc) {
+        enemy = ImageUtils.loadImage("src/main/resources/images/boss_ donw_1.png");
+        gc.drawImage(enemy, x, y, size_enemy, size_enemy);
     }
 
     public void moveEnemy(ArrayList<TileMap> arrTileMap) {
@@ -95,8 +89,6 @@ public class Enemy {
 
         boolean checkEnemyMove = checkMoveMap(arrTileMap);
 
-        enemy.setLayoutX(x);
-        enemy.setLayoutY(y);
     }
 
     public boolean checkMoveMap(ArrayList<TileMap> arrtileMap) {

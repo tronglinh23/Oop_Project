@@ -3,13 +3,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import javax.lang.model.type.NullType;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy {
     private int x;
     private int y;
-    private int speed = 3;
+    private int speed = 1;
     private int orient;
     private final int size_enemy = 50;
     private AnchorPane enemyPane;
@@ -17,7 +19,7 @@ public class Enemy {
     private Scene enemyScene;
     private Stage enemyStage;
     private int imageIndex;
-    private Random random= new Random();
+    private Random[] random= new Random[0,1,2,3];
 
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
@@ -30,6 +32,10 @@ public class Enemy {
         this.orient = orient;
         this.enemyPane = enemyPane;
         this.enemyScene = enemyScene;
+    }
+
+    public Enemy() {
+
     }
 
     Rectangle getRect() {
@@ -71,7 +77,6 @@ public class Enemy {
     }
 
     public void moveEnemy(ArrayList<TileMap> arrTileMap) {
-        int speed = 3;
         int xRaw = x;
         int yRaw = y;
         switch (orient) {
@@ -104,14 +109,13 @@ public class Enemy {
             if (tileMap.locate_bit == 5 || tileMap.locate_bit == 1 || tileMap.locate_bit == 2 ||
                 tileMap.locate_bit == 3 || tileMap.locate_bit == 4 || tileMap.locate_bit == 6 ||
                 tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
-                if (getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
+
+                if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
                     return true;
                 }
             }
         }
         return false;
     }
-
-
 }
 

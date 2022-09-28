@@ -34,6 +34,7 @@ public class GameManager {
     private ArrayList<Long> timeWaveBoom;
 
     private MainPlayer player;
+//    private Enemy[] enemy = new Enemy[6];
     private Enemy enemy;
 
     private final static int time_Bomb = 2;
@@ -50,6 +51,10 @@ public class GameManager {
         mainStage.setTitle(Title_game);
         mainStage.setScene(mainScene);
         createKeyListeners();
+//        for (int i = 0; i < 6; i++) {
+//            enemy[i] = new Enemy();
+//        }
+        enemy = new Enemy();
     }
 
     public void createNewGame(Stage menuStage) {
@@ -60,12 +65,18 @@ public class GameManager {
         TimeBombStart = new ArrayList<>();
         arrWaveBoom = new ArrayList<>();
         timeWaveBoom = new ArrayList<>();
-        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
-        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0, mainPain, mainScene);
+        player = new MainPlayer(45,45 , 0, mainPain, mainScene);
+//        for (int i = 0; i < 6; i++) {
+//            enemy[i] = new Enemy((i * 50) + 100,(i * 50) + 100, 0, mainPain, mainScene);
+//        }
+        enemy = new Enemy(675,45 , , mainPain, mainScene);
         createBackground();
         readTxtMap();
         drawStage();
         player.drawMainPlayer();
+//        for (int i = 0; i < 6; i++) {
+//            enemy[i].drawEnemy();
+//        }
         enemy.drawEnemy();
         createGameLoop();
         mainStage.show();
@@ -109,9 +120,12 @@ public class GameManager {
             @Override
             public void handle(long now) {
                 player.movePlayer(arrTileMap,arrBoom);
-                enemy.moveEnemy(arrTileMap);
                 checkTimeBombExplode();
                 bombBangTime();
+//                for (int i = 0; i < 6; i++) {
+//                    enemy[i].moveEnemy(arrTileMap);
+//                }
+                enemy.moveEnemy(arrTileMap);
             }
         };
         gameTimer.start();
@@ -164,6 +178,9 @@ public class GameManager {
     }
     public void draw() {
         player.movePlayer(arrTileMap,arrBoom);
+//        for (int i = 0; i < 6; i++) {
+//            enemy[i].moveEnemy(arrTileMap);
+//        }
         enemy.moveEnemy(arrTileMap);
     }
     public Stage getGameStage() {
@@ -205,6 +222,4 @@ public class GameManager {
             e.printStackTrace();
         }
     }
-
-
 }

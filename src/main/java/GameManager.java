@@ -44,7 +44,6 @@ public class GameManager {
     private final static int time_Bomb = 2;
     private final static int wave_Bomb = 1;
 
-
     public final Image MY_IMAGE= ImageUtils.loadImage("src/main/resources/images/background.jpg");
     public GameManager() {
 //        mainPain = new AnchorPane();

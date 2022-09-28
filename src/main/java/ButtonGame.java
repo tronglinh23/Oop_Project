@@ -4,7 +4,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 

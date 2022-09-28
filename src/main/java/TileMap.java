@@ -1,3 +1,5 @@
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
@@ -5,20 +7,20 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class TileMap {
-    private final static String[] IMG_MAP_VIEW = {
-           "TileMapBox/goccay1.png",
-           "TileMapBox/cay1.png",
-           "TileMapBox/da1.png",
-           "TileMapBox/namdo1.png",
-           "TileMapBox/namxanh1.png",
-           "TileMapBox/vienDuoi.png",
-           "TileMapBox/vienTren.png",
-           "TileMapBox/vienPhai.png",
-           "TileMapBox/vienTrai.png",
-           "TileMapBox/gocTrenTrai.png",
-           "TileMapBox/gocTrenPhai.png",
-           "TileMapBox/gocDuoiTrai.png",
-           "TileMapBox/gocDuoiPhai.png",
+    private final static Image[] IMG_MAP_VIEW = {
+            ImageUtils.loadImage("src/main/resources/TileMapBox/goccay1.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/cay1.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/da1.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/namdo1.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/namxanh1.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/vienDuoi.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/vienTren.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/vienPhai.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/vienTrai.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/gocTrenTrai.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/gocTrenPhai.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/gocDuoiTrai.png"),
+            ImageUtils.loadImage("src/main/resources/TileMapBox/gocDuoiPhai.png"),
     };
 
     private int x;
@@ -49,28 +51,21 @@ public class TileMap {
     }
 
     public Rectangle getRect() {
-        Rectangle rectangle = new Rectangle(x + 5, y + 20, SIZE - 10, SIZE - 10);
+        Rectangle rectangle = new Rectangle(x + 5, y + 15, SIZE - 10, SIZE - 10);
         return  rectangle;
     }
     
-    public void drawImageStage(AnchorPane mainPain) {
-        ImageView IMG = new ImageView("/images/background.jpg");
+    public void drawImageStage(GraphicsContext gc) {
         if(x == 0 && y == 0){
-            IMG = new ImageView(IMG_MAP_VIEW[9]);
+            gc.drawImage(IMG_MAP_VIEW[9],x,y);
         } else if(x == 0 && y == 14 * SIZE) {
-            IMG = new ImageView(IMG_MAP_VIEW[11]);
+            gc.drawImage(IMG_MAP_VIEW[11],x,y);
         } else if(x == 16 * SIZE && y == 0) {
-           IMG = new ImageView(IMG_MAP_VIEW[10]);
+            gc.drawImage(IMG_MAP_VIEW[10],x,y);
         } else if(x == 16 * SIZE && y == 14 * SIZE) {
-           IMG = new ImageView(IMG_MAP_VIEW[12]);
+            gc.drawImage(IMG_MAP_VIEW[12],x,y);
         } else if(locate_bit != 0) {
-            IMG = new ImageView(IMG_MAP_VIEW[locate_bit - 1]);
-            IMG.setFitWidth(SIZE + 2);
-            IMG.setFitHeight(SIZE + 2);
+            gc.drawImage(IMG_MAP_VIEW[locate_bit - 1],x,y, SIZE + 2, SIZE + 2);
         }
-
-        IMG.setLayoutX(x);
-        IMG.setLayoutY(y);
-        mainPain.getChildren().add(IMG);
     }
 }

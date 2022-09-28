@@ -1,6 +1,7 @@
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -9,29 +10,27 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int speed = 1;
     private int orient;
     private final int size_enemy = 50;
-    private AnchorPane enemyPane;
-    private ImageView enemy;
-    private Scene enemyScene;
-    private Stage enemyStage;
+    private Image enemy;
+    private int locate;
+
     private int imageIndex;
-    private Random[] random= new Random[0,1,2,3];
+
+    private Random random= new Random();
 
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
     public static final int UP = 2;
     public static final int DOWN = 3;
 
-    public Enemy(int x, int y, int orient, AnchorPane enemyPane, Scene enemyScene) {
+    public Enemy(int x, int y, int orient) {
         this.x = x;
         this.y = y;
         this.orient = orient;
-        this.enemyPane = enemyPane;
-        this.enemyScene = enemyScene;
     }
 
     public Enemy() {
@@ -39,23 +38,23 @@ public class Enemy {
     }
 
     Rectangle getRect() {
-        Rectangle theEnemy = new Rectangle(x,y + 25, size_enemy - 10, size_enemy - 10);
+        Rectangle theEnemy = new Rectangle(x,y + 25, size_enemy - 20, size_enemy - 20);
         return theEnemy;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getX() {
+    public double getX() {
         return this.x;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 
-    public int getY() {
+    public double getY() {
         return this.y;
     }
 
@@ -67,41 +66,47 @@ public class Enemy {
         return this.orient;
     }
 
-    public void drawEnemy() {
-        enemy = new ImageView("/images/boss_ donw_1.png");
-        enemy.setLayoutX(x);
-        enemy.setLayoutY(y);
-        enemy.setFitWidth(size_enemy);
-        enemy.setFitHeight(size_enemy);
-        enemyPane.getChildren().add(enemy);
+    public void drawEnemy(GraphicsContext gc) {
+        enemy = ImageUtils.loadImage("src/main/resources/images/boss_ donw_1.png");
+        gc.drawImage(enemy, x, y, size_enemy, size_enemy);
     }
 
     public void moveEnemy(ArrayList<TileMap> arrTileMap) {
-        int xRaw = x;
-        int yRaw = y;
+        double xRaw = x;
+        double yRaw = y;
         switch (orient) {
             case LEFT:
-                xRaw -= speed;
+                xRaw -= (double) speed / 5;
                 break;
             case RIGHT:
-                xRaw += speed;
+                xRaw += (double) speed / 5;
                 break;
             case UP:
-                yRaw -= speed;
+                yRaw -= (double) speed / 5;
                 break;
             case DOWN:
-                yRaw += speed;
+                yRaw += (double) speed / 5;
             default:
         }
-        int xChange = x;
-        int yChange = y;
+        double xChange = x;
+        double yChange = y;
         x = xRaw;
         y = yRaw;
 
         boolean checkEnemyMove = checkMoveMap(arrTileMap);
 
-        enemy.setLayoutX(x);
-        enemy.setLayoutY(y);
+        if (checkEnemyMove) {
+            if (orient == LEFT) {
+                orient = RIGHT;
+            } else if (orient == RIGHT) {
+                orient = UP;
+            } else if (orient == UP) {
+                orient = DOWN;
+            } else {
+                orient = LEFT;
+            }
+        }
+
     }
 
     public boolean checkMoveMap(ArrayList<TileMap> arrtileMap) {
@@ -109,7 +114,6 @@ public class Enemy {
             if (tileMap.locate_bit == 5 || tileMap.locate_bit == 1 || tileMap.locate_bit == 2 ||
                 tileMap.locate_bit == 3 || tileMap.locate_bit == 4 || tileMap.locate_bit == 6 ||
                 tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
-
                 if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
                     return true;
                 }

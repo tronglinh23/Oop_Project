@@ -1,120 +1,169 @@
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class WaveBoom {
     private int x;
     private int y;
-    private int lengthWave;
+    private int lengthLeft;
+    private int lengthRight;
+    private int lengthUp;
+    private int lengthDown;
 
-    private ImageView[] LEFT_IMG;
-    private ImageView[] RIGHT_IMG;
-    private ImageView[] UP_IMG;
-    private ImageView[] DOWN_IMG;
-    private ImageView MID_IMG;
+    private double xEnemyDie;
 
-    AnchorPane pane;
+    private double yEnemyDie;
+
+    private int imageIndex=0;
 
 
-    private final static String[] WAVE_IMG = {"images/bombbang_left_1.png", "images/bombbang_left_2.png",
-                                            "images/bombbang_right_1.png", "images/bombbang_right_2.png",
-                                            "images/bombbang_mid_2.png",
-                                            "images/bombbang_down_1.png", "images/bombbang_down_2.png",
-                                            "images/bombbang_up_1.png", "images/bombbang_up_2.png" };
+    private final Image[] WAVE_IMG = {ImageUtils.loadImage("src/main/resources/images/bombbang_left_1.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_left_2.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_right_1.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_right_2.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_mid_2.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_down_1.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_down_2.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_up_1.png"),
+                                        ImageUtils.loadImage("src/main/resources/images/bombbang_up_2.png")
+    };
 
-    public WaveBoom(int x, int y, int lengthWave, AnchorPane BombPane) {
+    public final Image[] ENEMY_DIE={
+            ImageUtils.loadImage("src/main/resources/images/boss_die_1.png"),
+            ImageUtils.loadImage("src/main/resources/images/boss_die_2.png"),
+            ImageUtils.loadImage("src/main/resources/images/boss_die_3.png"),
+            ImageUtils.loadImage("src/main/resources/images/boss_die_4.png")
+    };
+
+    public WaveBoom(int x, int y, int lengthWave) {
         this.x = x;
         this.y = y;
-        this.lengthWave =  lengthWave;
-        LEFT_IMG = new ImageView[lengthWave];
-        RIGHT_IMG = new ImageView[lengthWave];
-        UP_IMG = new ImageView[lengthWave];
-        DOWN_IMG = new ImageView[lengthWave];
-        this.pane = BombPane;
+        this.lengthLeft = this.lengthRight = this.lengthDown = this.lengthUp =  lengthWave;
     }
 
     public Rectangle getRect(int x, int y) {
-        Rectangle rec = new Rectangle(x + 5, y + 5, Boom.Size - 5, Boom.Size - 5);
+        Rectangle rec = new Rectangle(x + 5, y + 5, Boom.Size - 10, Boom.Size - 10);
         return rec;
     }
 
-    public void draw(ArrayList<TileMap> arrTileMap) {
-        drawLeftWave(arrTileMap);
-        drawRightWave(arrTileMap);
-        drawMidWave(arrTileMap);
-        drawDownWave(arrTileMap);
-        drawUpWave(arrTileMap);
+    public void draw(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
+        drawLeftWave(arrTileMap, gc);
+        drawRightWave(arrTileMap, gc);
+        drawMidWave(arrTileMap, gc);
+        drawDownWave(arrTileMap, gc);
+        drawUpWave(arrTileMap, gc);
+        if (xEnemyDie!=0 || yEnemyDie!=0) {
+            Image image= ENEMY_DIE[imageIndex/50%ENEMY_DIE.length];
+            gc.drawImage(image, xEnemyDie, yEnemyDie);
+        }
     }
 
-    private void drawLeftWave(ArrayList<TileMap> arrTileMap) {
-
-        for(int stt = 1 ; stt <= lengthWave ; stt++) {
+    private void drawLeftWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
+        for(int stt = 1 ; stt <= lengthLeft ; stt++) {
             int xLocate = x - stt * Boom.Size + 5;
-            int yLocate = y + 5;
-            if(stt == lengthWave) {
-                LEFT_IMG[stt-1] = new ImageView(WAVE_IMG[1]);
+            int yLocate = y + 10;
+            if(stt == lengthLeft) {
+                gc.drawImage(WAVE_IMG[1],xLocate, yLocate);
             } else {
-                LEFT_IMG[stt-1] = new ImageView(WAVE_IMG[0]);
+                gc.drawImage(WAVE_IMG[0],xLocate,yLocate);
             }
-            LEFT_IMG[stt-1].setLayoutX(xLocate);
-            LEFT_IMG[stt-1].setLayoutY(yLocate);
-            pane.getChildren().add(LEFT_IMG[stt-1]);
+            for (int i = 0; i < arrTileMap.size(); i++) {
+                if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
+                    if (arrTileMap.get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
+                            || arrTileMap.get(i).locate_bit == 5) {
+                        arrTileMap.remove(i);
+                        lengthLeft = lengthLeft - (lengthLeft - stt);
+
+                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
+                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
+                        lengthLeft = lengthLeft - (lengthLeft - stt);
+                    }
+                }
+            }
         }
     }
 
-    private void drawRightWave(ArrayList<TileMap> arrTileMap) {
-        for(int stt = 1 ; stt <= lengthWave ; stt++) {
+    private void drawRightWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
+        for(int stt = 1 ; stt <= lengthRight ; stt++) {
             int xLocate = x + stt * Boom.Size - 5;
-            int yLocate = y + 5;
-            if(stt == lengthWave) {
-                RIGHT_IMG[stt - 1] = new ImageView(WAVE_IMG[3]);
+            int yLocate = y + 10;
+            if(stt == lengthRight) {
+                gc.drawImage(WAVE_IMG[3],xLocate, yLocate, Boom.Size + 10, Boom.Size);
             } else {
-                RIGHT_IMG[stt - 1] = new ImageView(WAVE_IMG[2]);
+                gc.drawImage(WAVE_IMG[2],xLocate, yLocate);
             }
-            RIGHT_IMG[stt - 1].setLayoutX(xLocate);
-            RIGHT_IMG[stt - 1].setLayoutY(yLocate);
-            pane.getChildren().add(RIGHT_IMG[stt - 1]);
+            for (int i = 0; i < arrTileMap.size(); i++) {
+                if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
+                    if (arrTileMap.get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
+                            || arrTileMap.get(i).locate_bit == 5 ) {
+                        arrTileMap.remove(i);
+                        lengthRight = lengthRight - (lengthRight - stt);
+
+                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
+                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
+                        lengthRight = lengthRight - (lengthRight - stt);
+                    }
+                }
+            }
         }
     }
 
 
-    private void drawMidWave(ArrayList<TileMap> arrTileMap) {
-        MID_IMG  = new ImageView(WAVE_IMG[4]);
-        MID_IMG.setLayoutX(x + 5);
-        MID_IMG.setLayoutY(y + 5);
-        pane.getChildren().add(MID_IMG);
+    private void drawMidWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
+        gc.drawImage(WAVE_IMG[4],x + 5, y + 5);
     }
 
-    private void drawDownWave(ArrayList<TileMap> arrTileMap) {
-        for(int stt = 1 ; stt <= lengthWave ; stt++) {
+    private void drawDownWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
+        for(int stt = 1 ; stt <= lengthDown ; stt++) {
             int xLocate = x + 5;
             int yLocate = y + stt * Boom.Size - 5;
-            if(stt == lengthWave) {
-                DOWN_IMG[stt-1] = new ImageView(WAVE_IMG[6]);
+            if(stt == lengthDown) {
+                gc.drawImage(WAVE_IMG[6],xLocate, yLocate + 5, Boom.Size, Boom.Size + 10);
             } else {
-                DOWN_IMG[stt-1] = new ImageView(WAVE_IMG[5]);
+                gc.drawImage(WAVE_IMG[5],xLocate, yLocate);
             }
-            DOWN_IMG[stt-1].setLayoutX(xLocate);
-            DOWN_IMG[stt-1].setLayoutY(yLocate);
-            pane.getChildren().add(DOWN_IMG[stt-1]);
+            for (int i = 0; i < arrTileMap.size(); i++) {
+                if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
+                    if (arrTileMap.get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
+                            || arrTileMap.get(i).locate_bit == 5 ) {
+                        arrTileMap.remove(i);
+                        lengthDown = lengthDown - (lengthDown - stt);
+
+                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
+                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
+                        lengthDown = lengthDown - (lengthDown - stt);
+                    }
+                }
+            }
         }
     }
 
-    private void drawUpWave(ArrayList<TileMap> arrTileMap) {
-        for(int stt = 1 ; stt <= lengthWave ; stt++) {
+    private void drawUpWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
+        for(int stt = 1 ; stt <= lengthUp ; stt++) {
             int xLocate = x + 5;
             int yLocate = y - stt * Boom.Size + 5;
-            if(stt == lengthWave) {
-                UP_IMG[stt-1] = new ImageView(WAVE_IMG[8]);
+            if(stt == lengthUp) {
+                gc.drawImage(WAVE_IMG[8],xLocate, yLocate);
             } else {
-                UP_IMG[stt-1] = new ImageView(WAVE_IMG[7]);
+                gc.drawImage(WAVE_IMG[7],xLocate, yLocate);
             }
-            UP_IMG[stt-1].setLayoutX(xLocate);
-            UP_IMG[stt-1].setLayoutY(yLocate);
-            pane.getChildren().add(UP_IMG[stt-1]);
+            for (int i = 0; i < arrTileMap.size(); i++) {
+                if (getRect(xLocate + 5,yLocate + 10).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
+                    if (arrTileMap. get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
+                            || arrTileMap.get(i).locate_bit == 5 ) {
+                        arrTileMap.remove(i);
+                        lengthUp = lengthUp - (lengthUp - stt);
+
+                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
+                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
+                        lengthUp = lengthUp - (lengthUp - stt);
+                    }
+                }
+            }
+
         }
     }
 
@@ -123,45 +172,95 @@ public class WaveBoom {
             if(getRect(x,y).getBoundsInParent().intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {
                 timeBombStart.set(bomb, (long) 0 );
             }
-            for(int stt = 1 ; stt <= lengthWave ; stt++) {
-                if(getRect((int) LEFT_IMG[stt-1].getLayoutX(), (int) LEFT_IMG[stt-1].getLayoutY()).getBoundsInParent()
+            for(int stt = 1 ; stt <= lengthLeft ; stt++) {
+                int xLocate = x - stt * Boom.Size + 5;
+                int yLocate = y + 10;
+                if(getRect(xLocate,yLocate).getBoundsInParent()
                         .intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {
                     timeBombStart.set(bomb , (long) 0);
                     break;
                 }
             }
-            for(int stt = 1 ; stt <= lengthWave ; stt++) {
-                if(getRect((int) RIGHT_IMG[stt-1].getLayoutX(), (int) RIGHT_IMG[stt-1].getLayoutY()).getBoundsInParent()
+            for(int stt = 1 ; stt <= lengthRight ; stt++) {
+                int xLocate = x + stt * Boom.Size + 5;
+                int yLocate = y + 10;
+                if(getRect(xLocate, yLocate).getBoundsInParent()
                         .intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {
                     timeBombStart.set(bomb , (long) 0);
                     break;
                 }
             }
-            for(int stt = 1 ; stt <= lengthWave ; stt++) {
-                if(getRect((int) DOWN_IMG[stt-1].getLayoutX(), (int) DOWN_IMG[stt-1].getLayoutY()).getBoundsInParent()
+            for(int stt = 1 ; stt <= lengthDown ; stt++) {
+                int xLocate = x + 5;
+                int yLocate = y + stt * Boom.Size - 5;
+                if(getRect(xLocate,yLocate).getBoundsInParent()
                         .intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {
                     timeBombStart.set(bomb , (long) 0);
                     break;
                 }
             }
-            for(int stt = 1 ; stt <= lengthWave ; stt++) {
-                if(getRect((int) UP_IMG[stt-1].getLayoutX(), (int) UP_IMG[stt-1].getLayoutY()).getBoundsInParent()
+            for(int stt = 1 ; stt <= lengthUp ; stt++) {
+                int xLocate = x + 5;
+                int yLocate = y - stt * Boom.Size + 5;
+                if(getRect(xLocate, yLocate).getBoundsInParent()
                         .intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {
                     timeBombStart.set(bomb , (long) 0);
                     break;
                 }
             }
         }
-
     }
 
-    public void update() {
-        for(int i = 0 ; i < lengthWave ; i++) {
-            pane.getChildren().remove(LEFT_IMG[i]);
-            pane.getChildren().remove(RIGHT_IMG[i]);
-            pane.getChildren().remove(UP_IMG[i]);
-            pane.getChildren().remove(DOWN_IMG[i]);
+    public void checkExplodeBoom_Enemy(ArrayList<Enemy> arrEnemy) {
+        for (int i = 0; i < arrEnemy.size(); i++) {
+            try {
+                if (getRect(x,y).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                    xEnemyDie = arrEnemy.get(i).getX();
+                    yEnemyDie = arrEnemy.get(i).getY();
+                    arrEnemy.remove(i);
+                }
+                for (int j = 1; j <= lengthLeft; j++) {
+                    int xRaw = x - j * Boom.Size + 5;
+                    int yRaw = y + 5;
+                    if (getRect(xRaw, yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                        xEnemyDie = arrEnemy.get(i).getX();
+                        yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.remove(i);
+                    }
+                }
+
+                for (int j = 1; j <= lengthRight; j++) {
+                    int xRaw = x + j * Boom.Size + 5;
+                    int yRaw = y + 5;
+                    if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                        xEnemyDie = arrEnemy.get(i).getX();
+                        yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.remove(i);
+                    }
+                }
+
+                for (int j = 1; j <= lengthUp; j++) {
+                    int xRaw = x + 5;
+                    int yRaw = y - j * Boom.Size + 5;
+                    if (!getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                        xEnemyDie = arrEnemy.get(i).getX();
+                        yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.remove(i);
+                    }
+                }
+
+                for (int j = 1; j <= lengthDown; j++) {
+                    int xRaw = x + 5;
+                    int yRaw = y + j * Boom.Size + 5;
+                    if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                        xEnemyDie = arrEnemy.get(i).getX();
+                        yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.remove(i);
+                    }
+                }
+
+            } catch (IndexOutOfBoundsException e) {
+            }
         }
-        pane.getChildren().remove(MID_IMG);
     }
 }

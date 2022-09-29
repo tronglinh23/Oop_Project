@@ -102,7 +102,7 @@ public class MainPlayer {
 
 
     public int getAmountBomb() { return this.amountBomb;}
-    public void setAmountBomb(int k) {this.amountBomb += k;}
+    public void setAmountBomb(int k) {this.amountBomb += k+1;}
 
     public Rectangle getRect() {
         Rectangle mainPlayer = new Rectangle(x + 10,y+25, size_player - 10, size_player - 15);
@@ -203,7 +203,6 @@ public class MainPlayer {
         y=yChange;
         boolean checkMapMove = checkMoveMap(arrTileMap);
         boolean checkMoveBomb = checkMoveBomb(arrBomb);
-
         if(checkMapMove) {
             x = xRaw;
             y = yRaw;
@@ -223,7 +222,6 @@ public class MainPlayer {
                     return true;
                 }
             }
-
         }
         return false;
     }

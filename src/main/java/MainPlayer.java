@@ -121,7 +121,7 @@ public class MainPlayer {
                 } else {
                     imageIndex++;
                     gc.drawImage(IMAGES_PLAYER_LEFT[imageIndex / 10 % IMAGES_PLAYER_LEFT.length], x, y, size_player + 5, size_player + 15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex / 7 % IMAGE_BONGMO.length], x + 35, y + 15, size_player, size_player);
+                    gc.drawImage(IMAGE_BONGMO[imageIndex / 10 % IMAGE_BONGMO.length], x + 35, y + 15, size_player, size_player);
                 }
                 break;
             case 2 :
@@ -130,7 +130,7 @@ public class MainPlayer {
                 } else {
                     imageIndex++;
                     gc.drawImage(IMAGES_PLAYER_RIGHT[imageIndex / 10 % IMAGES_PLAYER_RIGHT.length], x, y, size_player + 5, size_player + 15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex / 7 % IMAGE_BONGMO.length], x - 35, y + 15, size_player, size_player);
+                    gc.drawImage(IMAGE_BONGMO[imageIndex/10 % IMAGE_BONGMO.length], x - 35, y + 15, size_player, size_player);
                 }
                 break;
             case 3 :
@@ -140,7 +140,7 @@ public class MainPlayer {
                 else {
                     imageIndex++;
                     gc.drawImage(IMAGES_PLAYER_UP[imageIndex / 10 % IMAGES_PLAYER_UP.length], x, y,size_player+5,size_player+15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex/7% IMAGE_BONGMO.length],x,y+25,size_player,size_player);
+                    gc.drawImage(IMAGE_BONGMO[imageIndex/10 % IMAGE_BONGMO.length],x,y+25,size_player,size_player);
                 }
                 break;
             case 4 :
@@ -149,16 +149,13 @@ public class MainPlayer {
                 } else {
                     imageIndex++;
                     gc.drawImage(IMAGES_PLAYER_DOWN[imageIndex / 10 % IMAGES_PLAYER_LEFT.length], x, y,size_player+5,size_player+15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex/7% IMAGE_BONGMO.length],x,y-30,size_player,size_player);
+                    gc.drawImage(IMAGE_BONGMO[imageIndex/10 % IMAGE_BONGMO.length],x,y-30,size_player,size_player);
                 }
                 break;
-//            default:
-//                gc.drawImage(IMAGES_PLAYER_DOWN[0],x,y,size_player+5,size_player+15);
         }
-//        event = 0;
         isPlayerRun=false;
         imageIndex++;
-        gc.drawImage(IMAGES_HIEUUNG[imageIndex/7%IMAGES_HIEUUNG.length],x-5,y,size_player+20,size_player+20);
+        gc.drawImage(IMAGES_HIEUUNG[imageIndex/10 % IMAGES_HIEUUNG.length],x-5,y,size_player+20,size_player+20);
     }
 
     public void movePlayer(ArrayList<TileMap>arrTileMap, ArrayList<Boom> arrBomb, ArrayList<KeyCode> keyCodes) {

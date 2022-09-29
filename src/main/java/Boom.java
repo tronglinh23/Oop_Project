@@ -15,13 +15,35 @@ public class Boom {
     private Image boomIMG;
 
     private int isCheckBomb = 1;
-    private final static String BOOM_IMG = "Bomb/boom1.png";
+    private final static Image[] BOOM_IMG = {
+            ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_3.png"),
+    };
+
+    private final static Image[] BOOM_IMG_2 = {
+            ImageUtils.loadImage("src/main/resources/Bomb/boom_D_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom_D_2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom_D_3.png"),
+    };
+
+    private final static Image[] BOOM_IMG_3 = {
+            ImageUtils.loadImage("src/main/resources/Bomb/boom1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom3.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom4.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom5.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom6.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom7.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom8.png"),
+    };
+
+    private int imageAnimationStt = 0;
 
     public Boom(int x, int y, int length_boom) {
         this.x = x;
         this.y = y;
         this.length_boom = length_boom;
-        this.boomIMG = ImageUtils.loadImage("src/main/resources/Bomb/boom1.png");
     }
     public void setX(int x){
         this.x = x;
@@ -47,9 +69,9 @@ public class Boom {
         return rec;
     }
     public void draw(GraphicsContext gc){
-//        imageIndex++;
-//        image = IMAGE_BOOM[imageIndex/5 %IMAGE_BOOM.length];
-        gc.drawImage(boomIMG,x,y,Size,Size);
+        imageAnimationStt++;
+        boomIMG = BOOM_IMG_2[imageAnimationStt/10 % BOOM_IMG.length];
+        gc.drawImage(boomIMG, x, y, Size + 3, Size);
     }
 
     public Image getImageView() {return boomIMG;}

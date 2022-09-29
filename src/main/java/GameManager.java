@@ -46,7 +46,6 @@ public class GameManager {
     private final static int time_Bomb = 2;
     private final static int wave_Bomb = 1;
 
-
     public final Image MY_IMAGE= ImageUtils.loadImage("src/main/resources/images/background.jpg");
     public GameManager() {
 
@@ -147,12 +146,17 @@ public class GameManager {
             }
         }
     }
+
+    /**
+     * Update Image, move, time ...
+     */
     public void update() {
         player.movePlayer(arrTileMap,arrBoom,keyCodes);
         enemy.moveEnemy(arrTileMap);
         checkTimeBombExplode();
         bombBangTime();
     }
+
     public void addBombToPlayer(long time_start) {
         if(arrBoom.size() < player.getAmountBomb() + 2) {
             if(player.getIscoBomb(arrBoom)) {
@@ -164,6 +168,10 @@ public class GameManager {
             }
         }
     }
+
+    /**
+     * Render all image to screen.
+     */
     public void renderer() {
         createBackground();
 
@@ -175,7 +183,7 @@ public class GameManager {
         }
 
 
-        drawStage();
+        drawTileMap();
         for (Enemy enemy1 : arrEnemy) {
             enemy1.drawEnemy(gContext);
             enemy1.moveEnemy(arrTileMap);
@@ -183,15 +191,15 @@ public class GameManager {
         player.drawMainPlayer(gContext);
 
     }
-    public Stage getGameStage() {
-        return this.mainStage;
-    }
 
     public void createBackground() {
         gContext.drawImage(MY_IMAGE,0,0,WIDTH_SCREEN,HEIGHT_SCREEN);
     }
 
-    public void drawStage() {
+    /**
+     * Draw tileMap.
+     */
+    public void drawTileMap() {
         int i = 0;
         try {
             for(TileMap obstacle : arrTileMap) {
@@ -201,22 +209,28 @@ public class GameManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Read File Map.
+     * Lấy từng kí tự đẩy vào arraylist để draw.
+     */
     public void readTxtMap() {
-        File file = new File("src/main/resources/map/mapBoom.txt");
-        int countLine = 0;
         try {
+            File file = new File("src/main/resources/map/mapBoom.txt");
+            int countLine = 0;
             FileInputStream inputStream = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line = reader.readLine();
+
             while(line != null) {
-                for (int i = 0; i < line.length(); i++) {
-                    arrTileMap.add(new TileMap(i*TileMap.SIZE, countLine*TileMap.SIZE,
-                            Integer.parseInt(String.valueOf(line.charAt(i)))));
+                for (int chr = 0; chr < line.length(); chr++) {
+                    arrTileMap.add(new TileMap(chr*TileMap.SIZE, countLine*TileMap.SIZE,
+                            Integer.parseInt(String.valueOf(line.charAt(chr)))));
                 }
+
                 line = reader.readLine();
                 countLine++;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,3 +1,4 @@
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -7,6 +8,7 @@ import javafx.stage.Stage;
 
 import javax.lang.model.type.NullType;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class Enemy {
@@ -19,8 +21,22 @@ public class Enemy {
     private int locate;
 
     private int imageIndex;
+    private double moveHori;
+    private double moveVerti;
+    private int[][] mapHash;
+    private boolean canMoveR;
+    private boolean canMoveL;
+    private boolean canMoveU;
+    private boolean canMoveD;
+    private int status = LEFT;
 
     private Random random= new Random();
+
+    private int rnd = random.nextInt(4);
+
+    private boolean checkMapHash(int mapHash) {
+        return mapHash == 2;
+    }
 
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
@@ -72,42 +88,103 @@ public class Enemy {
     }
 
     public void moveEnemy(ArrayList<TileMap> arrTileMap) {
-        double xRaw = x;
-        double yRaw = y;
-        switch (orient) {
-            case LEFT:
-                xRaw -= (double) speed / 5;
-                break;
-            case RIGHT:
-                xRaw += (double) speed / 5;
-                break;
-            case UP:
-                yRaw -= (double) speed / 5;
-                break;
-            case DOWN:
-                yRaw += (double) speed / 5;
-            default:
-        }
-        double xChange = x;
-        double yChange = y;
-        x = xRaw;
-        y = yRaw;
-
-        boolean checkEnemyMove = checkMoveMap(arrTileMap);
-
-        if (checkEnemyMove) {
-            if (orient == LEFT) {
-                orient = RIGHT;
-            } else if (orient == RIGHT) {
-                orient = UP;
-            } else if (orient == UP) {
-                orient = DOWN;
-            } else {
-                orient = LEFT;
+//        double xRaw = x;
+//        double yRaw = y;
+//        switch (rnd) {
+//            case LEFT:
+//                xRaw -= (double) speed / 5;
+//                break;
+//            case RIGHT:
+//                xRaw += (double) speed / 5;
+//                break;
+//            case UP:
+//                yRaw -= (double) speed / 5;
+//                break;
+//            case DOWN:
+//                yRaw += (double) speed / 5;
+//            default:
+//        }
+//        double xChange = x;
+//        double yChange = y;
+//        x = xRaw;
+//        y = yRaw;
+//
+//        boolean checkEnemyMove = checkMoveMap(arrTileMap);
+//
+//        LinkedList<Integer> check = new LinkedList<>();
+//        if (checkEnemyMove) {
+//            if (rnd == RIGHT) {
+//                check.add(RIGHT);
+//                check.add(RIGHT);
+//            }
+//
+//        }
+        int j = (int) (x / 32);
+        int i = (int) (y / 32);
+        if (j * 32 == x && i * 32 == y) {
+            moveHori = 0;
+            moveVerti = 0;
+            canMoveR = checkMapHash(mapHash[i][j + 1]);
+            canMoveL = checkMapHash(mapHash[i][j - 1]);
+            canMoveU = checkMapHash(mapHash[i - 1][j]);
+            canMoveD = checkMapHash(mapHash[i + 1][j]);
+            LinkedList<Integer> check = new LinkedList<>();
+            if (canMoveR) {
+                if (orient == RIGHT) {
+                    check.add(RIGHT);
+                    check.add(RIGHT);
+                }
+                check.add(RIGHT);
+            }
+            if (canMoveL) {
+                if (orient == LEFT) {
+                    check.add(LEFT);
+                    check.add(LEFT);
+                }
+                check.add(LEFT);
+            }
+            if (canMoveU) {
+                if (orient == UP) {
+                    check.add(UP);
+                    check.add(UP);
+                }
+                check.add(UP);
+            }
+            if (canMoveD) {
+                if (orient == DOWN) {
+                    check.add(DOWN);
+                    check.add(DOWN);
+                }
+                check.add(DOWN);
+            }
+            if (check.size() > 0) {
+                Random r = new Random();
+                int ran = r.nextInt(check.size());
+                if (check.get(ran) == UP) {
+                    moveVerti = - speed;
+                    orient = UP;
+                }
+                if (check.get(ran) == DOWN) {
+                    moveVerti = speed;
+                    orient = DOWN;
+                }
+                if (check.get(ran) == RIGHT) {
+                    moveHori = speed;
+                    orient = RIGHT;
+                    status = RIGHT;
+                }
+                if (check.get(ran) == LEFT) {
+                    moveHori = - speed;
+                    orient = LEFT;
+                    status = LEFT;
+                }
             }
         }
-
+        x += moveHori;
+        y += moveVerti;
     }
+
+
 
     public boolean checkMoveMap(ArrayList<TileMap> arrtileMap) {
         for (TileMap tileMap : arrtileMap) {

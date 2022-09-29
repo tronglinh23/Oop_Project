@@ -76,7 +76,7 @@ public class GameManager {
         KeyCodeEvent = new ArrayList<>();
 
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
-        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0 );
+        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0);
         arrEnemy.add(enemy);
 
         readTxtMap();

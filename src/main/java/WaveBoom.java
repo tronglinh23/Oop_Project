@@ -15,7 +15,7 @@ public class WaveBoom {
 
     private double yEnemyDie;
 
-    private int imageCount=0;
+    private int imageIndex=0;
 
     private final Image[] WAVE_IMG = {ImageUtils.loadImage("src/main/resources/images/bombbang_left_1.png"),
                                         ImageUtils.loadImage("src/main/resources/images/bombbang_left_2.png"),
@@ -53,7 +53,8 @@ public class WaveBoom {
         drawDownWave(arrTileMap, gc);
         drawUpWave(arrTileMap, gc);
         if (xEnemyDie!=0 || yEnemyDie!=0) {
-            Image image= ENEMY_DIE[imageCount/50%ENEMY_DIE.length];
+            imageIndex++;
+            Image image = ENEMY_DIE[imageIndex/50%ENEMY_DIE.length];
             gc.drawImage(image, xEnemyDie, yEnemyDie);
         }
     }
@@ -179,7 +180,7 @@ public class WaveBoom {
                 }
             }
             for(int stt = 1 ; stt <= lengthRight ; stt++) {
-                int xLocate = x + stt * Boom.Size + 5;
+                int xLocate = x + stt * Boom.Size - 5;
                 int yLocate = y + 10;
                 if(getRect(xLocate, yLocate).getBoundsInParent()
                         .intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {

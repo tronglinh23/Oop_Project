@@ -80,7 +80,7 @@ public class GameManager {
 
 
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
-        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0 );
+        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0);
         arrEnemy.add(enemy);
         readTxtMap();
         createGameLoop();
@@ -262,7 +262,7 @@ public class GameManager {
      */
     public void readTxtMap() {
         try {
-            File file = new File("src/main/resources/map/mapBoom.txt");
+            File file = new File("src/main/resources/map/map1.txt");
             int countLine = 0;
             FileInputStream inputStream = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

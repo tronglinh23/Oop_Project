@@ -38,13 +38,13 @@ public class TileMap extends BaseObject{
     
     public void drawImageStage(GraphicsContext gc) {
         if(x == 0 && y == 0){
-            gc.drawImage(IMG_MAP_VIEW[9],x,y);
+            gc.drawImage(IMG_MAP_VIEW[9],x,y,SIZE,SIZE);
         } else if(x == 0 && y == 14 * SIZE) {
-            gc.drawImage(IMG_MAP_VIEW[11],x,y);
+            gc.drawImage(IMG_MAP_VIEW[11],x,y,SIZE,SIZE);
         } else if(x == 16 * SIZE && y == 0) {
-            gc.drawImage(IMG_MAP_VIEW[10],x,y);
+            gc.drawImage(IMG_MAP_VIEW[10],x,y,SIZE,SIZE);
         } else if(x == 16 * SIZE && y == 14 * SIZE) {
-            gc.drawImage(IMG_MAP_VIEW[12],x,y);
+            gc.drawImage(IMG_MAP_VIEW[12],x,y,SIZE,SIZE);
         } else if(locate_bit != 0) {
             gc.drawImage(IMG_MAP_VIEW[locate_bit - 1],x,y, SIZE + 2, SIZE + 2);
         }

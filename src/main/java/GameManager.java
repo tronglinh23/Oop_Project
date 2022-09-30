@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -18,14 +17,24 @@ public class GameManager {
     private static int WIDTH_SCREEN = 765;
     private static int HEIGHT_SCREEN = 675;
 
-    private ArrayList<KeyCode> keyCodes = new ArrayList<>();
+    private final static int time_Bomb = 2;
+
+    private final static int time_Wave_Bomb = 1;
+
+    private final static int time_Bomber_Die = 3;
+
+    private static long time_Start_Game;
+
+    private double time_Die_Player;
+
+    private final static String Title_game = "Boom";
+
     GraphicsContext gContext;
     Canvas canvas;
 
     private Stage menuStage;
     private Stage mainStage;
     private Scene mainScene;
-    private final static String Title_game = "Boom";
 
     private AnimationTimer gameTimer;
 
@@ -36,15 +45,11 @@ public class GameManager {
 
     private ArrayList<WaveBoom> arrWaveBoom;
     private ArrayList<Long> timeWaveBoom;
-
+    private ArrayList<KeyCode> keyCodes = new ArrayList<>();
 
     private MainPlayer player;
 //    private Enemy[] enemy = new Enemy[6];
     private Enemy enemy;
-
-    private ArrayList<Integer> KeyCodeEvent;
-    private final static int time_Bomb = 2;
-    private final static int wave_Bomb = 1;
 
     public final Image MY_IMAGE= ImageUtils.loadImage("src/main/resources/images/background.jpg");
     public GameManager() {
@@ -53,8 +58,9 @@ public class GameManager {
 
     public void createNewGame(Stage menuStage) {
         this.menuStage = menuStage;
-        this.menuStage.hide();
+        this.menuStage.close();
 
+        time_Start_Game = System.nanoTime();
 
         canvas = new Canvas(WIDTH_SCREEN,HEIGHT_SCREEN);
         gContext = canvas.getGraphicsContext2D();
@@ -72,25 +78,31 @@ public class GameManager {
         arrWaveBoom = new ArrayList<>();
         timeWaveBoom = new ArrayList<>();
 
-        KeyCodeEvent = new ArrayList<>();
 
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
         enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0 );
         arrEnemy.add(enemy);
-
         readTxtMap();
         createGameLoop();
         createKeyListeners();
         mainStage.show();
     }
+
+    /**
+     * Xử lí các thao tác trên bàn phím , các nút bấm
+     * Di chuyển nhân vật
+     */
     private void createKeyListeners() {
         mainScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
               @Override
               public void handle(KeyEvent keyEvent) {
                   KeyCode code = keyEvent.getCode();
-                  if (!keyCodes.contains(code)) keyCodes.add(code);
+                  if (!keyCodes.contains(code)) keyCodes.add(code); // nếu trong list keycode chưa có thì add
                   if(code == KeyCode.SPACE) {
                       addBombToPlayer(System.nanoTime());
+                  }
+                  if(code == KeyCode.DIGIT1) {
+                      player.setIsDie(false,0); // Item kim làm nổ bóng
                   }
               }
         });
@@ -99,7 +111,7 @@ public class GameManager {
             @Override
             public void handle(KeyEvent keyEvent) {
                 KeyCode code = keyEvent.getCode();
-                if (keyCodes.contains(code)) keyCodes.remove(code);
+                if (keyCodes.contains(code)) keyCodes.remove(code); // nếu trong list keycode  có thì remove
             }
         });
     }
@@ -117,6 +129,15 @@ public class GameManager {
         gameTimer.start();
 
     }
+
+    public void checkGameOver() {
+        if(MainPlayer.gameOver == true) {
+            mainStage.close();
+            gameTimer.stop();
+            menuStage.show();
+        }
+    }
+
     public void checkTimeBombExplode() {
         for(int i = 0 ; i < arrBoom.size() ; i++) {
             double time = (System.nanoTime() - TimeBombStart.get(i)) / Math.pow(10,9);
@@ -125,12 +146,13 @@ public class GameManager {
                 arrBoom.remove(i);
                 TimeBombStart.remove(i);
                 arrWaveBoom.add(waveBoom);
+
                 try {
                     waveBoom.checkExplodeBoom_Boom(arrBoom, TimeBombStart);
-                    waveBoom.checkExplodeBoom_Enemy(arrEnemy);
                 } catch (IndexOutOfBoundsException e) {
 
                 }
+
                 timeWaveBoom.add(System.nanoTime());
             }
         }
@@ -140,25 +162,34 @@ public class GameManager {
     public void bombBangTime () {
         for(int i = 0 ; i < timeWaveBoom.size() ; i++) {
             double k = (System.nanoTime() - timeWaveBoom.get(i)) / Math.pow(10,9);
-            if(k >= wave_Bomb) {
+            if(k >= time_Wave_Bomb) {
                 arrWaveBoom.remove(i);
                 timeWaveBoom.remove(i);
+            } else {
+                for (WaveBoom waveBoom : arrWaveBoom) {
+                    waveBoom.checkExplodeBoom_Enemy(arrEnemy);
+                    waveBoom.checkBoom_Player(player, System.nanoTime());
+                }
             }
+
         }
     }
+
 
     /**
      * Update Image, move, time ...
      */
     public void update() {
+        checkGameOver();
         player.movePlayer(arrTileMap,arrBoom,keyCodes);
         enemy.moveEnemy(arrTileMap);
         checkTimeBombExplode();
         bombBangTime();
     }
 
+
     public void addBombToPlayer(long time_start) {
-        if(arrBoom.size() < player.getAmountBomb() + 2) {
+        if(arrBoom.size() < player.getAmountBomb()) {
             if(player.getIscoBomb(arrBoom)) {
                 Boom boom = player.setupBoom();
                 arrBoom.add(boom);
@@ -182,14 +213,14 @@ public class GameManager {
             waveBoom.draw(arrTileMap, gContext);
         }
 
-
         drawTileMap();
+
         for (Enemy enemy1 : arrEnemy) {
             enemy1.drawEnemy(gContext);
             enemy1.moveEnemy(arrTileMap);
         }
-        player.drawMainPlayer(gContext);
 
+        drawPlayer();
     }
 
     public void createBackground() {
@@ -209,6 +240,21 @@ public class GameManager {
             e.printStackTrace();
         }
     }
+
+    public void drawPlayer() {
+        if(player.getIsDie()) {
+            time_Die_Player = (System.nanoTime() - player.getTimeBomberDie()) / Math.pow(10, 9);
+            if (time_Die_Player > time_Bomber_Die) {
+                player.drawBomberDie(gContext);
+            } else {
+                player.drawBomberDie_WaitItem(gContext);
+            }
+        } else {
+            player.drawMainPlayer(gContext);
+        }
+
+    }
+
 
     /**
      * Read File Map.

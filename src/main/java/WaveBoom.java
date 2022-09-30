@@ -15,8 +15,7 @@ public class WaveBoom {
 
     private double yEnemyDie;
 
-    private int imageIndex=0;
-
+    private int imageCount=0;
 
     private final Image[] WAVE_IMG = {ImageUtils.loadImage("src/main/resources/images/bombbang_left_1.png"),
                                         ImageUtils.loadImage("src/main/resources/images/bombbang_left_2.png"),
@@ -54,8 +53,8 @@ public class WaveBoom {
         drawDownWave(arrTileMap, gc);
         drawUpWave(arrTileMap, gc);
         if (xEnemyDie!=0 || yEnemyDie!=0) {
-            imageIndex++;
-            Image image = ENEMY_DIE[imageIndex/50%ENEMY_DIE.length];
+            imageCount++;
+            Image image = ENEMY_DIE[imageCount/50%ENEMY_DIE.length];
             gc.drawImage(image, xEnemyDie, yEnemyDie);
         }
     }
@@ -262,4 +261,42 @@ public class WaveBoom {
             }
         }
     }
+    
+    public void checkBoom_Player(MainPlayer mainPlayer, long time) {
+        if (getRect(x,y).getBoundsInParent().intersects(mainPlayer.getRect().getBoundsInParent())) {
+            mainPlayer.setIsDie(true,time);
+        }
+        for (int j = 1; j <= lengthLeft; j++) {
+            int xRaw = x - j * Boom.Size + 5;
+            int yRaw = y + 5;
+            if (getRect(xRaw + 5, yRaw + 5).getBoundsInParent().intersects(mainPlayer.getRect().getBoundsInParent())) {
+                mainPlayer.setIsDie(true,time);
+            }
+        }
+
+        for (int j = 1; j <= lengthRight; j++) {
+            int xRaw = x + j * Boom.Size + 5;
+            int yRaw = y + 5;
+            if (getRect(xRaw,yRaw).getBoundsInParent().intersects(mainPlayer.getRect().getBoundsInParent())) {
+                mainPlayer.setIsDie(true,time);
+            }
+        }
+
+        for (int j = 1; j <= lengthUp; j++) {
+            int xRaw = x + 5;
+            int yRaw = y - j * Boom.Size + 5;
+            if (getRect(xRaw,yRaw).getBoundsInParent().intersects(mainPlayer.getRect().getBoundsInParent())) {
+                mainPlayer.setIsDie(true,time);
+            }
+        }
+
+        for (int j = 1; j <= lengthDown; j++) {
+            int xRaw = x + 5;
+            int yRaw = y + j * Boom.Size + 5;
+            if (getRect(xRaw, yRaw).getBoundsInParent().intersects(mainPlayer.getRect().getBoundsInParent())) {
+                mainPlayer.setIsDie(true,time);
+            }
+        }
+    }
+
 }

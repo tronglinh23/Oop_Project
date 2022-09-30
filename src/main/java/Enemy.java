@@ -24,6 +24,7 @@ public class Enemy {
 
     private int imageIndex;
     private Random random = new Random();
+    private int imageCount;
 
     public static final int LEFT = 0;
     public static final int RIGHT = 1;

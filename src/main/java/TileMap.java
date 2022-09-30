@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import java.util.ArrayList;
 
-public class TileMap {
+public class TileMap extends BaseObject{
     private final static Image[] IMG_MAP_VIEW = {
             ImageUtils.loadImage("src/main/resources/TileMapBox/goccay1.png"),
             ImageUtils.loadImage("src/main/resources/TileMapBox/cay1.png"),
@@ -23,35 +23,16 @@ public class TileMap {
             ImageUtils.loadImage("src/main/resources/TileMapBox/gocDuoiPhai.png"),
     };
 
-    private int x;
-    private int y;
     public int locate_bit;
     public static final int SIZE = 45;
 
     public TileMap(int x ,int y, int locate_bit) {
-        this.x = x;
-        this.y = y;
+        super(x,y);
         this.locate_bit = locate_bit;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public Rectangle getRect() {
-        Rectangle rectangle = new Rectangle(x + 5, y + 15, SIZE - 10, SIZE - 10);
+        Rectangle rectangle = new Rectangle(x + 5, y + 5, SIZE - 10, SIZE - 10);
         return  rectangle;
     }
     

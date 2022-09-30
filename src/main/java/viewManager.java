@@ -75,6 +75,7 @@ public class viewManager {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                System.out.println(1);
                 GameManager gameStage = new GameManager();
                 gameStage.createNewGame(mainStage);
             }

@@ -262,7 +262,7 @@ public class GameManager {
      */
     public void readTxtMap() {
         try {
-            File file = new File("src/main/resources/map/mapBoom.txt");
+            File file = new File("src/main/resources/map/map1.txt");
             int countLine = 0;
             FileInputStream inputStream = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

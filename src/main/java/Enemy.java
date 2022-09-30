@@ -18,44 +18,35 @@ public class Enemy {
     private double y;
     private int speed = 1;
     private int orient;
-    private final int size_enemy = 50;
+    private final int size_enemy = 45;
     private Image enemy;
-    private int locate;
-
-    private int imageIndex;
     private Random random = new Random();
-    private int imageCount;
-
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
     public static final int UP = 2;
     public static final int DOWN = 3;
 
     public final Image[] MY_ENEMY={
-            ImageUtils.loadImage("src/main/resources/images/boss_left.png"),
-            ImageUtils.loadImage("src/main/resources/images/boss_right.png"),
-            ImageUtils.loadImage("src/main/resources/images/boss_up.png"),
-            ImageUtils.loadImage("src/main/resources/images/boss_down.png")
+            ImageUtils.loadImage("src/main/resources/Enemy/ghost_left.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/ghost_right.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/ghost_up.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/ghost_down.png")
     };
-
     public Enemy(int x, int y, int orient) {
         this.x = x;
         this.y = y;
         this.orient = orient;
-    }
-
-    public Enemy() {
-
+        enemy = MY_ENEMY[0];
     }
 
     Rectangle getRect() {
-        Rectangle theEnemy = new Rectangle(x + 10,y + 25, size_enemy - 10, size_enemy - 10);
+        Rectangle theEnemy = new Rectangle(x + 10,y+15, size_enemy - 10, size_enemy - 15);
         return theEnemy;
     }
 
-    public void creatOrient() {
-        int rnd = random.nextInt(100);
-        if (rnd > 95) {
+    public void createOrient() {
+        int rnd = random.nextInt(20);
+        if (rnd > 15) {
             int newOrient = random.nextInt(4);
             setOrient(newOrient);
             enemy = MY_ENEMY[newOrient];
@@ -87,48 +78,46 @@ public class Enemy {
     }
 
     public void drawEnemy(GraphicsContext gc) {
-        enemy = ImageUtils.loadImage("src/main/resources/images/boss_ donw_1.png");
         gc.drawImage(enemy, x, y, size_enemy, size_enemy);
     }
 
     public void moveEnemy(ArrayList<TileMap> arrTileMap) {
-        double xRaw = x;
-        double yRaw = y;
-        switch (orient) {
-            case LEFT:
-                xRaw -= (double) speed / 5;
-                break;
-            case RIGHT:
-                xRaw += (double) speed / 5;
-                break;
-            case UP:
-                yRaw -= (double) speed / 5;
-                break;
-            case DOWN:
-                yRaw += (double) speed / 5;
-            default:
-        }
         double xChange = x;
         double yChange = y;
-        x = xRaw;
-        y = yRaw;
+        switch (orient) {
+            case LEFT:
+                xChange -= (double) speed / 4;
+                break;
+            case RIGHT:
+                xChange += (double) speed / 4;
+                break;
+            case UP:
+                yChange -= (double) speed / 4;
+                break;
+            case DOWN:
+                yChange += (double) speed / 4;
+            default:
+        }
+        double xRaw = x;
+        double yRaw = y;
+        x = xChange;
+        y = yChange;
 
         boolean checkEnemyMove = checkMoveMap(arrTileMap);
 
         if (checkEnemyMove) {
-            x = xChange;
-            y = yChange;
-            creatOrient();
+            x = xRaw;
+            y = yRaw;
+            createOrient();
         }
-
     }
 
 
 
-    public boolean checkMoveMap(ArrayList<TileMap> arrtileMap) {
-        for (TileMap tileMap : arrtileMap) {
-            if (tileMap.locate_bit == 5 || tileMap.locate_bit == 1 || tileMap.locate_bit == 2 ||
-                tileMap.locate_bit == 3 || tileMap.locate_bit == 4 || tileMap.locate_bit == 6 ||
+    public boolean checkMoveMap(ArrayList<TileMap> arrTileMap) {
+        for (TileMap tileMap : arrTileMap) {
+            if (tileMap.locate_bit == 1 || tileMap.locate_bit == 2 || tileMap.locate_bit == 3 ||
+                tileMap.locate_bit == 4 || tileMap.locate_bit == 5 || tileMap.locate_bit == 6 ||
                 tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
                 if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
                     return true;

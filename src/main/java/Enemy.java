@@ -18,7 +18,7 @@ public class Enemy {
     private Image enemy;
     private int locate;
 
-    private int imageIndex;
+    private int imageCount;
 
     private Random random= new Random();
 

@@ -9,25 +9,28 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 
-public class MainPlayer {
-    private int x;
-    private int y;
+public class MainPlayer extends BaseObject{
+    public static boolean gameOver;
 
-    private int soBoom = 2;
-    private int speed = 2;
-    private boolean isPlayerRun = false;
+    private int soBoom;
+    private int speed;
+    private boolean isPlayerRun;
 
-    private final int LEFT=1;
-    private final int RIGHT=2;
-    private final int UP=3;
-    private final int DOWN=4;
     private final int size_player = 45;
 
-    private int amountBomb = 2;
+    private int amountBomb;
 
-    private static boolean isCoBombSan = false;
-    private int imageIndex = 0;
-    private int event = 4;
+    private static boolean isCoBombSan;
+    
+    private int imageCount;
+    private int imageDieCount;
+
+    private int event;
+
+    private boolean isDie;
+
+    private Long timeBomberDie;
+
 
 
     public final Image[] IMAGE_BONGMO = {
@@ -40,15 +43,23 @@ public class MainPlayer {
             ImageUtils.loadImage("src/main/resources/images/BM_7.png"),
     };
 
-    public final Image[] IMAGES_HIEUUNG = {
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_11.png"),
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_12.png"),
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_13.png"),
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_14.png"),
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_15.png"),
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_16.png"),
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_17.png"),
-            ImageUtils.loadImage("src/main/resources/images/hieuUng_18.png"),
+    public final Image[] IMG_LUA_EFFECT = {
+            ImageUtils.loadImage("src/main/resources/images/lua_1.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_2.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_3.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_4.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_5.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_6.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_7.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_8.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_9.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_10.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_11.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_12.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_13.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_14.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_15.png"),
+            ImageUtils.loadImage("src/main/resources/images/lua_16.png"),
     };
     public final Image[] IMAGES_PLAYER_LEFT= {
             ImageUtils.loadImage("src/main/resources/images/player_left_1.png"),
@@ -81,36 +92,66 @@ public class MainPlayer {
             ImageUtils.loadImage("src/main/resources/images/player_down_5.png"),
     };
 
+    public final Image[] IMG_BOMBER_DIE_TIME = {
+            ImageUtils.loadImage("src/main/resources/Bomberdie/bomber_dead_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomberdie/bomber_dead_2.png"),
+    };
+
+    public final Image[] IMG_BOMBER_DIE = {
+            ImageUtils.loadImage("src/main/resources/Bomberdie/boomber_die_01.png"),
+            ImageUtils.loadImage("src/main/resources/Bomberdie/boomber_die_02.png"),
+            ImageUtils.loadImage("src/main/resources/Bomberdie/boomber_die_03.png"),
+            ImageUtils.loadImage("src/main/resources/Bomberdie/boomber_die_04.png"),
+            ImageUtils.loadImage("src/main/resources/Bomberdie/boomber_die_04.png"),
+    };
+
     public MainPlayer(int x, int y) {
-        this.x = x;
-        this.y = y;
+        super(x,y);
+        gameOver = false;
+        soBoom = 2;
+        speed = 2;
+        isPlayerRun = false;
+        amountBomb = 2;
+        isCoBombSan = false;
+        imageCount = 0;
+        imageDieCount = 0;
+        isDie = false;
+        event = 4;
     }
-
-    public void setX(int x){
-        this.x = x;
+    public void setIsDie(boolean isDie, long time) {
+        this.isDie = isDie;
+        if(isDie) {
+            this.isPlayerRun = false;
+            this.timeBomberDie = time;
+        }
     }
-    public int getX() {
-        return this.x;
+    public Long getTimeBomberDie() {
+        return this.timeBomberDie;
     }
-
-    public void setY(int y){
-        this.y = y;
-    }
-    public int getY() {
-        return this.y;
-    }
-
+    public boolean getIsDie() {return this.isDie;}
 
     public int getAmountBomb() { return this.amountBomb;}
-    public void setAmountBomb(int k) {this.amountBomb += k+1;}
+    public void setAmountBomb() {this.amountBomb += 1;}
 
     public Rectangle getRect() {
-        Rectangle mainPlayer = new Rectangle(x + 10,y+25, size_player - 10, size_player - 15);
+        Rectangle mainPlayer = new Rectangle(x + 10,y+15, size_player - 10, size_player - 15);
         return mainPlayer;
     }
 
     public boolean isRun() {
         return isPlayerRun;
+    }
+    
+    public void drawBomberDie(GraphicsContext gc) {
+        gc.drawImage(IMG_BOMBER_DIE[imageDieCount / 10 % IMG_BOMBER_DIE.length], x - 5, y - 5);
+        if(IMG_BOMBER_DIE[imageDieCount / 10 % IMG_BOMBER_DIE.length] == IMG_BOMBER_DIE[IMG_BOMBER_DIE.length - 1]) {
+            gameOver = true;
+        }
+        imageDieCount++;
+    }
+    public void drawBomberDie_WaitItem(GraphicsContext gc) {
+        gc.drawImage(IMG_BOMBER_DIE_TIME[imageCount / 10 % IMG_BOMBER_DIE_TIME.length], x - 5, y - 5);
+        imageCount++;
     }
     public void drawMainPlayer(GraphicsContext gc) {
 
@@ -119,18 +160,18 @@ public class MainPlayer {
                 if (!isRun()){
                     gc.drawImage(IMAGES_PLAYER_LEFT[0],x,y,size_player+5,size_player+15);
                 } else {
-                    imageIndex++;
-                    gc.drawImage(IMAGES_PLAYER_LEFT[imageIndex / 10 % IMAGES_PLAYER_LEFT.length], x, y, size_player + 5, size_player + 15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex / 10 % IMAGE_BONGMO.length], x + 35, y + 15, size_player, size_player);
+                    imageCount++;
+                    gc.drawImage(IMAGES_PLAYER_LEFT[imageCount / 10 % IMAGES_PLAYER_LEFT.length], x, y, size_player + 5, size_player + 15);
+                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x + 35, y + 15, size_player, size_player);
                 }
                 break;
             case 2 :
                 if (!isRun()){
                     gc.drawImage(IMAGES_PLAYER_RIGHT[0],x,y,size_player+5,size_player+15);
                 } else {
-                    imageIndex++;
-                    gc.drawImage(IMAGES_PLAYER_RIGHT[imageIndex / 10 % IMAGES_PLAYER_RIGHT.length], x, y, size_player + 5, size_player + 15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex/10 % IMAGE_BONGMO.length], x - 35, y + 15, size_player, size_player);
+                    imageCount++;
+                    gc.drawImage(IMAGES_PLAYER_RIGHT[imageCount / 10 % IMAGES_PLAYER_RIGHT.length], x, y, size_player + 5, size_player + 15);
+                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x - 35, y + 15, size_player, size_player);
                 }
                 break;
             case 3 :
@@ -138,79 +179,81 @@ public class MainPlayer {
                     gc.drawImage(IMAGES_PLAYER_UP[0],x,y,size_player+5,size_player+15);
                 }
                 else {
-                    imageIndex++;
-                    gc.drawImage(IMAGES_PLAYER_UP[imageIndex / 10 % IMAGES_PLAYER_UP.length], x, y,size_player+5,size_player+15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex/10 % IMAGE_BONGMO.length],x,y+25,size_player,size_player);
+                    imageCount++;
+                    gc.drawImage(IMAGES_PLAYER_UP[imageCount / 10 % IMAGES_PLAYER_UP.length], x, y,size_player+5,size_player+15);
+                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length],x,y+25,size_player,size_player);
                 }
                 break;
             case 4 :
                 if (!isRun()){
                     gc.drawImage(IMAGES_PLAYER_DOWN[0],x,y,size_player+5,size_player+15);
                 } else {
-                    imageIndex++;
-                    gc.drawImage(IMAGES_PLAYER_DOWN[imageIndex / 10 % IMAGES_PLAYER_LEFT.length], x, y,size_player+5,size_player+15);
-                    gc.drawImage(IMAGE_BONGMO[imageIndex/10 % IMAGE_BONGMO.length],x,y-30,size_player,size_player);
+                    imageCount++;
+                    gc.drawImage(IMAGES_PLAYER_DOWN[imageCount / 10 % IMAGES_PLAYER_LEFT.length], x, y,size_player+5,size_player+15);
+                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x,y-30,size_player,size_player);
                 }
                 break;
         }
+        gc.drawImage(IMG_LUA_EFFECT[imageCount/10 % IMG_LUA_EFFECT.length],x-5,y,size_player+20,size_player+20);
         isPlayerRun=false;
-        imageIndex++;
-        gc.drawImage(IMAGES_HIEUUNG[imageIndex/10 % IMAGES_HIEUUNG.length],x-5,y,size_player+20,size_player+20);
+        imageCount++;
     }
 
     public void movePlayer(ArrayList<TileMap>arrTileMap, ArrayList<Boom> arrBomb, ArrayList<KeyCode> keyCodes) {
+        if(!isDie) {
+            int xChange = this.x;
+            int yChange = this.y;
 
-        int xChange = this.x;
-        int yChange = this.y;
+            if(keyCodes.contains(KeyCode.LEFT)) {
+                xChange -= speed;
+                event = Move.LEFT.getIndex();
+                isPlayerRun = true;
+            }
 
-        if(keyCodes.contains(KeyCode.LEFT)) {
-            xChange -= speed;
-            event = LEFT;
-            isPlayerRun = true;
-        }
+            if (keyCodes.contains(KeyCode.RIGHT)) {
+                xChange += speed;
+                event = Move.RIGHT.getIndex();
+                isPlayerRun = true;
+            }
 
-        if (keyCodes.contains(KeyCode.RIGHT)) {
-            xChange += speed;
-            event = RIGHT;
-            isPlayerRun = true;
-        }
+            if (keyCodes.contains(KeyCode.UP)) {
+                yChange -= speed;
+                event = Move.UP.getIndex();
+                isPlayerRun = true;
+            }
 
-        if (keyCodes.contains(KeyCode.UP)) {
-            yChange -= speed;
-            event = UP;
-            isPlayerRun = true;
-        }
+            if (keyCodes.contains(KeyCode.DOWN)) {
+                yChange += speed;
+                event = Move.DOWN.getIndex();
+                isPlayerRun = true;
+            }
 
-        if (keyCodes.contains(KeyCode.DOWN)) {
-            yChange += speed;
-            event = DOWN;
-            isPlayerRun = true;
-        }
+            if (!keyCodes.contains(KeyCode.DOWN)
+                    && !keyCodes.contains(KeyCode.UP)
+                    && !keyCodes.contains(KeyCode.LEFT)
+                    && !keyCodes.contains(KeyCode.RIGHT)) {
+                isPlayerRun = false;
+            }
 
-        if (!keyCodes.contains(KeyCode.DOWN)
-                && !keyCodes.contains(KeyCode.UP)
-                && !keyCodes.contains(KeyCode.LEFT)
-                && !keyCodes.contains(KeyCode.RIGHT)) {
-            isPlayerRun = false;
-        }
+            int xRaw=x;
+            int yRaw=y;
+            x=xChange;
+            y=yChange;
+            boolean collisionMap = checkCollisionMap(arrTileMap);
+            boolean collisionBomb = checkCollisionBomb(arrBomb);
 
-        int xRaw=x;
-        int yRaw=y;
-        x=xChange;
-        y=yChange;
-        boolean checkMapMove = checkMoveMap(arrTileMap);
-        boolean checkMoveBomb = checkMoveBomb(arrBomb);
-        if(checkMapMove) {
-            x = xRaw;
-            y = yRaw;
-        }
-        if(checkMoveBomb) {
-            x = xRaw;
-            y = yRaw;
+            if(collisionMap) {
+                x = xRaw;
+                y = yRaw;
+            }
+            if(collisionBomb) {
+                x = xRaw;
+                y = yRaw;
+            }
         }
     }
 
-    public boolean checkMoveMap(ArrayList<TileMap>arrTileMap) {
+    public boolean checkCollisionMap(ArrayList<TileMap>arrTileMap) {
         for(TileMap tileMap : arrTileMap) {
             if(tileMap.locate_bit == 1 || tileMap.locate_bit == 2 || tileMap.locate_bit == 3 ||
                     tileMap.locate_bit == 4 || tileMap.locate_bit == 5 || tileMap.locate_bit == 6 ||
@@ -223,6 +266,11 @@ public class MainPlayer {
         return false;
     }
 
+    /**
+     * Kiểm tra xem ở vị trí đấy đã có bomb chưa, có rồi thì không thêm vào.
+     * @param arrBoom array Bombs
+     * @return true/false
+     */
     public boolean getIscoBomb(ArrayList<Boom> arrBoom) {
         for (Boom boom : arrBoom) {
             if (getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())) {
@@ -247,7 +295,7 @@ public class MainPlayer {
             }
         }
     }
-    public boolean checkMoveBomb(ArrayList<Boom> arrBoom) {
+    public boolean checkCollisionBomb(ArrayList<Boom> arrBoom) {
         setMoveBomb(arrBoom);
         for (Boom boom : arrBoom) {
             if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent()) && boom.getIsCheckBomb() == 0) {

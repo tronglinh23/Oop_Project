@@ -1,11 +1,7 @@
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import java.util.ArrayList;
 
 
@@ -198,6 +194,16 @@ public class MainPlayer extends BaseObject{
         isPlayerRun=false;
         imageCount++;
     }
+
+    public boolean checkEnemy_Player(ArrayList<Enemy> arrEnemy){
+        for (int i=0;i<arrEnemy.size();i++){
+            if (getRect().getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void movePlayer(ArrayList<TileMap>arrTileMap, ArrayList<Boom> arrBomb, ArrayList<KeyCode> keyCodes) {
         if(!isDie) {

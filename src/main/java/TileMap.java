@@ -1,10 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import java.util.ArrayList;
 
 public class TileMap extends BaseObject{
     private final static Image[] IMG_MAP_VIEW = {

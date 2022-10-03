@@ -42,16 +42,16 @@ public class WaveBoom {
     }
 
     public Rectangle getRect(int x, int y) {
-        Rectangle rec = new Rectangle(x + 5, y + 5, Boom.Size - 10, Boom.Size - 10);
+        Rectangle rec = new Rectangle(x + 5, y + 5, Boom.Size - 20, Boom.Size - 20);
         return rec;
     }
 
     public void draw(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
+        drawMidWave(arrTileMap, gc);
         drawLeftWave(arrTileMap, gc);
         drawRightWave(arrTileMap, gc);
-        drawMidWave(arrTileMap, gc);
-        drawDownWave(arrTileMap, gc);
         drawUpWave(arrTileMap, gc);
+        drawDownWave(arrTileMap, gc);
         if (xEnemyDie!=0 || yEnemyDie!=0) {
             imageIndex++;
             Image image = ENEMY_DIE[imageIndex/50%ENEMY_DIE.length];
@@ -62,7 +62,7 @@ public class WaveBoom {
     private void drawLeftWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
         for(int stt = 1 ; stt <= lengthLeft ; stt++) {
             int xLocate = x - stt * Boom.Size + 5;
-            int yLocate = y + 10;
+            int yLocate = y + 5;
             if(stt == lengthLeft) {
                 gc.drawImage(WAVE_IMG[1],xLocate, yLocate);
             } else {
@@ -86,10 +86,10 @@ public class WaveBoom {
 
     private void drawRightWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
         for(int stt = 1 ; stt <= lengthRight ; stt++) {
-            int xLocate = x + stt * Boom.Size - 5;
-            int yLocate = y + 10;
+            int xLocate = x + stt * Boom.Size + 5;
+            int yLocate = y + 5;
             if(stt == lengthRight) {
-                gc.drawImage(WAVE_IMG[3],xLocate, yLocate, Boom.Size + 10, Boom.Size);
+                gc.drawImage(WAVE_IMG[3],xLocate, yLocate);
             } else {
                 gc.drawImage(WAVE_IMG[2],xLocate, yLocate);
             }
@@ -111,15 +111,15 @@ public class WaveBoom {
 
 
     private void drawMidWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
-        gc.drawImage(WAVE_IMG[4],x + 5, y + 5);
+        gc.drawImage(WAVE_IMG[4],x + 5 ,y + 5);
     }
 
     private void drawDownWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
         for(int stt = 1 ; stt <= lengthDown ; stt++) {
             int xLocate = x + 5;
-            int yLocate = y + stt * Boom.Size - 5;
+            int yLocate = y + stt * Boom.Size;
             if(stt == lengthDown) {
-                gc.drawImage(WAVE_IMG[6],xLocate, yLocate + 5, Boom.Size, Boom.Size + 10);
+                gc.drawImage(WAVE_IMG[6],xLocate, yLocate);
             } else {
                 gc.drawImage(WAVE_IMG[5],xLocate, yLocate);
             }

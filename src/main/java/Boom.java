@@ -57,8 +57,8 @@ public class Boom extends BaseObject{
     public Image getImageView() {return boomIMG;}
 
     public WaveBoom boomBang() {
-        int locateX = x - 5;
-        int locateY = y - 5;
+        int locateX = (int)x - 5;
+        int locateY = (int)y - 5;
         WaveBoom waveBoom = new WaveBoom(locateX, locateY, length_boom);
         return waveBoom;
     };

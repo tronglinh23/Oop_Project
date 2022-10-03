@@ -80,6 +80,8 @@ public class viewManager {
                 Clip start = SoundLoad.getSoundVolume(getClass().getResource("sounds/start.wav"), 0);
                 start.start();
                 GameManager gameStage = new GameManager();
+                GameManager.level_Game = 0; // khoi tao bien static
+                TileMap.levelGame = 0; // khoi tao bien static
                 gameStage.createNewGame(mainStage);
             }
         });

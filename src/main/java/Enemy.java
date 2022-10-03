@@ -5,9 +5,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Enemy {
-    private double x;
-    private double y;
+public class Enemy extends BaseObject{
     private int speed = 1;
     private int orient;
     private final int size_enemy = 45;
@@ -56,13 +54,12 @@ public class Enemy {
             ImageUtils.loadImage("src/main/resources/Enemy/ghost_down.png")
     };
     public Enemy(int x, int y, int orient) {
-        this.x = x;
-        this.y = y;
+        super(x,y);
         this.orient = orient;
         enemy = MY_ENEMY[0];
     }
 
-    Rectangle getRect() {
+    public Rectangle getRect() {
         Rectangle theEnemy = new Rectangle(x + 10,y+15, size_enemy - 10, size_enemy - 15);
         return theEnemy;
     }
@@ -74,22 +71,6 @@ public class Enemy {
             setOrient(newOrient);
             enemy = MY_ENEMY[newOrient];
         }
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getX() {
-        return this.x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getY() {
-        return this.y;
     }
 
     public void setOrient(int orient) {

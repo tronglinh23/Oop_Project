@@ -9,7 +9,7 @@ public class MainPlayer extends BaseObject{
     public static boolean gameOver;
 
     private int soBoom;
-    private int speed;
+    private double speed;
 
     private int lengthBomb;
 
@@ -109,7 +109,7 @@ public class MainPlayer extends BaseObject{
         super(x,y);
         gameOver = false;
         soBoom = 2;
-        speed = 2;
+        speed = 1.5;
         lengthBomb = 1;
         kim = 0;
         isPlayerRun = false;
@@ -138,7 +138,7 @@ public class MainPlayer extends BaseObject{
     public int getLengthBomb() {return this.lengthBomb;}
     public void setLengthBomb() {this.lengthBomb += 1;}
 
-    public void setSpeed() {this.speed += 1;}
+    public void setSpeed() {this.speed += 0.5;}
 
     public void setKim(int k) {this.kim += k;}
     public int getKim() {return this.kim;}
@@ -221,8 +221,8 @@ public class MainPlayer extends BaseObject{
 
     public void movePlayer(ArrayList<TileMap>arrTileMap, ArrayList<Boom> arrBomb, ArrayList<KeyCode> keyCodes) {
         if(!isDie) {
-            int xChange = this.x;
-            int yChange = this.y;
+            double xChange = this.x;
+            double yChange = this.y;
 
             if(keyCodes.contains(KeyCode.LEFT)) {
                 xChange -= speed;
@@ -255,8 +255,8 @@ public class MainPlayer extends BaseObject{
                 isPlayerRun = false;
             }
 
-            int xRaw=x;
-            int yRaw=y;
+            double xRaw=x;
+            double yRaw=y;
             x=xChange;
             y=yChange;
             boolean collisionMap = checkCollisionMap(arrTileMap);
@@ -334,8 +334,8 @@ public class MainPlayer extends BaseObject{
      * ngược lại nếu nghiêng về phải hơn thì bomb sẽ đc đặt sang bên phải.
      */
     public Boom setupBoom() {
-        int xRaw = this.x + Boom.Size/2;
-        int yRaw = this.y + Boom.Size/2;
+        int xRaw = (int)this.x + Boom.Size/2;
+        int yRaw = (int)this.y + Boom.Size/2;
         int locateX = xRaw - xRaw % Boom.Size;
         int locateY = yRaw - yRaw % Boom.Size;
         Boom bomb = new Boom(locateX, locateY, lengthBomb);

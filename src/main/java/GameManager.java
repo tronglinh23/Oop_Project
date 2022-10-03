@@ -13,6 +13,7 @@ import javax.sound.sampled.Clip;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class GameManager {
     private static int WIDTH_SCREEN = 945;
@@ -31,6 +32,24 @@ public class GameManager {
     private double time_Die_Player;
 
     private final static String Title_game = "Boom Online";
+
+    // khoi tao scene theo level
+    public static int level_Game = 0;
+    public static boolean is_check = false;
+    private final String[] sound_Game = {
+            "sounds/gameplay1.wav",
+            "sounds/gameplay2.wav"
+    };
+    private final String[] background_Game = {
+            "src/main/resources/images/background.jpg",
+            "src/main/resources/images/background2.png"
+    };
+    private final String[] map_Game = {
+            "src/main/resources/map1/map1.txt",
+            "src/main/resources/map2/map2.txt"
+    };
+
+
 
     GraphicsContext gContext;
     Canvas canvas;
@@ -60,7 +79,7 @@ public class GameManager {
     ArrayList<Pair<Integer,Integer>> ranDomLocate;
     Clip soundGame;
 
-    public final Image MY_IMAGE= ImageUtils.loadImage("src/main/resources/images/background2.png");
+    public final Image MY_IMAGE= ImageUtils.loadImage(background_Game[level_Game]);
     public GameManager() {
 
     }
@@ -92,28 +111,14 @@ public class GameManager {
         ranDomLocate = new ArrayList<>();
 
         readTxtMap();
-
-        // Random vi tri cho items
-        int x1 = autoRandomLocate();
-        arrItemGame.add(new ItemGame(ranDomLocate.get(x1).getKey(),ranDomLocate.get(x1).getValue(), 0));
-        ranDomLocate.remove(x1);
-        int x2 = autoRandomLocate();
-        arrItemGame.add(new ItemGame(ranDomLocate.get(x2).getKey(),ranDomLocate.get(x2).getValue(),1));
-        ranDomLocate.remove(x2);
-        int x3 = autoRandomLocate();
-        arrItemGame.add(new ItemGame(ranDomLocate.get(x3).getKey(),ranDomLocate.get(x3).getValue(),2));
-        ranDomLocate.remove(x3);
-        int x4 = autoRandomLocate();
-        arrItemGame.add(new ItemGame(ranDomLocate.get(x4).getKey(),ranDomLocate.get(x4).getValue(),3));
-        ranDomLocate.remove(x4);
-
+        createLocateRanDomItem();
         //Load sound game
-        soundGame = SoundLoad.getSoundVolume(getClass().getResource("sounds/gameplay2.wav"), -5);
+        soundGame = SoundLoad.getSoundVolume(getClass().getResource(sound_Game[level_Game]), -5);
         soundGame.loop(10);
         soundGame.start();
 
-        //player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
-        player = new MainPlayer(45,45);
+        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
+//        player = new MainPlayer(45,45);
         enemy[0] = new Enemy(45, 585,0);
         enemy[1] = new Enemy(675,45, 0);
         enemy[2] = new Enemy(675,585,0);
@@ -131,6 +136,27 @@ public class GameManager {
         int x = random.nextInt(ranDomLocate.size() - 1);
         return x;
 
+    }
+
+    private void createLocateRanDomItem() {
+        // Random vi tri cho items
+        int x1 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x1).getKey(),ranDomLocate.get(x1).getValue(), 0));
+        ranDomLocate.remove(x1);
+        int x2 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x2).getKey(),ranDomLocate.get(x2).getValue(),1));
+        ranDomLocate.remove(x2);
+        int x3 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x3).getKey(),ranDomLocate.get(x3).getValue(),2));
+        ranDomLocate.remove(x3);
+        int x4 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x4).getKey(),ranDomLocate.get(x4).getValue(),3));
+        ranDomLocate.remove(x4);
+        if(level_Game != 1) {
+            int x5 = autoRandomLocate();
+            arrItemGame.add(new ItemGame(ranDomLocate.get(x5).getKey(),ranDomLocate.get(x5).getValue(),4));
+            ranDomLocate.remove(x5);
+        }
     }
     /**
      * Xử lí các thao tác trên bàn phím , các nút bấm
@@ -172,8 +198,8 @@ public class GameManager {
             @Override
             public void handle(long now) {
                 gContext.clearRect(0,0, WIDTH_SCREEN, HEIGHT_SCREEN);
-                update();
                 renderer();
+                update();
             }
         };
         gameTimer.start();
@@ -188,6 +214,23 @@ public class GameManager {
             viewManager viewManager = new viewManager();
             menuStage = viewManager.getMainStage();
             menuStage.show();
+        }
+    }
+
+    public void upLevelGame() {
+        if(level_Game == 1 && !is_check) {
+            soundGame.stop();
+            gameTimer.stop();
+            try {
+                TimeUnit.SECONDS.sleep(2); // sleep chuyen level
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            GameManager gameStage = new GameManager();
+            gameStage.createNewGame(mainStage);
+            is_check = true;
+            TileMap.levelGame++;
+
         }
     }
 
@@ -246,6 +289,7 @@ public class GameManager {
      * Update Image, move, time ...
      */
     public void update() {
+        upLevelGame();
         checkGameOver();
         player.movePlayer(arrTileMap,arrBoom,keyCodes);
         for (int i = 0; i < 3; i++) {
@@ -270,10 +314,9 @@ public class GameManager {
 
         for (int itemGame = 0 ; itemGame < arrItemGame.size() ; itemGame++) {
             arrItemGame.get(itemGame).drawItem(gContext);
-            if(arrItemGame.get(itemGame).handLeItem(player)){
+            if(arrItemGame.get(itemGame).handLeItem(player,arrEnemy)){
                 arrItemGame.remove(itemGame);
             }
-
         }
 
         drawTileMap();
@@ -333,8 +376,7 @@ public class GameManager {
      */
     public void readTxtMap() {
         try {
-            File file = new File("src/main/resources/map2/map2.txt");
-
+            File file = new File(map_Game[level_Game]);
             int countLine = 0;
             FileInputStream inputStream = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

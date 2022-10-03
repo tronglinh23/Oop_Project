@@ -53,8 +53,7 @@ public class GameManager {
     private ArrayList<ItemGame> arrItemGame;
 
     private MainPlayer player;
-//    private Enemy[] enemy = new Enemy[6];
-    private Enemy enemy;
+    private Enemy[] enemy = new Enemy[3];
 
 
 
@@ -90,7 +89,6 @@ public class GameManager {
         keyCodes = new ArrayList<>();
         arrItemGame = new ArrayList<>();
 
-
         ranDomLocate = new ArrayList<>();
 
         readTxtMap();
@@ -114,9 +112,14 @@ public class GameManager {
         soundGame.loop(10);
         soundGame.start();
 
-        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
-        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0 );
-        arrEnemy.add(enemy);
+        //player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
+        player = new MainPlayer(45,45);
+        enemy[0] = new Enemy(45, 585,0);
+        enemy[1] = new Enemy(675,45, 0);
+        enemy[2] = new Enemy(675,585,0);
+        for (int i = 0; i < 3; i++) {
+            arrEnemy.add(enemy[i]);
+        }
         createGameLoop();
         createKeyListeners();
         mainStage.show();
@@ -245,9 +248,14 @@ public class GameManager {
     public void update() {
         checkGameOver();
         player.movePlayer(arrTileMap,arrBoom,keyCodes);
-        enemy.moveEnemy(arrTileMap);
+        for (int i = 0; i < 3; i++) {
+            enemy[i].moveEnemy(arrTileMap, arrBoom);
+        }
         checkTimeBombExplode();
         bombBangTime();
+        if (player.checkEnemy_Player(arrEnemy) == true){
+            player.setIsDie(true, System.nanoTime());
+        }
     }
 
     /**
@@ -275,10 +283,11 @@ public class GameManager {
         }
         for (Enemy enemy1 : arrEnemy) {
             enemy1.drawEnemy(gContext);
-            enemy1.moveEnemy(arrTileMap);
         }
 
         drawPlayer();
+
+
     }
 
     public void createBackground() {
@@ -318,7 +327,6 @@ public class GameManager {
 
     }
 
-
     /**
      * Read File Map.
      * Lấy từng kí tự đẩy vào arraylist để draw.
@@ -326,6 +334,7 @@ public class GameManager {
     public void readTxtMap() {
         try {
             File file = new File("src/main/resources/map2/map2.txt");
+
             int countLine = 0;
             FileInputStream inputStream = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

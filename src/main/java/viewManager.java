@@ -3,12 +3,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javax.sound.sampled.*;
 import java.util.ArrayList;
-import java.util.List;
 public class viewManager {
 
     private static int WIDTH_SCREEN = 1024;

@@ -1,16 +1,8 @@
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 
-import javax.lang.model.type.NullType;
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
 
 public class Enemy {
@@ -109,10 +101,10 @@ public class Enemy {
     }
 
     public void drawEnemy(GraphicsContext gc) {
-        gc.drawImage(enemy, x, y, size_enemy, size_enemy);
+        gc.drawImage(enemy, x, y, size_enemy + 10, size_enemy + 10);
     }
 
-    public void moveEnemy(ArrayList<TileMap> arrTileMap) {
+    public void moveEnemy(ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom) {
         double xChange = x;
         double yChange = y;
         switch (orient) {
@@ -126,7 +118,7 @@ public class Enemy {
                 yChange -= (double) speed / 4;
                 break;
             case DOWN:
-                yChange += (double) speed / 4;
+                yChange +=  (double) speed / 4;
             default:
         }
         double xRaw = x;
@@ -135,21 +127,34 @@ public class Enemy {
         y = yChange;
 
         boolean checkEnemyMove = checkMoveMap(arrTileMap);
+        boolean checkEnemyBomb = checkMoveEnemy_boom(arrBoom);
 
         if (checkEnemyMove) {
             x = xRaw;
             y = yRaw;
             createOrient();
         }
+
+        if (checkEnemyBomb) {
+            x = xRaw;
+            y = yRaw;
+            createOrient();
+        }
     }
 
-
-
+    public boolean checkMoveEnemy_boom(ArrayList<Boom> arrBoom) {
+        for (Boom boom : arrBoom) {
+            if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent()) && boom.getIsCheckBomb() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean checkMoveMap(ArrayList<TileMap> arrTileMap) {
         for (TileMap tileMap : arrTileMap) {
             if (tileMap.locate_bit == 1 || tileMap.locate_bit == 2 || tileMap.locate_bit == 3 ||
                 tileMap.locate_bit == 4 || tileMap.locate_bit == 5 || tileMap.locate_bit == 6 ||
-                tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
+                tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9 ) {
                 if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
                     return true;
                 }

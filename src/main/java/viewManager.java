@@ -1,19 +1,12 @@
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
-import java.awt.*;
-import java.io.IOException;
+import javax.sound.sampled.*;
 import java.util.ArrayList;
 import java.util.List;
 public class viewManager {
@@ -24,15 +17,17 @@ public class viewManager {
     private AnchorPane mainPain;
     private Stage mainStage;
     private Scene mainScene;
-    private final static String Title_game = "Boom";
+    private final static String Title_game = "Boom Online";
 
     ArrayList<ButtonGame> listButtonMenu;
     private static final int Menu_Button_X = 100;
     private static final int Menu_Button_Y = 150;
 
-
-
+    private boolean isMusicPlay;
     private final static String BACKGROUND_IMG = "images/boom-mobile-1.jpg";
+
+    Clip menuSongClip;
+    Clip mouseClick;
 
     public viewManager() {
         mainPain = new AnchorPane();
@@ -42,8 +37,14 @@ public class viewManager {
         mainStage.setScene(mainScene);
         createBackGround();
         createButtons();
+        setMenuSongClip();
     }
 
+    public void setMenuSongClip() {
+        menuSongClip = SoundLoad.getSoundVolume(getClass().getResource("sounds/Happy Accident Simple Long Loop.wav"), -20);
+        menuSongClip.loop(30);
+        menuSongClip.start();
+    }
     public Stage getMainStage() {
         return this.mainStage;
     }
@@ -75,7 +76,11 @@ public class viewManager {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println(1);
+                menuSongClip.stop();
+                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
+                mouseClick.start();
+                Clip start = SoundLoad.getSoundVolume(getClass().getResource("sounds/start.wav"), 0);
+                start.start();
                 GameManager gameStage = new GameManager();
                 gameStage.createNewGame(mainStage);
             }
@@ -85,11 +90,25 @@ public class viewManager {
     private void createScoresMenu() {
         ButtonGame scoresButton = new ButtonGame("Scores");
         addMenuButton(scoresButton);
+        scoresButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
+                mouseClick.start();
+            }
+        });
     }
 
     private void createHelpMenu() {
         ButtonGame helpButton = new ButtonGame("Help");
         addMenuButton(helpButton);
+        helpButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
+                mouseClick.start();
+            }
+        });
     }
 
     private void createExitMenu() {
@@ -97,6 +116,8 @@ public class viewManager {
         exitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
+                mouseClick.start();
                 mainStage.close();
             }
         });

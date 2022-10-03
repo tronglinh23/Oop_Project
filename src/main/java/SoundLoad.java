@@ -1,14 +1,17 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import java.net.URL;
 
 public class SoundLoad {
-    public static Clip getSound(URL url) {
+    public static Clip getSoundVolume(URL url, float minusVolume) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
+
+            FloatControl gainControl =
+                    (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(minusVolume);
+
             return clip;
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 
 
@@ -14,6 +16,10 @@ public class MainPlayer extends BaseObject{
 
     private int soBoom;
     private int speed;
+
+    private int lengthBomb;
+
+    private int kim;
     private boolean isPlayerRun;
 
     private final int size_player = 45;
@@ -61,7 +67,7 @@ public class MainPlayer extends BaseObject{
             ImageUtils.loadImage("src/main/resources/images/lua_15.png"),
             ImageUtils.loadImage("src/main/resources/images/lua_16.png"),
     };
-    public final Image[] IMAGES_PLAYER_LEFT= {
+    public final Image[] PLAYER_LEFT_IMG = {
             ImageUtils.loadImage("src/main/resources/images/player_left_1.png"),
             ImageUtils.loadImage("src/main/resources/images/player_left_2.png"),
             ImageUtils.loadImage("src/main/resources/images/player_left_3.png"),
@@ -69,14 +75,14 @@ public class MainPlayer extends BaseObject{
             ImageUtils.loadImage("src/main/resources/images/player_left_5.png"),
     };
 
-    public final Image[] IMAGES_PLAYER_RIGHT= {
+    public final Image[] PLAYER_RIGHT_IMG = {
             ImageUtils.loadImage("src/main/resources/images/player_right_1.png"),
             ImageUtils.loadImage("src/main/resources/images/player_right_2.png"),
             ImageUtils.loadImage("src/main/resources/images/player_right_3.png"),
             ImageUtils.loadImage("src/main/resources/images/player_right_4.png"),
             ImageUtils.loadImage("src/main/resources/images/player_right_5.png"),
     };
-    public final Image[] IMAGES_PLAYER_UP= {
+    public final Image[] PLAYER_UP_IMG = {
             ImageUtils.loadImage("src/main/resources/images/player_up_1.png"),
             ImageUtils.loadImage("src/main/resources/images/player_up_2.png"),
             ImageUtils.loadImage("src/main/resources/images/player_up_3.png"),
@@ -84,7 +90,7 @@ public class MainPlayer extends BaseObject{
             ImageUtils.loadImage("src/main/resources/images/player_up_5.png"),
     };
 
-    public final Image[] IMAGES_PLAYER_DOWN= {
+    public final Image[] PLAYER_DOWN_IMG = {
             ImageUtils.loadImage("src/main/resources/images/player_down_1.png"),
             ImageUtils.loadImage("src/main/resources/images/player_down_2.png"),
             ImageUtils.loadImage("src/main/resources/images/player_down_3.png"),
@@ -110,6 +116,8 @@ public class MainPlayer extends BaseObject{
         gameOver = false;
         soBoom = 2;
         speed = 2;
+        lengthBomb = 1;
+        kim = 0;
         isPlayerRun = false;
         amountBomb = 2;
         isCoBombSan = false;
@@ -132,6 +140,14 @@ public class MainPlayer extends BaseObject{
 
     public int getAmountBomb() { return this.amountBomb;}
     public void setAmountBomb() {this.amountBomb += 1;}
+
+    public int getLengthBomb() {return this.lengthBomb;}
+    public void setLengthBomb() {this.lengthBomb += 1;}
+
+    public void setSpeed() {this.speed += 1;}
+
+    public void setKim(int k) {this.kim += k;}
+    public int getKim() {return this.kim;}
 
     public Rectangle getRect() {
         Rectangle mainPlayer = new Rectangle(x + 10,y+15, size_player - 10, size_player - 15);
@@ -158,38 +174,38 @@ public class MainPlayer extends BaseObject{
         switch (event) {
             case 1 :
                 if (!isRun()){
-                    gc.drawImage(IMAGES_PLAYER_LEFT[0],x,y,size_player+5,size_player+15);
+                    gc.drawImage(PLAYER_LEFT_IMG[0],x,y,size_player+5,size_player+15);
                 } else {
                     imageCount++;
-                    gc.drawImage(IMAGES_PLAYER_LEFT[imageCount / 10 % IMAGES_PLAYER_LEFT.length], x, y, size_player + 5, size_player + 15);
+                    gc.drawImage(PLAYER_LEFT_IMG[imageCount / 10 % PLAYER_LEFT_IMG.length], x, y, size_player + 5, size_player + 15);
                     gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x + 35, y + 15, size_player, size_player);
                 }
                 break;
             case 2 :
                 if (!isRun()){
-                    gc.drawImage(IMAGES_PLAYER_RIGHT[0],x,y,size_player+5,size_player+15);
+                    gc.drawImage(PLAYER_RIGHT_IMG[0],x,y,size_player+5,size_player+15);
                 } else {
                     imageCount++;
-                    gc.drawImage(IMAGES_PLAYER_RIGHT[imageCount / 10 % IMAGES_PLAYER_RIGHT.length], x, y, size_player + 5, size_player + 15);
+                    gc.drawImage(PLAYER_RIGHT_IMG[imageCount / 10 % PLAYER_RIGHT_IMG.length], x, y, size_player + 5, size_player + 15);
                     gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x - 35, y + 15, size_player, size_player);
                 }
                 break;
             case 3 :
                 if (!isRun()){
-                    gc.drawImage(IMAGES_PLAYER_UP[0],x,y,size_player+5,size_player+15);
+                    gc.drawImage(PLAYER_UP_IMG[0],x,y,size_player+5,size_player+15);
                 }
                 else {
                     imageCount++;
-                    gc.drawImage(IMAGES_PLAYER_UP[imageCount / 10 % IMAGES_PLAYER_UP.length], x, y,size_player+5,size_player+15);
+                    gc.drawImage(PLAYER_UP_IMG[imageCount / 10 % PLAYER_UP_IMG.length], x, y,size_player+5,size_player+15);
                     gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length],x,y+25,size_player,size_player);
                 }
                 break;
             case 4 :
                 if (!isRun()){
-                    gc.drawImage(IMAGES_PLAYER_DOWN[0],x,y,size_player+5,size_player+15);
+                    gc.drawImage(PLAYER_DOWN_IMG[0],x,y,size_player+5,size_player+15);
                 } else {
                     imageCount++;
-                    gc.drawImage(IMAGES_PLAYER_DOWN[imageCount / 10 % IMAGES_PLAYER_LEFT.length], x, y,size_player+5,size_player+15);
+                    gc.drawImage(PLAYER_DOWN_IMG[imageCount / 10 % PLAYER_DOWN_IMG.length], x, y,size_player+5,size_player+15);
                     gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x,y-30,size_player,size_player);
                 }
                 break;
@@ -308,7 +324,7 @@ public class MainPlayer extends BaseObject{
     /**
      * Đặt bomb chỗ nhân vật.
      * Đặt gần nhất với các ô vuông.
-     * Size = 45.
+     * Size = 50.
      * Thuật toán ví dụ trên x, ta sẽ kiểm tra xem x đang nằm nghiêng về bên phải hay bên trái hơn.
      * nếu nghiêng về bên trái hơn thì ta cộng vào Size/2 thì nó vẫn bé hơn => bomb sẽ được đặt vào ô trái.
      * ngược lại nếu nghiêng về phải hơn thì bomb sẽ đc đặt sang bên phải.
@@ -318,7 +334,7 @@ public class MainPlayer extends BaseObject{
         int yRaw = this.y + Boom.Size/2;
         int locateX = xRaw - xRaw % Boom.Size;
         int locateY = yRaw - yRaw % Boom.Size;
-        Boom bomb = new Boom(locateX, locateY, 1);
+        Boom bomb = new Boom(locateX, locateY, lengthBomb);
         return bomb;
     }
 }

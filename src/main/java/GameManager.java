@@ -8,14 +8,15 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
+import javafx.util.Pair;
 import javax.sound.sampled.Clip;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameManager {
-    private static int WIDTH_SCREEN = 765;
-    private static int HEIGHT_SCREEN = 675;
+    private static int WIDTH_SCREEN = 945;
+    private static int HEIGHT_SCREEN = 855;
 
     private final static int time_Bomb = 2;
 
@@ -23,11 +24,13 @@ public class GameManager {
 
     private final static int time_Bomber_Die = 3;
 
+    private static int run_1_time ;
+
     private static long time_Start_Game;
 
     private double time_Die_Player;
 
-    private final static String Title_game = "Boom";
+    private final static String Title_game = "Boom Online";
 
     GraphicsContext gContext;
     Canvas canvas;
@@ -45,13 +48,20 @@ public class GameManager {
 
     private ArrayList<WaveBoom> arrWaveBoom;
     private ArrayList<Long> timeWaveBoom;
-    private ArrayList<KeyCode> keyCodes = new ArrayList<>();
+    private ArrayList<KeyCode> keyCodes;
+
+    private ArrayList<ItemGame> arrItemGame;
 
     private MainPlayer player;
 //    private Enemy[] enemy = new Enemy[6];
     private Enemy enemy;
 
-    public final Image MY_IMAGE= ImageUtils.loadImage("src/main/resources/images/background.jpg");
+
+
+    ArrayList<Pair<Integer,Integer>> ranDomLocate;
+    Clip soundGame;
+
+    public final Image MY_IMAGE= ImageUtils.loadImage("src/main/resources/images/background2.png");
     public GameManager() {
 
     }
@@ -61,7 +71,7 @@ public class GameManager {
         this.menuStage.close();
 
         time_Start_Game = System.nanoTime();
-
+        run_1_time = 1;
         canvas = new Canvas(WIDTH_SCREEN,HEIGHT_SCREEN);
         gContext = canvas.getGraphicsContext2D();
         Group root = new Group(canvas);
@@ -77,17 +87,48 @@ public class GameManager {
         TimeBombStart = new ArrayList<>();
         arrWaveBoom = new ArrayList<>();
         timeWaveBoom = new ArrayList<>();
+        keyCodes = new ArrayList<>();
+        arrItemGame = new ArrayList<>();
 
+
+        ranDomLocate = new ArrayList<>();
+
+        readTxtMap();
+
+        // Random vi tri cho items
+        int x1 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x1).getKey(),ranDomLocate.get(x1).getValue(), 0));
+        ranDomLocate.remove(x1);
+        int x2 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x2).getKey(),ranDomLocate.get(x2).getValue(),1));
+        ranDomLocate.remove(x2);
+        int x3 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x3).getKey(),ranDomLocate.get(x3).getValue(),2));
+        ranDomLocate.remove(x3);
+        int x4 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x4).getKey(),ranDomLocate.get(x4).getValue(),3));
+        ranDomLocate.remove(x4);
+
+        //Load sound game
+        soundGame = SoundLoad.getSoundVolume(getClass().getResource("sounds/gameplay2.wav"), -5);
+        soundGame.loop(10);
+        soundGame.start();
 
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
-        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0);
+        enemy = new Enemy(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE, 0 );
         arrEnemy.add(enemy);
-        readTxtMap();
         createGameLoop();
         createKeyListeners();
         mainStage.show();
     }
 
+
+    public int autoRandomLocate() {
+        Random random = new Random();
+        int x = random.nextInt(ranDomLocate.size() - 1);
+        return x;
+
+    }
     /**
      * Xử lí các thao tác trên bàn phím , các nút bấm
      * Di chuyển nhân vật
@@ -98,11 +139,17 @@ public class GameManager {
               public void handle(KeyEvent keyEvent) {
                   KeyCode code = keyEvent.getCode();
                   if (!keyCodes.contains(code)) keyCodes.add(code); // nếu trong list keycode chưa có thì add
-                  if(code == KeyCode.SPACE) {
+                  if(code == KeyCode.SPACE && !player.getIsDie()) {
                       addBombToPlayer(System.nanoTime());
                   }
                   if(code == KeyCode.DIGIT1) {
-                      player.setIsDie(false,0); // Item kim làm nổ bóng
+                      // kiểm tra nếu player die và số kim lớn hơn 1 thì sau khi player die đc 0.2s thì có thể dùng kim
+                      if(player.getIsDie() && player.getKim() > 0
+                              && (double) (System.nanoTime() - player.getTimeBomberDie())/ Math.pow(10,9) > time_Wave_Bomb - 0.8) {
+                          System.out.println(time_Wave_Bomb - 0.8);
+                          player.setIsDie(false,0); // Item kim làm nổ bóng
+                          player.setKim(-1);
+                      }
                   }
               }
         });
@@ -132,8 +179,11 @@ public class GameManager {
 
     public void checkGameOver() {
         if(MainPlayer.gameOver == true) {
+            soundGame.stop();
             mainStage.close();
             gameTimer.stop();
+            viewManager viewManager = new viewManager();
+            menuStage = viewManager.getMainStage();
             menuStage.show();
         }
     }
@@ -142,6 +192,8 @@ public class GameManager {
         for(int i = 0 ; i < arrBoom.size() ; i++) {
             double time = (System.nanoTime() - TimeBombStart.get(i)) / Math.pow(10,9);
             if(time >= time_Bomb) {
+                Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/boom_bang.wav"), -15);
+                clip.start();
                 WaveBoom waveBoom = arrBoom.get(i).boomBang();
                 arrBoom.remove(i);
                 TimeBombStart.remove(i);
@@ -149,8 +201,8 @@ public class GameManager {
 
                 try {
                     waveBoom.checkExplodeBoom_Boom(arrBoom, TimeBombStart);
-                } catch (IndexOutOfBoundsException e) {
-
+                } catch (Exception e) {
+                        e.printStackTrace();
                 }
 
                 timeWaveBoom.add(System.nanoTime());
@@ -175,6 +227,17 @@ public class GameManager {
         }
     }
 
+    public void addBombToPlayer(long time_start) {
+        if(arrBoom.size() < player.getAmountBomb()) {
+            if(player.getIscoBomb(arrBoom)) {
+                Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/set_boom.wav"), -15);
+                clip.start();
+                Boom boom = player.setupBoom();
+                arrBoom.add(boom);
+                TimeBombStart.add(time_start);
+            }
+        }
+    }
 
     /**
      * Update Image, move, time ...
@@ -187,19 +250,6 @@ public class GameManager {
         bombBangTime();
     }
 
-
-    public void addBombToPlayer(long time_start) {
-        if(arrBoom.size() < player.getAmountBomb()) {
-            if(player.getIscoBomb(arrBoom)) {
-                Boom boom = player.setupBoom();
-                arrBoom.add(boom);
-                Clip clip = SoundLoad.getSound(getClass().getResource("sounds/set_boom.wav"));
-                clip.start();
-                TimeBombStart.add(time_start);
-            }
-        }
-    }
-
     /**
      * Render all image to screen.
      */
@@ -209,12 +259,20 @@ public class GameManager {
         for (Boom boom : arrBoom) {
             boom.draw(gContext);
         }
-        for (WaveBoom waveBoom : arrWaveBoom) {
-            waveBoom.draw(arrTileMap, gContext);
+
+        for (int itemGame = 0 ; itemGame < arrItemGame.size() ; itemGame++) {
+            arrItemGame.get(itemGame).drawItem(gContext);
+            if(arrItemGame.get(itemGame).handLeItem(player)){
+                arrItemGame.remove(itemGame);
+            }
+
         }
 
         drawTileMap();
 
+        for (WaveBoom waveBoom : arrWaveBoom) {
+            waveBoom.draw(arrTileMap, gContext);
+        }
         for (Enemy enemy1 : arrEnemy) {
             enemy1.drawEnemy(gContext);
             enemy1.moveEnemy(arrTileMap);
@@ -245,6 +303,11 @@ public class GameManager {
         if(player.getIsDie()) {
             time_Die_Player = (System.nanoTime() - player.getTimeBomberDie()) / Math.pow(10, 9);
             if (time_Die_Player > time_Bomber_Die) {
+                if(run_1_time > 0) {
+                    Clip soundBomberDie = SoundLoad.getSoundVolume(getClass().getResource("sounds/bomberdie.wav"), 0);
+                    soundBomberDie.start();
+                    run_1_time--;
+                }
                 player.drawBomberDie(gContext);
             } else {
                 player.drawBomberDie_WaitItem(gContext);
@@ -262,7 +325,7 @@ public class GameManager {
      */
     public void readTxtMap() {
         try {
-            File file = new File("src/main/resources/map/map1.txt");
+            File file = new File("src/main/resources/map2/map2.txt");
             int countLine = 0;
             FileInputStream inputStream = new FileInputStream(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -272,6 +335,10 @@ public class GameManager {
                 for (int chr = 0; chr < line.length(); chr++) {
                     arrTileMap.add(new TileMap(chr*TileMap.SIZE, countLine*TileMap.SIZE,
                             Integer.parseInt(String.valueOf(line.charAt(chr)))));
+//                    if(line.charAt(chr) != '0' && line.charAt(chr) != '6' && line.charAt(chr) != '7' && line.charAt(chr) != '8' && line.charAt(chr) != '9') {
+                    if(line.charAt(chr) == '0'){
+                        ranDomLocate.add(new Pair<>(chr*TileMap.SIZE, countLine*TileMap.SIZE));
+                    }
                 }
 
                 line = reader.readLine();

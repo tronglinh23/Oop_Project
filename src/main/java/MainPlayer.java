@@ -109,7 +109,7 @@ public class MainPlayer extends BaseObject{
         super(x,y);
         gameOver = false;
         soBoom = 2;
-        speed = 1.5;
+        speed = 2;
         lengthBomb = 1;
         kim = 0;
         isPlayerRun = false;
@@ -267,6 +267,12 @@ public class MainPlayer extends BaseObject{
                 y = yRaw;
             }
             if(collisionBomb) {
+                x = xRaw;
+                y = yRaw;
+            }
+
+            if(xChange <= 0 || xChange >= (GameManager.WIDTH_SCREEN - size_player - 10)
+                    || yChange <= 0 || yChange >= (GameManager.HEIGHT_SCREEN - size_player - 10)) {
                 x = xRaw;
                 y = yRaw;
             }

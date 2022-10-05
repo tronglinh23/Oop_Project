@@ -70,15 +70,28 @@ public class WaveBoom {
             }
             for (int i = 0; i < arrTileMap.size(); i++) {
                 if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
-                    if (arrTileMap.get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
-                            || arrTileMap.get(i).locate_bit == 5) {
-                        arrTileMap.remove(i);
-                        lengthLeft = lengthLeft - (lengthLeft - stt);
+                    if (TileMap.levelGame == 0) {
+                        if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
+                                || arrTileMap.get(i).locate_bit == 7) {
+                            arrTileMap.remove(i);
+                            lengthLeft = lengthLeft - (lengthLeft - stt);
 
-                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
-                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
-                        lengthLeft = lengthLeft - (lengthLeft - stt);
+                        } else if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 8 || arrTileMap.get(i).locate_bit == 9) {
+                            lengthLeft = lengthLeft - (lengthLeft - stt);
+                        }
+                    } else if (TileMap.levelGame == 1) {
+                        if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 5 ) {
+                            arrTileMap.remove(i);
+                            lengthLeft = lengthLeft - (lengthLeft - stt);
+
+                        } else if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4) {
+                            lengthLeft = lengthLeft - (lengthLeft - stt);
+                        }
                     }
+
                 }
             }
         }
@@ -95,14 +108,26 @@ public class WaveBoom {
             }
             for (int i = 0; i < arrTileMap.size(); i++) {
                 if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
-                    if (arrTileMap.get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
-                            || arrTileMap.get(i).locate_bit == 5 ) {
-                        arrTileMap.remove(i);
-                        lengthRight = lengthRight - (lengthRight - stt);
+                    if (TileMap.levelGame == 0) {
+                        if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
+                                || arrTileMap.get(i).locate_bit == 7) {
+                            arrTileMap.remove(i);
+                            lengthRight = lengthRight - (lengthRight - stt);
 
-                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
-                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
-                        lengthRight = lengthRight - (lengthRight - stt);
+                        } else if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 8 || arrTileMap.get(i).locate_bit == 9) {
+                            lengthRight = lengthRight - (lengthRight - stt);
+                        }
+                    } else if (TileMap.levelGame == 1) {
+                        if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 5 ) {
+                            arrTileMap.remove(i);
+                            lengthRight = lengthRight - (lengthRight - stt);
+
+                        } else if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4) {
+                            lengthRight = lengthRight - (lengthRight - stt);
+                        }
                     }
                 }
             }
@@ -125,14 +150,26 @@ public class WaveBoom {
             }
             for (int i = 0; i < arrTileMap.size(); i++) {
                 if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
-                    if (arrTileMap.get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
-                            || arrTileMap.get(i).locate_bit == 5 ) {
-                        arrTileMap.remove(i);
-                        lengthDown = lengthDown - (lengthDown - stt);
+                    if (TileMap.levelGame == 0) {
+                        if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
+                                || arrTileMap.get(i).locate_bit == 7) {
+                            arrTileMap.remove(i);
+                            lengthDown = lengthDown - (lengthDown - stt);
 
-                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
-                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
-                        lengthDown = lengthDown - (lengthDown - stt);
+                        } else if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 8 || arrTileMap.get(i).locate_bit == 9) {
+                            lengthDown = lengthDown - (lengthDown - stt);
+                        }
+                    } else if (TileMap.levelGame == 1) {
+                        if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 5) {
+                            arrTileMap.remove(i);
+                            lengthDown = lengthDown - (lengthDown - stt);
+
+                        } else if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4) {
+                            lengthDown = lengthDown - (lengthDown - stt);
+                        }
                     }
                 }
             }
@@ -150,14 +187,26 @@ public class WaveBoom {
             }
             for (int i = 0; i < arrTileMap.size(); i++) {
                 if (getRect(xLocate + 5,yLocate + 10).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
-                    if (arrTileMap. get(i).locate_bit == 2 || arrTileMap.get(i).locate_bit == 4
-                            || arrTileMap.get(i).locate_bit == 5 ) {
-                        arrTileMap.remove(i);
-                        lengthUp = lengthUp - (lengthUp - stt);
+                    if (TileMap.levelGame == 0) {
+                        if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
+                                || arrTileMap.get(i).locate_bit == 7) {
+                            arrTileMap.remove(i);
+                            lengthUp = lengthUp - (lengthUp - stt);
 
-                    } else if (arrTileMap.get(i).locate_bit != 2 && arrTileMap.get(i).locate_bit != 4
-                            && arrTileMap.get(i).locate_bit != 5 && arrTileMap.get(i).locate_bit != 0) {
-                        lengthUp = lengthUp - (lengthUp - stt);
+                        } else if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 8 || arrTileMap.get(i).locate_bit == 9) {
+                            lengthUp = lengthUp - (lengthUp - stt);
+                        }
+                    } else if (TileMap.levelGame == 1) {
+                        if (arrTileMap.get(i).locate_bit == 1 || arrTileMap.get(i).locate_bit == 2
+                                || arrTileMap.get(i).locate_bit == 5) {
+                            arrTileMap.remove(i);
+                            lengthUp = lengthUp - (lengthUp - stt);
+
+                        } else if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4) {
+                            lengthUp = lengthUp - (lengthUp - stt);
+                        }
                     }
                 }
             }

@@ -16,8 +16,8 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class GameManager {
-    private static int WIDTH_SCREEN = 945;
-    private static int HEIGHT_SCREEN = 855;
+    public final static int WIDTH_SCREEN = 945;
+    public final static int HEIGHT_SCREEN = 855;
 
     private final static int time_Bomb = 2;
 

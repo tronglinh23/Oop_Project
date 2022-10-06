@@ -6,15 +6,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy extends BaseObject{
-    private int speed = 1;
+    private int speed = 3;
     private int orient;
-    private final int size_enemy = 45;
     private Image enemy;
     private Random random = new Random();
     public static final int LEFT = 0;
     public static final int RIGHT = 1;
     public static final int UP = 2;
     public static final int DOWN = 3;
+
+    public final int size_enemy = 45;
 
     public final Image[] HAITAC_ENEMY_LEFT_IMG= {
             ImageUtils.loadImage("src/main/resources/Enemy/LEFT.png"),
@@ -64,6 +65,11 @@ public class Enemy extends BaseObject{
         return theEnemy;
     }
 
+    /**
+     * tạo ra 1 orient mới để có thể chuyển hướng khi gặp chướng ngại vật.
+     * set 1 biến random kiểu int có 4 giá trị.
+     * mỗi giá trí ứng với 1 hướng di chuyển của enemy.
+     */
     public void createOrient() {
         int rnd = random.nextInt(20);
         if (rnd > 15) {
@@ -123,6 +129,9 @@ public class Enemy extends BaseObject{
         }
     }
 
+    /**
+     * check di chuyển của enemy với boom.
+     */
     public boolean checkMoveEnemy_boom(ArrayList<Boom> arrBoom) {
         for (Boom boom : arrBoom) {
             if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent()) && boom.getIsCheckBomb() == 0) {
@@ -143,5 +152,7 @@ public class Enemy extends BaseObject{
         }
         return false;
     }
+
+
 }
 

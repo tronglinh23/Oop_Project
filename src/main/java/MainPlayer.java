@@ -32,17 +32,6 @@ public class MainPlayer extends BaseObject{
     private Long timeBomberDie;
 
 
-
-    public final Image[] IMAGE_BONGMO = {
-            ImageUtils.loadImage("src/main/resources/images/BM_1.png"),
-            ImageUtils.loadImage("src/main/resources/images/BM_2.png"),
-            ImageUtils.loadImage("src/main/resources/images/BM_3.png"),
-            ImageUtils.loadImage("src/main/resources/images/BM_4.png"),
-            ImageUtils.loadImage("src/main/resources/images/BM_5.png"),
-            ImageUtils.loadImage("src/main/resources/images/BM_6.png"),
-            ImageUtils.loadImage("src/main/resources/images/BM_7.png"),
-    };
-
     public final Image[] IMG_LUA_EFFECT = {
             ImageUtils.loadImage("src/main/resources/images/lua_1.png"),
             ImageUtils.loadImage("src/main/resources/images/lua_2.png"),
@@ -172,7 +161,6 @@ public class MainPlayer extends BaseObject{
                 } else {
                     imageCount++;
                     gc.drawImage(PLAYER_LEFT_IMG[imageCount / 10 % PLAYER_LEFT_IMG.length], x, y, size_player + 5, size_player + 15);
-                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x + 35, y + 15, size_player, size_player);
                 }
                 break;
             case 2 :
@@ -181,7 +169,6 @@ public class MainPlayer extends BaseObject{
                 } else {
                     imageCount++;
                     gc.drawImage(PLAYER_RIGHT_IMG[imageCount / 10 % PLAYER_RIGHT_IMG.length], x, y, size_player + 5, size_player + 15);
-                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x - 35, y + 15, size_player, size_player);
                 }
                 break;
             case 3 :
@@ -191,7 +178,6 @@ public class MainPlayer extends BaseObject{
                 else {
                     imageCount++;
                     gc.drawImage(PLAYER_UP_IMG[imageCount / 10 % PLAYER_UP_IMG.length], x, y,size_player+5,size_player+15);
-                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length],x,y+25,size_player,size_player);
                 }
                 break;
             case 4 :
@@ -200,7 +186,6 @@ public class MainPlayer extends BaseObject{
                 } else {
                     imageCount++;
                     gc.drawImage(PLAYER_DOWN_IMG[imageCount / 10 % PLAYER_DOWN_IMG.length], x, y,size_player+5,size_player+15);
-                    gc.drawImage(IMAGE_BONGMO[imageCount / 10 % IMAGE_BONGMO.length], x,y-30,size_player,size_player);
                 }
                 break;
         }
@@ -283,7 +268,7 @@ public class MainPlayer extends BaseObject{
         for(TileMap tileMap : arrTileMap) {
             if(tileMap.locate_bit == 1 || tileMap.locate_bit == 2 || tileMap.locate_bit == 3 ||
                     tileMap.locate_bit == 4 || tileMap.locate_bit == 5 || tileMap.locate_bit == 6 ||
-                    tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
+                    tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
                 if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
                     return true;
                 }

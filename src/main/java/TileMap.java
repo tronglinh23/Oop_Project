@@ -4,7 +4,7 @@ import javafx.scene.shape.Rectangle;
 
 public class TileMap extends BaseObject{
 
-    public static int levelGame = 0;
+    public static int levelGame;
     private final static Image[][] IMG_MAP_VIEW = {
             {
                     ImageUtils.loadImage("src/main/resources/map1/pic_1.png"),

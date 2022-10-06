@@ -22,7 +22,7 @@ public class viewManager {
     private static final int Menu_Button_Y = 150;
 
     private boolean isMusicPlay;
-    private final static String BACKGROUND_IMG = "images/boom-mobile-1.jpg";
+    private final static String BACKGROUND_IMG = "BackgroundGame/boom-mobile-1.jpg";
 
     Clip menuSongClip;
     Clip mouseClick;

@@ -35,15 +35,15 @@ public class GameManager {
     private final static String Title_game = "Boom Online";
 
     // khoi tao scene theo level
-    public static int level_Game = 0;
+    public static int level_Game;
     public static boolean is_check = false;
     private final String[] sound_Game = {
             "sounds/gameplay1.wav",
             "sounds/gameplay2.wav"
     };
     private final String[] background_Game = {
-            "src/main/resources/images/background.jpg",
-            "src/main/resources/images/background2.png"
+            "src/main/resources/map1/background1.png",
+            "src/main/resources/map2/background2.png"
     };
     private final String[] map_Game = {
             "src/main/resources/map1/map1.txt",
@@ -87,10 +87,11 @@ public class GameManager {
     public void createNewGame(Stage menuStage) {
         this.menuStage = menuStage;
         this.menuStage.close();
-
         time_Start_Game = System.nanoTime();
+
         run_1_time = 1;
         timeEnemy = 0;
+
         canvas = new Canvas(WIDTH_SCREEN,HEIGHT_SCREEN);
         gContext = canvas.getGraphicsContext2D();
         Group root = new Group(canvas);
@@ -108,6 +109,8 @@ public class GameManager {
         keyCodes = new ArrayList<>();
         arrItemGame = new ArrayList<>();
         ranDomLocate = new ArrayList<>();
+
+        run_1_time = 1; // chay 1s trc khi out ra man hinh menu
 
         readTxtMap();
         createLocateRanDomItem();
@@ -223,7 +226,7 @@ public class GameManager {
             soundGame.stop();
             gameTimer.stop();
             try {
-                TimeUnit.SECONDS.sleep(2); // sleep chuyen level
+                TimeUnit.SECONDS.sleep(1); // sleep chuyen level
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -324,9 +327,6 @@ public class GameManager {
     public void renderer() {
         createBackground();
 
-        for (Boom boom : arrBoom) {
-            boom.draw(gContext);
-        }
 
         for (int itemGame = 0 ; itemGame < arrItemGame.size() ; itemGame++) {
             arrItemGame.get(itemGame).drawItem(gContext);
@@ -336,6 +336,10 @@ public class GameManager {
         }
 
         drawTileMap();
+
+        for (Boom boom : arrBoom) {
+            boom.draw(gContext);
+        }
 
         for (WaveBoom waveBoom : arrWaveBoom) {
             waveBoom.draw(arrTileMap, gContext);
@@ -403,9 +407,14 @@ public class GameManager {
                 for (int chr = 0; chr < line.length(); chr++) {
                     arrTileMap.add(new TileMap(chr*TileMap.SIZE, countLine*TileMap.SIZE,
                             Integer.parseInt(String.valueOf(line.charAt(chr)))));
-//                    if(line.charAt(chr) != '0' && line.charAt(chr) != '6' && line.charAt(chr) != '7' && line.charAt(chr) != '8' && line.charAt(chr) != '9') {
-                    if(line.charAt(chr) == '0'){
-                        ranDomLocate.add(new Pair<>(chr*TileMap.SIZE, countLine*TileMap.SIZE));
+//                    if(level_Game == 0 && (line.charAt(chr) == '3' || line.charAt(chr) == '4' ||
+//                            line.charAt(chr) == '5' || line.charAt(chr) == '6')) {
+//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+//                    } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
+//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+//                    }
+                    if (line.charAt(chr) == '0') {
+                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
                     }
                 }
 

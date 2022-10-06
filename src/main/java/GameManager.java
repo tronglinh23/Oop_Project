@@ -29,6 +29,7 @@ public class GameManager {
 
     private static long time_Start_Game;
 
+    private int timeEnemy;
     private double time_Die_Player;
 
     private final static String Title_game = "Boom Online";
@@ -49,8 +50,6 @@ public class GameManager {
             "src/main/resources/map2/map2.txt"
     };
 
-
-
     GraphicsContext gContext;
     Canvas canvas;
 
@@ -63,6 +62,7 @@ public class GameManager {
     private ArrayList<TileMap> arrTileMap;
     private ArrayList<Enemy> arrEnemy;
     private ArrayList<Boom> arrBoom;
+
     private ArrayList<Long> TimeBombStart;
 
     private ArrayList<WaveBoom> arrWaveBoom;
@@ -72,9 +72,9 @@ public class GameManager {
     private ArrayList<ItemGame> arrItemGame;
 
     private MainPlayer player;
-    private Enemy[] enemy = new Enemy[3];
+    private Enemy[] enemy = new Enemy[4];
 
-
+    private Octopus octopus;
 
     ArrayList<Pair<Integer,Integer>> ranDomLocate;
     Clip soundGame;
@@ -90,10 +90,10 @@ public class GameManager {
 
         time_Start_Game = System.nanoTime();
         run_1_time = 1;
+        timeEnemy = 0;
         canvas = new Canvas(WIDTH_SCREEN,HEIGHT_SCREEN);
         gContext = canvas.getGraphicsContext2D();
         Group root = new Group(canvas);
-
         mainScene = new Scene(root, WIDTH_SCREEN, HEIGHT_SCREEN);
         mainStage = new Stage();
         mainStage.setTitle(Title_game);
@@ -107,7 +107,6 @@ public class GameManager {
         timeWaveBoom = new ArrayList<>();
         keyCodes = new ArrayList<>();
         arrItemGame = new ArrayList<>();
-
         ranDomLocate = new ArrayList<>();
 
         readTxtMap();
@@ -125,6 +124,8 @@ public class GameManager {
         for (int i = 0; i < 3; i++) {
             arrEnemy.add(enemy[i]);
         }
+        octopus = new Octopus(180, 585, 0);
+        arrEnemy.add(octopus);
         createGameLoop();
         createKeyListeners();
         mainStage.show();
@@ -173,10 +174,10 @@ public class GameManager {
                   }
                   if(code == KeyCode.DIGIT1) {
                       // kiểm tra nếu player die và số kim lớn hơn 1 thì sau khi player die đc 0.2s thì có thể dùng kim
-                      if(player.getIsDie() && player.getKim() > 0
-                              && (double) (System.nanoTime() - player.getTimeBomberDie())/ Math.pow(10,9) > time_Wave_Bomb - 0.8) {
+                      if (player.getIsDie() && player.getKim() > 0
+                              && (double) (System.nanoTime() - player.getTimeBomberDie()) / Math.pow(10, 9) > time_Wave_Bomb - 0.8) {
                           System.out.println(time_Wave_Bomb - 0.8);
-                          player.setIsDie(false,0); // Item kim làm nổ bóng
+                          player.setIsDie(false, 0); // Item kim làm nổ bóng
                           player.setKim(-1);
                       }
                   }
@@ -244,13 +245,11 @@ public class GameManager {
                 arrBoom.remove(i);
                 TimeBombStart.remove(i);
                 arrWaveBoom.add(waveBoom);
-
                 try {
                     waveBoom.checkExplodeBoom_Boom(arrBoom, TimeBombStart);
                 } catch (Exception e) {
                         e.printStackTrace();
                 }
-
                 timeWaveBoom.add(System.nanoTime());
             }
         }
@@ -285,6 +284,21 @@ public class GameManager {
         }
     }
 
+    public void OctopusAddBomb(long time_start) {
+        int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
+        System.out.println(time);
+        if (time != timeEnemy) {
+            timeEnemy = time;
+            if (timeEnemy % 5 == 0) {
+            Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/set_boom.wav"), -15);
+            clip.start();
+                Boom boom = octopus.setupBoom(player.getX(), player.getY());
+                arrBoom.add(boom);
+                TimeBombStart.add(time_start);
+            }
+        }
+    }
+
     /**
      * Update Image, move, time ...
      */
@@ -295,6 +309,8 @@ public class GameManager {
         for (int i = 0; i < 3; i++) {
             enemy[i].moveEnemy(arrTileMap, arrBoom);
         }
+        OctopusAddBomb(System.nanoTime());
+        octopus.moveEnemy(arrTileMap, arrBoom);
         checkTimeBombExplode();
         bombBangTime();
         if (player.checkEnemy_Player(arrEnemy) == true){
@@ -327,6 +343,7 @@ public class GameManager {
         for (Enemy enemy1 : arrEnemy) {
             enemy1.drawEnemy(gContext);
         }
+        octopus.drawOctopus(gContext);
 
         drawPlayer();
 

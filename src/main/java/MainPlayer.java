@@ -344,7 +344,7 @@ public class MainPlayer extends BaseObject{
         int yRaw = (int)this.y + Boom.Size/2;
         int locateX = xRaw - xRaw % Boom.Size;
         int locateY = yRaw - yRaw % Boom.Size;
-        Boom bomb = new Boom(locateX, locateY, lengthBomb);
+        Boom bomb = new Boom(locateX, locateY, lengthBomb, 0);
         return bomb;
     }
 }

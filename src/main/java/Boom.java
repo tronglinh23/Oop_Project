@@ -7,7 +7,7 @@ public class Boom extends BaseObject{
     private int length_boom;
     public static final int Size = 45;
     private Image boomIMG;
-
+    private int type;
     private int isCheckBomb = 1;
     private final static Image[] BOOM_IMG = {
             ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_1.png"),
@@ -34,9 +34,10 @@ public class Boom extends BaseObject{
 
     private int imageAnimationStt = 0;
 
-    public Boom(int x, int y, int length_boom) {
+    public Boom(int x, int y, int length_boom, int type) {
         super(x,y);
         this.length_boom = length_boom;
+        this.type = type;
     }
 
     public void setIsCheckBomb(int k) {this.isCheckBomb = k;}
@@ -50,7 +51,11 @@ public class Boom extends BaseObject{
     }
     public void draw(GraphicsContext gc){
         imageAnimationStt++;
-        boomIMG = BOOM_IMG_2[imageAnimationStt/10 % BOOM_IMG.length];
+        if (type == 0){
+            boomIMG = BOOM_IMG_2[imageAnimationStt/10 % BOOM_IMG.length];
+        } else if (type == 1) {
+            boomIMG = BOOM_IMG[imageAnimationStt/10 % BOOM_IMG.length];
+        }
         gc.drawImage(boomIMG, x, y, Size + 3, Size);
     }
 

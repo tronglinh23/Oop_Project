@@ -72,8 +72,7 @@ public class WaveBoom {
                 if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
                     if (TileMap.levelGame == 0) {
                         if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
-                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
-                                || arrTileMap.get(i).locate_bit == 7) {
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6) {
                             arrTileMap.remove(i);
                             lengthLeft = lengthLeft - (lengthLeft - stt);
 
@@ -110,8 +109,7 @@ public class WaveBoom {
                 if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
                     if (TileMap.levelGame == 0) {
                         if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
-                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
-                                || arrTileMap.get(i).locate_bit == 7) {
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6) {
                             arrTileMap.remove(i);
                             lengthRight = lengthRight - (lengthRight - stt);
 
@@ -142,7 +140,7 @@ public class WaveBoom {
     private void drawDownWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
         for(int stt = 1 ; stt <= lengthDown ; stt++) {
             int xLocate = x + 5;
-            int yLocate = y + stt * Boom.Size;
+            int yLocate = y + stt * Boom.Size + 5;
             if(stt == lengthDown) {
                 gc.drawImage(WAVE_IMG[6],xLocate, yLocate);
             } else {
@@ -152,8 +150,7 @@ public class WaveBoom {
                 if (getRect(xLocate,yLocate).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
                     if (TileMap.levelGame == 0) {
                         if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
-                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
-                                || arrTileMap.get(i).locate_bit == 7) {
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6) {
                             arrTileMap.remove(i);
                             lengthDown = lengthDown - (lengthDown - stt);
 
@@ -189,8 +186,7 @@ public class WaveBoom {
                 if (getRect(xLocate + 5,yLocate + 10).getBoundsInParent().intersects(arrTileMap.get(i).getRect().getBoundsInParent())) {
                     if (TileMap.levelGame == 0) {
                         if (arrTileMap.get(i).locate_bit == 3 || arrTileMap.get(i).locate_bit == 4
-                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6
-                                || arrTileMap.get(i).locate_bit == 7) {
+                                || arrTileMap.get(i).locate_bit == 5 || arrTileMap.get(i).locate_bit == 6) {
                             arrTileMap.remove(i);
                             lengthUp = lengthUp - (lengthUp - stt);
 

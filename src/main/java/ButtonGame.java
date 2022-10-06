@@ -11,8 +11,8 @@ public class ButtonGame extends Button {
 
     private final String Font_Path = "src/main/resources/font/kenvector_future.ttf";
 
-    private final String BUTTON_FREE_STYLE = "-fx-background-color: transparent;-fx-background-image: url('images/Button_Default.jpg');";
-    private final String BUTTON_PRESSED_STYLE = "-fx-background-color: transparent;-fx-background-image: url('images/Button_Pressed.jpg');";
+    private final String BUTTON_FREE_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/Button_Default.jpg');";
+    private final String BUTTON_PRESSED_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/Button_Pressed.jpg');";
 
     public ButtonGame(String text) {
         setText(text);

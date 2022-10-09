@@ -9,23 +9,23 @@ import java.io.FileNotFoundException;
 
 public class ButtonGame extends Button {
 
-    private final String Font_Path = "src/main/resources/font/kenvector_future.ttf";
+    private final String Font_Path = "src/main/resources/font/XBall.ttf";
 
-    private final String BUTTON_FREE_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/Button_Default.jpg');";
-    private final String BUTTON_PRESSED_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/Button_Pressed.jpg');";
+    private final String BUTTON_FREE_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/greenButton.png');";
+    private final String BUTTON_PRESSED_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/greenButtonPressed.png');";
 
     public ButtonGame(String text) {
         setText(text);
         setButtonFont();
-        setPrefWidth(190);
-        setPrefHeight(49);
+        setPrefWidth(233);
+        setPrefHeight(55);
         setStyle(BUTTON_FREE_STYLE);
         initializeButtonListeners();
     }
 
     private void setButtonFont() {
         try {
-            setFont(Font.loadFont(new FileInputStream(Font_Path), 23));
+            setFont(Font.loadFont(new FileInputStream(Font_Path), 25));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -33,14 +33,14 @@ public class ButtonGame extends Button {
 
     private void setButtonPressedStyle() {
         setStyle(BUTTON_PRESSED_STYLE);
-        setPrefHeight(49);
-        setLayoutY(getLayoutY() + 4);
+        setPrefHeight(55);
+        setLayoutY(getLayoutY() + 5);
     }
 
     private void setButtonReleasedStyle() {
         setStyle(BUTTON_FREE_STYLE);
-        setPrefHeight(49);
-        setLayoutY(getLayoutY() - 4);
+        setPrefHeight(55);
+        setLayoutY(getLayoutY() - 5);
 
     }
 

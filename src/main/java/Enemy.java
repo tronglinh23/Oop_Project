@@ -61,7 +61,7 @@ public class Enemy extends BaseObject{
     }
 
     public Rectangle getRect() {
-        Rectangle theEnemy = new Rectangle(x + 10,y+15, size_enemy - 10, size_enemy - 15);
+        Rectangle theEnemy = new Rectangle(x + 10,y+15, size_enemy - 10, size_enemy - 10);
         return theEnemy;
     }
 
@@ -113,8 +113,8 @@ public class Enemy extends BaseObject{
         x = xChange;
         y = yChange;
 
-        boolean checkEnemyMove = checkMoveMap(arrTileMap);
-        boolean checkEnemyBomb = checkMoveEnemy_boom(arrBoom);
+        boolean checkEnemyMove = checkCollisionMap(arrTileMap);
+        boolean checkEnemyBomb = checkCollisionBomb(arrBoom);
 
         if (checkEnemyMove) {
             x = xRaw;
@@ -128,31 +128,6 @@ public class Enemy extends BaseObject{
             createOrient();
         }
     }
-
-    /**
-     * check di chuyển của enemy với boom.
-     */
-    public boolean checkMoveEnemy_boom(ArrayList<Boom> arrBoom) {
-        for (Boom boom : arrBoom) {
-            if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent()) && boom.getIsCheckBomb() == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean checkMoveMap(ArrayList<TileMap> arrTileMap) {
-        for (TileMap tileMap : arrTileMap) {
-            if (tileMap.locate_bit == 1 || tileMap.locate_bit == 2 || tileMap.locate_bit == 3 ||
-                tileMap.locate_bit == 4 || tileMap.locate_bit == 5 || tileMap.locate_bit == 6 ||
-                tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9 ) {
-                if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
 
 }
 

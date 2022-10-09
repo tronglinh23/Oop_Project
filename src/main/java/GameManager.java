@@ -184,6 +184,12 @@ public class GameManager {
                           player.setKim(-1);
                       }
                   }
+
+                  // xu li am thanh ki muon tat mo
+                  if (code == KeyCode.M) {
+                      if(soundGame.isRunning()) soundGame.stop();
+                      else soundGame.start();
+                  }
               }
         });
 
@@ -192,6 +198,7 @@ public class GameManager {
             public void handle(KeyEvent keyEvent) {
                 KeyCode code = keyEvent.getCode();
                 if (keyCodes.contains(code)) keyCodes.remove(code); // nếu trong list keycode  có thì remove
+
             }
         });
     }
@@ -289,7 +296,6 @@ public class GameManager {
 
     public void OctopusAddBomb(long time_start) {
         int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
-        System.out.println(time);
         if (time != timeEnemy) {
             timeEnemy = time;
             if (timeEnemy % 5 == 0) {
@@ -362,7 +368,6 @@ public class GameManager {
      * Draw tileMap.
      */
     public void drawTileMap() {
-        int i = 0;
         try {
             for(TileMap obstacle : arrTileMap) {
                 obstacle.drawImageStage(gContext);

@@ -19,7 +19,7 @@ public class viewManager {
 
     ArrayList<ButtonGame> listButtonMenu;
     private static final int Menu_Button_X = 100;
-    private static final int Menu_Button_Y = 150;
+    private static final int Menu_Button_Y = 350;
 
     private boolean isMusicPlay;
     private final static String BACKGROUND_IMG = "BackgroundGame/boom-mobile-1.jpg";
@@ -63,7 +63,7 @@ public class viewManager {
     private void createButtons() {
         listButtonMenu = new ArrayList<>();
         createStartMenu();
-        createScoresMenu();
+//        createScoresMenu();
         createHelpMenu();
         createExitMenu();
     }

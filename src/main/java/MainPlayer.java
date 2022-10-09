@@ -133,7 +133,7 @@ public class MainPlayer extends BaseObject{
     public int getKim() {return this.kim;}
 
     public Rectangle getRect() {
-        Rectangle mainPlayer = new Rectangle(x + 10,y+15, size_player - 10, size_player - 15);
+        Rectangle mainPlayer = new Rectangle(x + 10,y+15, size_player - 10, size_player - 10);
         return mainPlayer;
     }
 
@@ -264,18 +264,6 @@ public class MainPlayer extends BaseObject{
         }
     }
 
-    public boolean checkCollisionMap(ArrayList<TileMap>arrTileMap) {
-        for(TileMap tileMap : arrTileMap) {
-            if(tileMap.locate_bit == 1 || tileMap.locate_bit == 2 || tileMap.locate_bit == 3 ||
-                    tileMap.locate_bit == 4 || tileMap.locate_bit == 5 || tileMap.locate_bit == 6 ||
-                    tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
-                if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * Kiểm tra xem ở vị trí đấy đã có bomb chưa, có rồi thì không thêm vào.
@@ -306,14 +294,12 @@ public class MainPlayer extends BaseObject{
             }
         }
     }
+
+    @Override
     public boolean checkCollisionBomb(ArrayList<Boom> arrBoom) {
         setMoveBomb(arrBoom);
-        for (Boom boom : arrBoom) {
-            if(getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent()) && boom.getIsCheckBomb() == 0) {
-                return true;
-            }
-        }
-        return false;
+        boolean collid = super.checkCollisionBomb(arrBoom);
+        return collid;
     }
 
     /**

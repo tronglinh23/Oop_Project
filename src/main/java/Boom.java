@@ -9,7 +9,23 @@ public class Boom extends BaseObject{
     private Image boomIMG;
     private int type;
     private int isCheckBomb = 1;
+    private final static Image[] BOOM_ENEMY_IMG = {
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/blur_boom_2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom_Enemy_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom_Enemy_1.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom_Enemy_2.png"),
+            ImageUtils.loadImage("src/main/resources/Bomb/boom_Enemy_2.png"),
+
+    };
     private final static Image[] BOOM_IMG = {
+            ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_1.png"),
             ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_1.png"),
             ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_2.png"),
             ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_3.png"),
@@ -52,9 +68,9 @@ public class Boom extends BaseObject{
     public void draw(GraphicsContext gc){
         imageAnimationStt++;
         if (type == 0){
-            boomIMG = BOOM_IMG_2[imageAnimationStt/10 % BOOM_IMG.length];
+            boomIMG = BOOM_IMG_2[imageAnimationStt/10 % BOOM_IMG_2.length];
         } else if (type == 1) {
-            boomIMG = BOOM_IMG[imageAnimationStt/10 % BOOM_IMG.length];
+            boomIMG = BOOM_ENEMY_IMG[imageAnimationStt/10 % BOOM_ENEMY_IMG.length];
         }
         gc.drawImage(boomIMG, x, y, Size + 3, Size);
     }

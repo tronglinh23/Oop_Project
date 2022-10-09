@@ -98,15 +98,17 @@ public class Find extends Enemy{
         boolean checkEnemyMove = checkMoveMap(arrTileMap);
         boolean checkEnemyBomb = checkMoveEnemy_boom(arrBoom);
 
+        setOrient(checkMove(player));
         if (checkEnemyMove) {
             x = xRaw;
             y = yRaw;
-            createOrient();
-        } else {
-            if (player.getX() == this.getX() || player.getY() == this.getY()) {
-                setOrient(checkMove(player));
-            }
+            setOrient(checkMove(player));
         }
+//        } else {
+//            if (player.getX() == this.getX() || player.getY() == this.getY()) {
+//                setOrient(checkMove(player));
+//            }
+//        }
 
         if (checkEnemyBomb) {
             x = xRaw;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy extends BaseObject{
-    private int speed = 3;
+    public int speed = 4;
     private int orient;
     private Image enemy;
     private Random random = new Random();

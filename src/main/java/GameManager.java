@@ -76,6 +76,8 @@ public class GameManager {
 
     private Octopus octopus;
 
+    private Find find;
+
     ArrayList<Pair<Integer,Integer>> ranDomLocate;
     Clip soundGame;
 
@@ -123,12 +125,14 @@ public class GameManager {
 //        player = new MainPlayer(45,45);
         enemy[0] = new Enemy(45, 585,0);
         enemy[1] = new Enemy(675,45, 0);
-        enemy[2] = new Enemy(675,585,0);
+        enemy[2] = new Enemy(675,765,0);
         for (int i = 0; i < 3; i++) {
             arrEnemy.add(enemy[i]);
         }
         octopus = new Octopus(180, 585, 0);
         arrEnemy.add(octopus);
+        find = new Find(360, 765, 0);
+        arrEnemy.add(find);
         createGameLoop();
         createKeyListeners();
         mainStage.show();
@@ -298,7 +302,7 @@ public class GameManager {
         int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
         if (time != timeEnemy) {
             timeEnemy = time;
-            if (timeEnemy % 5 == 0) {
+            if (timeEnemy % 30 == 0) {
             Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/set_boom.wav"), -15);
             clip.start();
                 Boom boom = octopus.setupBoom(player.getX(), player.getY());
@@ -320,6 +324,7 @@ public class GameManager {
         }
         OctopusAddBomb(System.nanoTime());
         octopus.moveEnemy(arrTileMap, arrBoom);
+        find.moveFind(arrTileMap, arrBoom, player);
         checkTimeBombExplode();
         bombBangTime();
         if (player.checkEnemy_Player(arrEnemy) == true){
@@ -354,6 +359,7 @@ public class GameManager {
             enemy1.drawEnemy(gContext);
         }
         octopus.drawOctopus(gContext);
+        find.drawFind(gContext);
 
         drawPlayer();
 
@@ -412,12 +418,12 @@ public class GameManager {
                 for (int chr = 0; chr < line.length(); chr++) {
                     arrTileMap.add(new TileMap(chr*TileMap.SIZE, countLine*TileMap.SIZE,
                             Integer.parseInt(String.valueOf(line.charAt(chr)))));
-//                    if(level_Game == 0 && (line.charAt(chr) == '3' || line.charAt(chr) == '4' ||
-//                            line.charAt(chr) == '5' || line.charAt(chr) == '6')) {
-//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
-//                    } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
-//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
-//                    }
+                    if(level_Game == 0 && (line.charAt(chr) == '3' || line.charAt(chr) == '4' ||
+                            line.charAt(chr) == '5' || line.charAt(chr) == '6')) {
+                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+                    } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
+                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+                    }
                     if (line.charAt(chr) == '0') {
                         ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
                     }

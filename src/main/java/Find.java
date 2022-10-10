@@ -13,6 +13,13 @@ public class Find extends Enemy{
 
     private Random random = new Random();
 
+    private double moveHori;
+    private double moveVerti;
+    private boolean canMoveR;
+    private boolean canMoveL;
+    private boolean canMoveU;
+    private boolean canMoveD;
+
     public Find(int x, int y, int orient) {
         super(x, y, orient);
         find = MY_FIND[0];
@@ -43,129 +50,75 @@ public class Find extends Enemy{
         gc.drawImage(find, x, y, size_find + 10, size_find + 10);
     }
 
-//    public void moveFind(ArrayList<TileMap> arrTileMap, MainPlayer player) {
-//        boolean checkMove = checkMoveMap(arrTileMap);
-//        double xChange = x;
-//        double yChange = y;
-//        switch (super.getOrient()) {
-//            case LEFT:
-//                xChange -= (double) speed / 4;
-//                break;
-//            case RIGHT:
-//                xChange += (double) speed / 4;
-//                break;
-//            case UP:
-//                yChange -= (double) speed / 4;
-//                break;
-//            case DOWN:
-//                yChange +=  (double) speed / 4;
-//            default:
-//        }
-//        double xRaw = x;
-//        double yRaw = y;
-//        x = xChange;
-//        y = yChange;
-//
-//        if (checkMove) {
-//            x = xRaw;
-//            y = yRaw;
-//            createOrient();
-//        }
-//    }
+    public void moveFind(MainPlayer player, ArrayList<TileMap> arrTileMap) {
+        int j = (int) ((x + size_enemy / 2) / size_enemy);
+        int i = (int) ((y + size_enemy / 2) / size_enemy);
+        int jp = (int) (player.getX() + size_enemy / 2) / size_enemy;
+        int ip = (int) (player.getY() + size_enemy / 2) / size_enemy;
+        if ((j * size_enemy == x && i * size_enemy == y)) {
+            moveHori = 0;
+            moveVerti = 0;
+            canMoveR = false;
+            canMoveL = false;
+            canMoveU = false;
+            canMoveD = false;
+            checkNext(arrTileMap, j * size_enemy, i * size_enemy);
+            if (jp == j) {
+                moveHori = 0;
+            } else if (jp < j && canMoveL) {
+                moveHori = - speed;
+            } else if (jp > j && canMoveR) {
+                moveHori = speed;
+            }
+            if (ip == i) {
+                moveVerti = 0;
+            } else if (ip < i && canMoveU) {
+                moveVerti = - speed;
+            } else if (ip > i && canMoveD) {
+                moveVerti = speed;
+            }
 
-    public void moveFind(ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom, MainPlayer player) {
-        double xChange = x;
-        double yChange = y;
-        switch (super.getOrient()) {
-            case LEFT:
-                xChange -= (double) speed / 4;
-                break;
-            case RIGHT:
-                xChange += (double) speed / 4;
-                break;
-            case UP:
-                yChange -= (double) speed / 4;
-                break;
-            case DOWN:
-                yChange +=  (double) speed / 4;
-            default:
-        }
-        double xRaw = x;
-        double yRaw = y;
-        x = xChange;
-        y = yChange;
-
-        boolean checkEnemyMove = checkMoveMap(arrTileMap);
-        boolean checkEnemyBomb = checkMoveEnemy_boom(arrBoom);
-
-        setOrient(checkMove(player));
-        if (checkEnemyMove) {
-            x = xRaw;
-            y = yRaw;
-            setOrient(checkMove(player));
-        }
-//        } else {
-//            if (player.getX() == this.getX() || player.getY() == this.getY()) {
-//                setOrient(checkMove(player));
-//            }
-//        }
-
-        if (checkEnemyBomb) {
-            x = xRaw;
-            y = yRaw;
-            createOrient();
-        }
-    }
-
-    @Override
-    public boolean checkMoveMap(ArrayList<TileMap> arrTileMap) {
-        for (TileMap tileMap : arrTileMap) {
-            if (tileMap.locate_bit == 1 || tileMap.locate_bit == 2 || tileMap.locate_bit == 3 ||
-                    tileMap.locate_bit == 4 || tileMap.locate_bit == 5 || tileMap.locate_bit == 6 ||
-                    tileMap.locate_bit == 7 || tileMap.locate_bit == 8 || tileMap.locate_bit == 9) {
-                if(getRect().getBoundsInParent().intersects(tileMap.getRect().getBoundsInParent())) {
-                    return true;
+            if (moveVerti != 0 && moveHori != 0) {
+                if (Math.abs(ip - i) > Math.abs(jp - j)) {
+                    moveHori = 0;
+                } else {
+                    moveVerti = 0;
                 }
             }
         }
-        return false;
+        x += moveHori;
+        y += moveVerti;
+        x = Math.round(x * 10) / 10;
+        y = Math.round(y * 10) / 10;
     }
 
-    protected int calculateColDirection(MainPlayer player) {
-        if(player.getX() < this.getX())
-            return 0;
-        else if(player.getX() > this.getX())
-            return 1;
-        return -1;
-    }
+    public void checkNext(ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom, int xNext, int yNext){
+        for (TileMap tileMap : arrTileMap) {
+            if (tileMap.locate_bit == 0) {
+                if (tileMap.getX() == xNext + TileMap.SIZE && tileMap.getY() == yNext) {
+                    canMoveR = true;
+                    System.out.println(1);
+                }
 
-    protected int calculateRowDirection(MainPlayer player) {
-        if(player.getY() < this.getY())
-            return 2;
-        else if(player.getY() > this.getY())
-            return 3;
-        return -1;
-    }
+                if (tileMap.getX() == xNext - TileMap.SIZE && tileMap.getY() == yNext) {
+                    canMoveL = true;
+                    System.out.println(2);
+                }
 
-    public int checkMove(MainPlayer player) {
-        int rnd = random.nextInt(2);
-        if (rnd == 1) {
-            int col = calculateColDirection(player);
-            if (col != -1) {
-                return col;
-            }
-            else {
-                return calculateRowDirection(player);
+                if (tileMap.getX() == xNext && tileMap.getY() == yNext - TileMap.SIZE) {
+                    canMoveU = true;
+                    System.out.println(3);
+                }
+
+                if (tileMap.getX() == xNext && tileMap.getY() == yNext + TileMap.SIZE) {
+                    canMoveD = true;
+                    System.out.println(4);
+                }
             }
         }
-        else {
-            int row = calculateRowDirection(player);
-            if (row != -1) {
-                return row;
-            }
-            else {
-                return calculateColDirection(player);
-            }
+
+        for (Boom boom : arrBoom) {
+            if (boom)
         }
     }
 }

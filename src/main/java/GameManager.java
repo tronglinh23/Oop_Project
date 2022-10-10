@@ -131,7 +131,7 @@ public class GameManager {
         }
         octopus = new Octopus(180, 585, 0);
         arrEnemy.add(octopus);
-        find = new Find(360, 765, 0);
+        find = new Find(945 - 45 * 5, 765-45*3, 0);
         arrEnemy.add(find);
         createGameLoop();
         createKeyListeners();
@@ -324,7 +324,7 @@ public class GameManager {
         }
         OctopusAddBomb(System.nanoTime());
         octopus.moveEnemy(arrTileMap, arrBoom);
-        find.moveFind(arrTileMap, arrBoom, player);
+        find.moveFind(player, arrTileMap);
         checkTimeBombExplode();
         bombBangTime();
         if (player.checkEnemy_Player(arrEnemy) == true){
@@ -424,9 +424,9 @@ public class GameManager {
                     } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
                         ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
                     }
-                    if (line.charAt(chr) == '0') {
-                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
-                    }
+//                    if (line.charAt(chr) == '0') {
+//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+//                    }
                 }
 
                 line = reader.readLine();

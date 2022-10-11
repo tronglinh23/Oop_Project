@@ -190,7 +190,7 @@ public class MainPlayer extends BaseObject{
                 }
                 break;
         }
-        gc.drawImage(IMG_LUA_EFFECT[imageCount/10 % IMG_LUA_EFFECT.length],x-5,y,size_player+20,size_player+20);
+        gc.drawImage(IMG_LUA_EFFECT[imageCount / 10 % IMG_LUA_EFFECT.length],x-5,y,size_player+20,size_player+20);
         isPlayerRun=false;
         imageCount++;
     }

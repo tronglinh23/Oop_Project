@@ -15,6 +15,11 @@ public class viewManager {
     private AnchorPane mainPain;
     private Stage mainStage;
     private Scene mainScene;
+
+    private SubSceneGame startSubScene;
+    private SubSceneGame helpSubScene;
+    private SubSceneGame currentSubScene;
+
     private final static String Title_game = "Boom Online";
 
     ArrayList<ButtonGame> listButtonMenu;
@@ -35,7 +40,21 @@ public class viewManager {
         mainStage.setScene(mainScene);
         createBackGround();
         createButtons();
+        createStartSubScene();
+        createHelpSubScene();
+
         setMenuSongClip();
+    }
+
+    public void createStartSubScene() {
+        startSubScene = new SubSceneGame();
+        mainPain.getChildren().add(startSubScene);
+        startSubScene.getPane().getChildren().add(startButton());
+    }
+
+    public void createHelpSubScene() {
+        helpSubScene = new SubSceneGame();
+        mainPain.getChildren().add(helpSubScene);
     }
 
     public void setMenuSongClip() {
@@ -74,27 +93,10 @@ public class viewManager {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                menuSongClip.stop();
                 mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
                 mouseClick.start();
-                Clip start = SoundLoad.getSoundVolume(getClass().getResource("sounds/start.wav"), 0);
-                start.start();
-                GameManager gameStage = new GameManager();
-                GameManager.level_Game = 0; // khoi tao bien static
-                TileMap.levelGame = 0; // khoi tao bien static
-                gameStage.createNewGame(mainStage);
-            }
-        });
-    }
+                showUpSubScene(startSubScene);
 
-    private void createScoresMenu() {
-        ButtonGame scoresButton = new ButtonGame("Scores");
-        addMenuButton(scoresButton);
-        scoresButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
-                mouseClick.start();
             }
         });
     }
@@ -107,6 +109,7 @@ public class viewManager {
             public void handle(MouseEvent mouseEvent) {
                 mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
                 mouseClick.start();
+                showUpSubScene(helpSubScene);
             }
         });
     }
@@ -122,5 +125,40 @@ public class viewManager {
             }
         });
         addMenuButton(exitButton);
+    }
+
+
+    int countScreen;
+    public void showUpSubScene(SubSceneGame current) {
+        if (currentSubScene != null) {
+            countScreen += 1;
+            currentSubScene.moveSubscene();
+        }
+        if(currentSubScene != current) {
+            current.moveSubscene();
+            countScreen = 1;
+            currentSubScene = current;
+        }
+
+        if(countScreen == 2) currentSubScene = null; // Nếu 1 screen được bấm 2 lần rồi thì ta sẽ gán cho nó bằng null
+    }
+
+    public ButtonGame startButton() {
+        ButtonGame start = new ButtonGame("Start");
+        start.setLayoutX(135);
+        start.setLayoutY(325);
+        start.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                menuSongClip.stop();
+                Clip start = SoundLoad.getSoundVolume(getClass().getResource("sounds/start.wav"), 0);
+                start.start();
+                GameManager gameStage = new GameManager();
+                GameManager.level_Game = 0; // khoi tao bien static
+                TileMap.levelGame = 0; // khoi tao bien static
+                gameStage.createNewGame(mainStage);
+            }
+        });
+        return start;
     }
 }

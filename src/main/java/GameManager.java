@@ -128,10 +128,13 @@ public class GameManager {
         for (int i = 0; i < 3; i++) {
             arrEnemy.add(enemy[i]);
         }
+
         octopus = new Octopus(180, 585, 0);
         arrEnemy.add(octopus);
+
         find = new Find(945 - 45 * 7, 765-45*8, 0);
         arrEnemy.add(find);
+
         createGameLoop();
         createKeyListeners();
         mainStage.show();
@@ -258,11 +261,6 @@ public class GameManager {
                 arrBoom.remove(i);
                 TimeBombStart.remove(i);
                 arrWaveBoom.add(waveBoom);
-                try {
-                    waveBoom.checkExplodeBoom_Boom(arrBoom, TimeBombStart);
-                } catch (Exception e) {
-                        e.printStackTrace();
-                }
                 timeWaveBoom.add(System.nanoTime());
             }
         }
@@ -277,6 +275,7 @@ public class GameManager {
                 timeWaveBoom.remove(i);
             } else {
                 for (WaveBoom waveBoom : arrWaveBoom) {
+                    waveBoom.checkExplodeBoom_Boom(arrBoom, TimeBombStart);
                     waveBoom.checkExplodeBoom_Enemy(arrEnemy);
                     waveBoom.checkBoom_Player(player, System.nanoTime());
                 }
@@ -317,19 +316,22 @@ public class GameManager {
     public void update() {
         upLevelGame();
         checkGameOver();
+
         player.movePlayer(arrTileMap,arrBoom,keyCodes);
-        for (int i = 0; i < 3; i++) {
-            enemy[i].moveEnemy(arrTileMap, arrBoom);
+
+        for (int i = 0 ; i < 3 ; i++) {
+            enemy[i].moveEnemy(arrTileMap,arrBoom);
         }
+
         OctopusAddBomb(System.nanoTime());
         octopus.moveEnemy(arrTileMap, arrBoom);
+
         find.moveFind(player, arrTileMap, arrBoom);
 
-        checkTimeBombExplode();
-        bombBangTime();
-        if (player.checkEnemy_Player(arrEnemy) == true){
-            player.setIsDie(true, System.nanoTime());
-        }
+//        if (player.checkEnemy_Player(arrEnemy) == true){
+//            player.setIsDie(true, System.nanoTime());
+//        }
+
     }
 
     /**
@@ -337,7 +339,6 @@ public class GameManager {
      */
     public void renderer() {
         createBackground();
-
 
         for (int itemGame = 0 ; itemGame < arrItemGame.size() ; itemGame++) {
             arrItemGame.get(itemGame).drawItem(gContext);
@@ -348,19 +349,23 @@ public class GameManager {
 
         drawTileMap();
 
-        for (Boom boom : arrBoom) {
-            boom.draw(gContext);
-        }
+        checkTimeBombExplode();
 
         for (WaveBoom waveBoom : arrWaveBoom) {
             waveBoom.draw(arrTileMap, gContext);
         }
+
+        for (Boom boom : arrBoom) {
+            boom.draw(gContext);
+        }
+
+        bombBangTime();
+
         for (Enemy enemy1 : arrEnemy) {
             enemy1.drawEnemy(gContext);
         }
 
         drawPlayer();
-
 
     }
 

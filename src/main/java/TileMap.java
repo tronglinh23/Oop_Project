@@ -40,7 +40,7 @@ public class TileMap extends BaseObject{
 
     public void drawImageStage(GraphicsContext gc) {
         if(locate_bit != 0) {
-            gc.drawImage(IMG_MAP_VIEW[levelGame][locate_bit - 1],x,y,SIZE+2,SIZE+2);
+            gc.drawImage(IMG_MAP_VIEW[levelGame][locate_bit - 1],x,y,SIZE,SIZE);
         }
     }
 }

@@ -45,6 +45,7 @@ public class Octopus extends Enemy{
         return theOctopus;
     }
 
+    @Override
     public void drawEnemy(GraphicsContext gc) {
         gc.drawImage(octopus, x, y, size_octopus + 10, size_octopus + 10);
     }

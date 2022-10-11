@@ -9,16 +9,22 @@ import java.io.FileNotFoundException;
 
 public class ButtonGame extends Button {
 
+    private int WIDTH = 233;
+    private int HEIGHT = 55;
     private final String Font_Path = "src/main/resources/font/XBall.ttf";
 
     private final String BUTTON_FREE_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/greenButton.png');";
     private final String BUTTON_PRESSED_STYLE = "-fx-background-color: transparent;-fx-background-image: url('Button_img/greenButtonPressed.png');";
 
+    public void setSizeButton(int WIDTH, int HEIGHT) {
+        this.WIDTH = WIDTH;
+        this.HEIGHT = HEIGHT;
+    }
     public ButtonGame(String text) {
         setText(text);
         setButtonFont();
-        setPrefWidth(233);
-        setPrefHeight(55);
+        setPrefWidth(WIDTH);
+        setPrefHeight(HEIGHT);
         setStyle(BUTTON_FREE_STYLE);
         initializeButtonListeners();
     }
@@ -33,13 +39,13 @@ public class ButtonGame extends Button {
 
     private void setButtonPressedStyle() {
         setStyle(BUTTON_PRESSED_STYLE);
-        setPrefHeight(55);
+        setPrefHeight(HEIGHT);
         setLayoutY(getLayoutY() + 5);
     }
 
     private void setButtonReleasedStyle() {
         setStyle(BUTTON_FREE_STYLE);
-        setPrefHeight(55);
+        setPrefHeight(HEIGHT);
         setLayoutY(getLayoutY() - 5);
 
     }

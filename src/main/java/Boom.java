@@ -83,4 +83,5 @@ public class Boom extends BaseObject{
         WaveBoom waveBoom = new WaveBoom(locateX, locateY, length_boom);
         return waveBoom;
     };
+
 }

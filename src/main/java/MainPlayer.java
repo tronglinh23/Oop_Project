@@ -97,17 +97,17 @@ public class MainPlayer extends BaseObject{
     public MainPlayer(int x, int y) {
         super(x,y);
         gameOver = false;
+        isPlayerRun = false;
+        isCoBombSan = false;
+        isDie = false;
         soBoom = 2;
         speed = 2;
         lengthBomb = 1;
         kim = 0;
-        isPlayerRun = false;
         amountBomb = 2;
-        isCoBombSan = false;
         imageCount = 0;
         imageDieCount = 0;
-        isDie = false;
-        event = 4;
+        event = 3;
     }
     public void setIsDie(boolean isDie, long time) {
         this.isDie = isDie;
@@ -143,7 +143,8 @@ public class MainPlayer extends BaseObject{
     
     public void drawBomberDie(GraphicsContext gc) {
         gc.drawImage(IMG_BOMBER_DIE[imageDieCount / 10 % IMG_BOMBER_DIE.length], x - 5, y - 5);
-        if(IMG_BOMBER_DIE[imageDieCount / 10 % IMG_BOMBER_DIE.length] == IMG_BOMBER_DIE[IMG_BOMBER_DIE.length - 1]) {
+        if(IMG_BOMBER_DIE[imageDieCount / 10 % IMG_BOMBER_DIE.length] ==
+                IMG_BOMBER_DIE[IMG_BOMBER_DIE.length - 1]) {
             gameOver = true;
         }
         imageDieCount++;
@@ -155,7 +156,7 @@ public class MainPlayer extends BaseObject{
     public void drawMainPlayer(GraphicsContext gc) {
 
         switch (event) {
-            case 1 :
+            case 0 :
                 if (!isRun()){
                     gc.drawImage(PLAYER_LEFT_IMG[0],x,y,size_player+5,size_player+15);
                 } else {
@@ -163,7 +164,7 @@ public class MainPlayer extends BaseObject{
                     gc.drawImage(PLAYER_LEFT_IMG[imageCount / 10 % PLAYER_LEFT_IMG.length], x, y, size_player + 5, size_player + 15);
                 }
                 break;
-            case 2 :
+            case 1 :
                 if (!isRun()){
                     gc.drawImage(PLAYER_RIGHT_IMG[0],x,y,size_player+5,size_player+15);
                 } else {
@@ -171,7 +172,7 @@ public class MainPlayer extends BaseObject{
                     gc.drawImage(PLAYER_RIGHT_IMG[imageCount / 10 % PLAYER_RIGHT_IMG.length], x, y, size_player + 5, size_player + 15);
                 }
                 break;
-            case 3 :
+            case 2 :
                 if (!isRun()){
                     gc.drawImage(PLAYER_UP_IMG[0],x,y,size_player+5,size_player+15);
                 }
@@ -180,7 +181,7 @@ public class MainPlayer extends BaseObject{
                     gc.drawImage(PLAYER_UP_IMG[imageCount / 10 % PLAYER_UP_IMG.length], x, y,size_player+5,size_player+15);
                 }
                 break;
-            case 4 :
+            case 3 :
                 if (!isRun()){
                     gc.drawImage(PLAYER_DOWN_IMG[0],x,y,size_player+5,size_player+15);
                 } else {
@@ -246,18 +247,8 @@ public class MainPlayer extends BaseObject{
             y=yChange;
             boolean collisionMap = checkCollisionMap(arrTileMap);
             boolean collisionBomb = checkCollisionBomb(arrBomb);
-
-            if(collisionMap) {
-                x = xRaw;
-                y = yRaw;
-            }
-            if(collisionBomb) {
-                x = xRaw;
-                y = yRaw;
-            }
-
-            if(xChange <= 0 || xChange >= (GameManager.WIDTH_SCREEN - size_player - 10)
-                    || yChange <= 0 || yChange >= (GameManager.HEIGHT_SCREEN - size_player - 10)) {
+            boolean collisionFrame = checkCollisionFrame(xChange,yChange,size_player);
+            if(collisionMap || collisionBomb || collisionFrame) {
                 x = xRaw;
                 y = yRaw;
             }

@@ -122,16 +122,15 @@ public class GameManager {
         soundGame.start();
 
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
-//        player = new MainPlayer(45,45);
-        enemy[0] = new Enemy(45, 585,0);
-        enemy[1] = new Enemy(675,45, 0);
-        enemy[2] = new Enemy(675,765,0);
+        enemy[0] = new Enemy(45 * 3, 585,0);
+        enemy[1] = new Enemy(675,45 * 2, 0);
+        enemy[2] = new Enemy(675,765 - 45,0);
         for (int i = 0; i < 3; i++) {
             arrEnemy.add(enemy[i]);
         }
         octopus = new Octopus(180, 585, 0);
         arrEnemy.add(octopus);
-        find = new Find(945 - 45 * 5, 765-45*3, 0);
+        find = new Find(945 - 45 * 7, 765-45*8, 0);
         arrEnemy.add(find);
         createGameLoop();
         createKeyListeners();
@@ -302,7 +301,7 @@ public class GameManager {
         int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
         if (time != timeEnemy) {
             timeEnemy = time;
-            if (timeEnemy % 30 == 0) {
+            if (timeEnemy % 10 == 0) {
             Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/set_boom.wav"), -15);
             clip.start();
                 Boom boom = octopus.setupBoom(player.getX(), player.getY());
@@ -324,7 +323,8 @@ public class GameManager {
         }
         OctopusAddBomb(System.nanoTime());
         octopus.moveEnemy(arrTileMap, arrBoom);
-        find.moveFind(player, arrTileMap);
+        find.moveFind(player, arrTileMap, arrBoom);
+
         checkTimeBombExplode();
         bombBangTime();
         if (player.checkEnemy_Player(arrEnemy) == true){
@@ -358,8 +358,6 @@ public class GameManager {
         for (Enemy enemy1 : arrEnemy) {
             enemy1.drawEnemy(gContext);
         }
-        octopus.drawOctopus(gContext);
-        find.drawFind(gContext);
 
         drawPlayer();
 

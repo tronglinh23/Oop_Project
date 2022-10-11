@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Enemy extends BaseObject{
-    public int speed = 1;
+    public int speed = 2;
     private int orient;
     private Image enemy;
     private Random random = new Random();
@@ -17,37 +17,6 @@ public class Enemy extends BaseObject{
 
     public final int size_enemy = 45;
 
-    public final Image[] HAITAC_ENEMY_LEFT_IMG= {
-            ImageUtils.loadImage("src/main/resources/Enemy/LEFT.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/LEFT_1.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/LEFT_2.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/LEFT_3.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/LEFT_4.png")
-    };
-
-    public final Image[] HAITAC_ENEMY_RIGHT_IMG= {
-            ImageUtils.loadImage("src/main/resources/Enemy/RIGHT.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/RIGHT_1.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/RIGHT_2.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/RIGHT_3.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/RIGHT_4.png"),
-    };
-
-    public final Image[] HAITAC_ENEMY_UP_IMG= {
-            ImageUtils.loadImage("src/main/resources/Enemy/UP.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/UP_1.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/UP_2.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/UP_3.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/UP_4.png"),
-    };
-
-    public final Image[] HAITAC_ENEMY_DOWN_IMG= {
-            ImageUtils.loadImage("src/main/resources/Enemy/DOWN.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/DOWN_1.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/DOWN_2.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/DOWN_3.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/DOWN_4.png"),
-    };
     public final Image[] MY_ENEMY={
             ImageUtils.loadImage("src/main/resources/Enemy/ghost_left.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/ghost_right.png"),
@@ -113,16 +82,10 @@ public class Enemy extends BaseObject{
         x = xChange;
         y = yChange;
 
-        boolean checkEnemyMove = checkCollisionMap(arrTileMap);
+        boolean checkEnemyMap = checkCollisionMap(arrTileMap);
         boolean checkEnemyBomb = checkCollisionBomb(arrBoom);
-
-        if (checkEnemyMove) {
-            x = xRaw;
-            y = yRaw;
-            createOrient();
-        }
-
-        if (checkEnemyBomb) {
+        boolean checkEnemyFrame = checkCollisionFrame(xChange,yChange,size_enemy);
+        if (checkEnemyMap || checkEnemyBomb || checkEnemyFrame) {
             x = xRaw;
             y = yRaw;
             createOrient();

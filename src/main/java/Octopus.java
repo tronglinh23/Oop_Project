@@ -45,7 +45,7 @@ public class Octopus extends Enemy{
         return theOctopus;
     }
 
-    public void drawOctopus(GraphicsContext gc) {
+    public void drawEnemy(GraphicsContext gc) {
         gc.drawImage(octopus, x, y, size_octopus + 10, size_octopus + 10);
     }
 

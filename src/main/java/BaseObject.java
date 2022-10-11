@@ -25,10 +25,10 @@ public abstract class BaseObject {
     }
 
     public enum Move{
-        LEFT(1),
-        RIGHT(2),
-        UP(3),
-        DOWN(4),
+        LEFT(0),
+        RIGHT(1),
+        UP(2),
+        DOWN(3),
         ;
 
         int index;
@@ -37,7 +37,7 @@ public abstract class BaseObject {
             index = i;
         }
 
-        public int getIndex() {
+        public final int getIndex() {
             return index;
         }
     }
@@ -73,6 +73,12 @@ public abstract class BaseObject {
                 return true;
             }
         }
+        return false;
+    }
+    public boolean checkCollisionFrame(double xChange, double yChange, double SIZE) {
+        if(xChange <= 0 || xChange >= (GameManager.WIDTH_SCREEN - SIZE - 10)
+                || yChange <= 0 || yChange >= (GameManager.HEIGHT_SCREEN - SIZE - 10))
+            return true;
         return false;
     }
 }

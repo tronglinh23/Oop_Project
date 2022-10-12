@@ -1,3 +1,9 @@
+package Item_Bomb;
+
+import Enemy.Enemy;
+import MainGame.MainPlayer;
+import Map.TileMap;
+import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -286,6 +292,7 @@ public class WaveBoom {
                 if (getRect(x,y).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
                     xEnemyDie = arrEnemy.get(i).getX();
                     yEnemyDie = arrEnemy.get(i).getY();
+                    arrEnemy.get(i).setIsDie(true);
                     arrEnemy.remove(i);
                 }
                 for (int j = 1; j <= lengthLeft; j++) {
@@ -294,6 +301,7 @@ public class WaveBoom {
                     if (getRect(xRaw, yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
                         xEnemyDie = arrEnemy.get(i).getX();
                         yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.get(i).setIsDie(true);
                         arrEnemy.remove(i);
                     }
                 }
@@ -304,6 +312,7 @@ public class WaveBoom {
                     if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
                         xEnemyDie = arrEnemy.get(i).getX();
                         yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.get(i).setIsDie(true);
                         arrEnemy.remove(i);
                     }
                 }
@@ -314,6 +323,7 @@ public class WaveBoom {
                     if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
                         xEnemyDie = arrEnemy.get(i).getX();
                         yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.get(i).setIsDie(true);
                         arrEnemy.remove(i);
                     }
                 }
@@ -324,6 +334,7 @@ public class WaveBoom {
                     if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
                         xEnemyDie = arrEnemy.get(i).getX();
                         yEnemyDie = arrEnemy.get(i).getY();
+                        arrEnemy.get(i).setIsDie(true);
                         arrEnemy.remove(i);
                     }
                 }

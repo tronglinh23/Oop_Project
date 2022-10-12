@@ -1,11 +1,14 @@
+package Others;
 import javax.sound.sampled.*;
+import java.io.File;
 import java.net.URL;
 
 public class SoundLoad {
     private Clip clip_game;
-    public static Clip getSoundVolume(URL url, float minusVolume) {
+    public static Clip getSoundVolume(String fileName, float minusVolume) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+            File file = new File(fileName);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             FloatControl gainControl =

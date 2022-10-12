@@ -1,3 +1,5 @@
+package GUI;
+
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;

@@ -1,3 +1,8 @@
+package Enemy;
+import Others.*;
+import Base.BaseObject;
+import Item_Bomb.Boom;
+import Map.TileMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -17,6 +22,8 @@ public class Enemy extends BaseObject{
 
     public final int size_enemy = 45;
 
+    private boolean isDie;
+
     public final Image[] MY_ENEMY={
             ImageUtils.loadImage("src/main/resources/Enemy/ghost_left.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/ghost_right.png"),
@@ -27,6 +34,7 @@ public class Enemy extends BaseObject{
         super(x,y);
         this.orient = orient;
         enemy = MY_ENEMY[0];
+        isDie = false;
     }
 
     public Rectangle getRect() {
@@ -91,5 +99,10 @@ public class Enemy extends BaseObject{
             createOrient();
         }
     }
+
+    public void setIsDie(boolean isDie) {
+        this.isDie = isDie;
+    }
+    public boolean getIsDie() {return this.isDie;}
 }
 

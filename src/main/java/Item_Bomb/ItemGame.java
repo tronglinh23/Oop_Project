@@ -1,3 +1,11 @@
+package Item_Bomb;
+
+import Base.BaseObject;
+import Enemy.Enemy;
+import MainGame.GameManager;
+import MainGame.MainPlayer;
+import Map.TileMap;
+import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -58,13 +66,13 @@ public class ItemGame extends BaseObject{
                 return true;
             } else if(pickItem == 3) {
                 player.setKim(1);
-                System.out.println(player.getKim());
+                System.out.println("Kim : " + player.getKim());
                 return true;
             } else {
                 // phai giet het dc enemy moi qua man
                 if(arrEnemy.size() == 0) {
                     GameManager.level_Game += 1;
-                    System.out.println(GameManager.level_Game);
+                    System.out.println("Level Game:" + GameManager.level_Game);
                     return true;
                 }
             }

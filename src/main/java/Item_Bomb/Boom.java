@@ -1,3 +1,6 @@
+package Item_Bomb;
+import Base.BaseObject;
+import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;

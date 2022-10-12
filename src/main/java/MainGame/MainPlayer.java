@@ -1,3 +1,9 @@
+package MainGame;
+import Base.BaseObject;
+import Enemy.Enemy;
+import Item_Bomb.Boom;
+import Map.TileMap;
+import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;

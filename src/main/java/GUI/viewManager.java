@@ -1,3 +1,9 @@
+package GUI;
+
+import Others.*;
+import MainGame.GameManager;
+import Map.TileMap;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -58,7 +64,7 @@ public class viewManager {
     }
 
     public void setMenuSongClip() {
-        menuSongClip = SoundLoad.getSoundVolume(getClass().getResource("sounds/Happy Accident Simple Long Loop.wav"), -20);
+        menuSongClip = SoundLoad.getSoundVolume("src/main/resources/sounds/Happy Accident Simple Long Loop.wav", -20);
         menuSongClip.loop(30);
         menuSongClip.start();
     }
@@ -68,7 +74,8 @@ public class viewManager {
 
     private void createBackGround() {
         Image IMG = new Image(BACKGROUND_IMG, WIDTH_SCREEN, HEIGHT_SCREEN, false, false);
-        BackgroundImage backgroundIMG = new BackgroundImage(IMG,BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
+        BackgroundImage backgroundIMG = new BackgroundImage(IMG,BackgroundRepeat.REPEAT,
+                BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
         mainPain.setBackground(new Background(backgroundIMG));
     }
 
@@ -93,7 +100,7 @@ public class viewManager {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
+                mouseClick = SoundLoad.getSoundVolume("src/main/resources/sounds/Mouse-Click-00-m-FesliyanStudios.com.wav", -5);
                 mouseClick.start();
                 showUpSubScene(startSubScene);
 
@@ -107,7 +114,7 @@ public class viewManager {
         helpButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
+                mouseClick = SoundLoad.getSoundVolume("src/main/resources/sounds/Mouse-Click-00-m-FesliyanStudios.com.wav", -5);
                 mouseClick.start();
                 showUpSubScene(helpSubScene);
             }
@@ -119,7 +126,7 @@ public class viewManager {
         exitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                mouseClick = SoundLoad.getSoundVolume(getClass().getResource("sounds/Mouse-Click-00-m-FesliyanStudios.com.wav"), -5);
+                mouseClick = SoundLoad.getSoundVolume("src/main/resources/sounds/Mouse-Click-00-m-FesliyanStudios.com.wav", -5);
                 mouseClick.start();
                 mainStage.close();
             }
@@ -151,10 +158,10 @@ public class viewManager {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 menuSongClip.stop();
-                Clip start = SoundLoad.getSoundVolume(getClass().getResource("sounds/start.wav"), 0);
+                Clip start = SoundLoad.getSoundVolume("src/main/resources/sounds/start.wav", 0);
                 start.start();
                 GameManager gameStage = new GameManager();
-                GameManager.level_Game = 0; // khoi tao bien static
+                GameManager.level_Game = 1; // khoi tao bien static
                 TileMap.levelGame = 0; // khoi tao bien static
                 gameStage.createNewGame(mainStage);
             }

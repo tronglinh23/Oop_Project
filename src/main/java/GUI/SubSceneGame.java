@@ -1,3 +1,4 @@
+package GUI;
 import javafx.animation.TranslateTransition;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;

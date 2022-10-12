@@ -1,5 +1,9 @@
-import javafx.scene.shape.Rectangle;
+package Base;
 
+import Item_Bomb.Boom;
+import MainGame.GameManager;
+import Map.TileMap;
+import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 
 public abstract class BaseObject {

@@ -1,3 +1,9 @@
+package Enemy;
+
+import Item_Bomb.Boom;
+import MainGame.MainPlayer;
+import Map.TileMap;
+import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
@@ -61,7 +67,7 @@ public class Find extends Enemy {
 
     public void drawEnemy(GraphicsContext gc) {
         gc.drawImage(MY_FIND[setImage][indexIMG / 10 % MY_FIND[setImage].length],
-                x, y, size_find + 10, size_find + 10);
+                x, y, size_find + 5, size_find + 15);
         indexIMG++;
     }
 
@@ -83,7 +89,6 @@ public class Find extends Enemy {
             if (xPlayer == xEnemy) {
                 moveHorizontal = 0;
             } else if (xPlayer < xEnemy && canMoveL) {
-                System.out.println(1);
                 moveHorizontal = -speedHaiTac;
             } else if (xPlayer > xEnemy && canMoveR) {
                 moveHorizontal = speedHaiTac;

@@ -1,3 +1,10 @@
+package MainGame;
+
+import Enemy.*;
+import Item_Bomb.*;
+import GUI.viewManager;
+import Map.TileMap;
+import Others.*;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -38,8 +45,8 @@ public class GameManager {
     public static int level_Game;
     public static boolean is_check = false;
     private final String[] sound_Game = {
-            "sounds/gameplay1.wav",
-            "sounds/gameplay2.wav"
+            "src/main/resources/sounds/gameplay1.wav",
+            "src/main/resources/sounds/gameplay2.wav"
     };
     private final String[] background_Game = {
             "src/main/resources/map1/background1.png",
@@ -117,7 +124,7 @@ public class GameManager {
         readTxtMap();
         createLocateRanDomItem();
         //Load sound game
-        soundGame = SoundLoad.getSoundVolume(getClass().getResource(sound_Game[level_Game]), -5);
+        soundGame = SoundLoad.getSoundVolume(sound_Game[level_Game], -5);
         soundGame.loop(10);
         soundGame.start();
 
@@ -185,7 +192,6 @@ public class GameManager {
                       // kiểm tra nếu player die và số kim lớn hơn 1 thì sau khi player die đc 0.2s thì có thể dùng kim
                       if (player.getIsDie() && player.getKim() > 0
                               && (double) (System.nanoTime() - player.getTimeBomberDie()) / Math.pow(10, 9) > time_Wave_Bomb - 0.8) {
-                          System.out.println(time_Wave_Bomb - 0.8);
                           player.setIsDie(false, 0); // Item kim làm nổ bóng
                           player.setKim(-1);
                       }
@@ -239,7 +245,7 @@ public class GameManager {
             soundGame.stop();
             gameTimer.stop();
             try {
-                TimeUnit.SECONDS.sleep(1); // sleep chuyen level
+                TimeUnit.SECONDS.sleep(0); // sleep chuyen level
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -255,7 +261,7 @@ public class GameManager {
         for(int i = 0 ; i < arrBoom.size() ; i++) {
             double time = (System.nanoTime() - TimeBombStart.get(i)) / Math.pow(10,9);
             if(time >= time_Bomb) {
-                Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/boom_bang.wav"), -15);
+                Clip clip = SoundLoad.getSoundVolume("src/main/resources/sounds/boom_bang.wav", -15);
                 clip.start();
                 WaveBoom waveBoom = arrBoom.get(i).boomBang();
                 arrBoom.remove(i);
@@ -287,7 +293,7 @@ public class GameManager {
     public void addBombToPlayer(long time_start) {
         if(arrBoom.size() < player.getAmountBomb()) {
             if(player.getIscoBomb(arrBoom)) {
-                Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/set_boom.wav"), -15);
+                Clip clip = SoundLoad.getSoundVolume("src/main/resources/sounds/set_boom.wav", -15);
                 clip.start();
                 Boom boom = player.setupBoom();
                 arrBoom.add(boom);
@@ -297,15 +303,17 @@ public class GameManager {
     }
 
     public void OctopusAddBomb(long time_start) {
-        int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
-        if (time != timeEnemy) {
-            timeEnemy = time;
-            if (timeEnemy % 10 == 0) {
-            Clip clip = SoundLoad.getSoundVolume(getClass().getResource("sounds/set_boom.wav"), -15);
-            clip.start();
-                Boom boom = octopus.setupBoom(player.getX(), player.getY());
-                arrBoom.add(boom);
-                TimeBombStart.add(time_start);
+        if(!octopus.getIsDie()) {
+            int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
+            if (time != timeEnemy) {
+                timeEnemy = time;
+                if (timeEnemy % 10 == 0) {
+                    Clip clip = SoundLoad.getSoundVolume("src/main/resources/sounds/set_boom.wav", -15);
+                    clip.start();
+                    Boom boom = octopus.setupBoom(player.getX(), player.getY());
+                    arrBoom.add(boom);
+                    TimeBombStart.add(time_start);
+                }
             }
         }
     }
@@ -391,7 +399,7 @@ public class GameManager {
             time_Die_Player = (System.nanoTime() - player.getTimeBomberDie()) / Math.pow(10, 9);
             if (time_Die_Player > time_Bomber_Die) {
                 if(run_1_time > 0) {
-                    Clip soundBomberDie = SoundLoad.getSoundVolume(getClass().getResource("sounds/bomberdie.wav"), 0);
+                    Clip soundBomberDie = SoundLoad.getSoundVolume("src/main/resources/sounds/bomberdie.wav", 0);
                     soundBomberDie.start();
                     run_1_time--;
                 }

@@ -1,8 +1,10 @@
+package Enemy;
+
+import Item_Bomb.Boom;
+import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 /**

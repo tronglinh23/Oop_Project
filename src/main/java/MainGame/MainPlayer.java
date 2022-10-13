@@ -37,7 +37,7 @@ public class MainPlayer extends BaseObject{
 
     private Long timeBomberDie;
 
-
+    public static int bombType = 1;
     public final Image[] IMG_LUA_EFFECT = {
             ImageUtils.loadImage("src/main/resources/images/lua_1.png"),
             ImageUtils.loadImage("src/main/resources/images/lua_2.png"),
@@ -114,6 +114,15 @@ public class MainPlayer extends BaseObject{
         imageCount = 0;
         imageDieCount = 0;
         event = 3;
+        infoPlayer();
+    }
+
+    public void infoPlayer() {
+        System.out.println("\nLevel : " + (TileMap.levelGame + 1));
+        System.out.println("Bomb : " + getAmountBomb());
+        System.out.println("Speed : " + getSpeed());
+        System.out.println("Length WaveBomb : " + getLengthBomb());
+        System.out.println("Kim : " + getKim());
     }
     public void setIsDie(boolean isDie, long time) {
         this.isDie = isDie;
@@ -134,6 +143,10 @@ public class MainPlayer extends BaseObject{
     public void setLengthBomb() {this.lengthBomb += 1;}
 
     public void setSpeed() {this.speed += 0.5;}
+
+    public double getSpeed() {
+        return speed;
+    }
 
     public void setKim(int k) {this.kim += k;}
     public int getKim() {return this.kim;}
@@ -200,16 +213,6 @@ public class MainPlayer extends BaseObject{
         isPlayerRun=false;
         imageCount++;
     }
-
-    public boolean checkEnemy_Player(ArrayList<Enemy> arrEnemy){
-        for (int i=0;i<arrEnemy.size();i++){
-            if (getRect().getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())){
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public void movePlayer(ArrayList<TileMap>arrTileMap, ArrayList<Boom> arrBomb, ArrayList<KeyCode> keyCodes) {
         if(!isDie) {
@@ -312,7 +315,7 @@ public class MainPlayer extends BaseObject{
         int yRaw = (int)this.y + Boom.Size/2;
         int locateX = xRaw - xRaw % Boom.Size;
         int locateY = yRaw - yRaw % Boom.Size;
-        Boom bomb = new Boom(locateX, locateY, lengthBomb, 0);
+        Boom bomb = new Boom(locateX, locateY, lengthBomb, bombType);
         return bomb;
     }
 }

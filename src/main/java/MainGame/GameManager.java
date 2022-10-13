@@ -21,6 +21,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class GameManager {
     public final static int WIDTH_SCREEN = 945;
@@ -32,17 +33,22 @@ public class GameManager {
 
     private final static int time_Bomber_Die = 3;
 
+    private final static int timeImmortality = 2;
+
     private static int run_1_time ;
 
     private static long time_Start_Game;
 
-    private int timeEnemy;
+    private int timeOctopus;
+    private int timeHanabi;
     private double time_Die_Player;
+
+    private long timeUsedKim;
 
     private final static String Title_game = "Boom Online";
 
     // khoi tao scene theo level
-    public static int level_Game;
+    public static int level_Game = 0;
     public static boolean is_check = false;
     private final String[] sound_Game = {
             "src/main/resources/sounds/gameplay1.wav",
@@ -100,7 +106,9 @@ public class GameManager {
         time_Start_Game = System.nanoTime();
 
         run_1_time = 1;
-        timeEnemy = 0;
+        timeOctopus = 0;
+        timeHanabi = 0;
+        timeUsedKim = time_Start_Game;
 
         canvas = new Canvas(WIDTH_SCREEN,HEIGHT_SCREEN);
         gContext = canvas.getGraphicsContext2D();
@@ -139,9 +147,9 @@ public class GameManager {
 
         octopus = new Octopus(180, 585, 0);
         arrEnemy.add(octopus);
-        hanabi = new Hanabi(360, 585, 0);
+        hanabi = new Hanabi(45*3, 5 * 45);
         arrEnemy.add(hanabi);
-        find = new Find(945 - 45 * 7, 765-45*8, 0);
+        find = new Find(945 - 45 * 3, 5 * 45);
         arrEnemy.add(find);
 
         createGameLoop();
@@ -192,10 +200,13 @@ public class GameManager {
                   }
                   if(code == KeyCode.DIGIT1) {
                       // kiểm tra nếu player die và số kim lớn hơn 1 thì sau khi player die đc 0.2s thì có thể dùng kim
-                      if (player.getIsDie() && player.getKim() > 0
-                              && (double) (System.nanoTime() - player.getTimeBomberDie()) / Math.pow(10, 9) > time_Wave_Bomb - 0.8) {
+                      if (player.getIsDie() && player.getKim() > 0) {
+                          Clip soundRes = SoundLoad.getSoundVolume("src/main/resources/sounds/resurrection.wav", 0);
+                          soundRes.start();
+                          timeUsedKim = System.nanoTime();
                           player.setIsDie(false, 0); // Item kim làm nổ bóng
                           player.setKim(-1);
+                          System.out.println("Kim : " + player.getKim());
                       }
                   }
 
@@ -233,6 +244,7 @@ public class GameManager {
 
     public void checkGameOver() {
         if(MainPlayer.gameOver == true) {
+            if(level_Game == 1) level_Game--;
             soundGame.stop();
             mainStage.close();
             gameTimer.stop();
@@ -255,7 +267,6 @@ public class GameManager {
             gameStage.createNewGame(mainStage);
             is_check = true;
             TileMap.levelGame++;
-
         }
     }
 
@@ -276,9 +287,9 @@ public class GameManager {
 
     public void checkTimeHanabiExplode(long time_start) {
         int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
-        if (time != timeEnemy) {
-            timeEnemy = time;
-            if (timeEnemy % 5 == 0) {
+        if (time != timeHanabi) {
+            timeHanabi = time;
+            if (timeHanabi % 10 == 0) {
                 for (int i = 0; i < arrEnemy.size(); i++) {
                     if (arrEnemy.get(i) instanceof Hanabi) {
                         WaveBoom waveBoom = hanabi.boomBang();
@@ -323,9 +334,9 @@ public class GameManager {
     public void OctopusAddBomb(long time_start) {
         if(!octopus.getIsDie()) {
             int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
-            if (time != timeEnemy) {
-                timeEnemy = time;
-                if (timeEnemy % 10 == 0) {
+            if (time != timeOctopus) {
+                timeOctopus = time;
+                if (timeOctopus % 5 == 0) {
                     Clip clip = SoundLoad.getSoundVolume("src/main/resources/sounds/set_boom.wav", -15);
                     clip.start();
                     Boom boom = octopus.setupBoom(player.getX(), player.getY());
@@ -333,6 +344,12 @@ public class GameManager {
                     TimeBombStart.add(time_start);
                 }
             }
+        }
+    }
+
+    public void immortalPlayerCheck() {
+        if ((System.nanoTime() - timeUsedKim) / Math.pow(10,9) < timeImmortality) {
+            player.setIsDie(false, 0);
         }
     }
 
@@ -345,18 +362,13 @@ public class GameManager {
 
         player.movePlayer(arrTileMap,arrBoom,keyCodes);
 
-        for (int i = 0 ; i < 3 ; i++) {
-            enemy[i].moveEnemy(arrTileMap,arrBoom);
+
+        for (Enemy enemy : arrEnemy) {
+            enemy.moveEnemy(player, arrTileMap, arrBoom);
         }
 
         OctopusAddBomb(System.nanoTime());
-        octopus.moveEnemy(arrTileMap, arrBoom);
-        hanabi.moveFind(player, arrTileMap, arrBoom);
-        find.moveFind(player, arrTileMap, arrBoom);
-
-        if (player.checkEnemy_Player(arrEnemy) == true){
-            player.setIsDie(true, System.nanoTime());
-        }
+        immortalPlayerCheck();
 
     }
 
@@ -448,15 +460,15 @@ public class GameManager {
                 for (int chr = 0; chr < line.length(); chr++) {
                     arrTileMap.add(new TileMap(chr*TileMap.SIZE, countLine*TileMap.SIZE,
                             Integer.parseInt(String.valueOf(line.charAt(chr)))));
-                    if(level_Game == 0 && (line.charAt(chr) == '3' || line.charAt(chr) == '4' ||
-                            line.charAt(chr) == '5' || line.charAt(chr) == '6')) {
-                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
-                    } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
-                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
-                    }
-//                    if (line.charAt(chr) == '0') {
+//                    if(level_Game == 0 && (line.charAt(chr) == '3' || line.charAt(chr) == '4' ||
+//                            line.charAt(chr) == '5' || line.charAt(chr) == '6')) {
+//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+//                    } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
 //                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
 //                    }
+                    if (line.charAt(chr) == '0') {
+                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+                    }
                 }
 
                 line = reader.readLine();

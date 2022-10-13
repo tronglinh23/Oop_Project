@@ -57,22 +57,24 @@ public class ItemGame extends BaseObject{
         if(getRect().getBoundsInParent().intersects(player.getRect().getBoundsInParent())) {
             if (pickItem == 0) {
                 player.setAmountBomb();
+                System.out.println("\nBomb : " + player.getAmountBomb());
                 return true;
             } else if (pickItem == 1) {
                 player.setLengthBomb();;
+                System.out.println("\nLength WaveBomb : " + player.getLengthBomb());
                 return true;
             } else if (pickItem == 2) {
                 player.setSpeed();
+                System.out.println("\nSpeed : " + player.getSpeed());
                 return true;
             } else if(pickItem == 3) {
                 player.setKim(1);
-                System.out.println("Kim : " + player.getKim());
+                System.out.println("\nKim : " + player.getKim());
                 return true;
             } else {
                 // phai giet het dc enemy moi qua man
                 if(arrEnemy.size() == 0) {
                     GameManager.level_Game += 1;
-                    System.out.println("Level Game:" + GameManager.level_Game);
                     return true;
                 }
             }

@@ -260,7 +260,6 @@ public class WaveBoom {
                 int yLocate = y + 5;
                 if(getRect(xLocate, yLocate).getBoundsInParent()
                         .intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {
-                    System.out.println(1);
                     timeBombStart.set(bomb , (long) 0);
                     break;
                 }

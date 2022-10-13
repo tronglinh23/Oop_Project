@@ -80,9 +80,10 @@ public abstract class BaseObject {
         return false;
     }
     public boolean checkCollisionFrame(double xChange, double yChange, double SIZE) {
-        if(xChange <= 0 || xChange >= (GameManager.WIDTH_SCREEN - SIZE - 10)
-                || yChange <= 0 || yChange >= (GameManager.HEIGHT_SCREEN - SIZE - 10))
+        if(xChange <= 0 || xChange > (GameManager.WIDTH_SCREEN - SIZE)
+                || yChange <= 0 || yChange > (GameManager.HEIGHT_SCREEN - SIZE)) {
             return true;
+        }
         return false;
     }
 }

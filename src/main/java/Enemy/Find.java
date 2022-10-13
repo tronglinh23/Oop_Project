@@ -14,13 +14,9 @@ import java.util.Random;
 
 public class Find extends Enemy {
 
-    private Image find;
-    private final int speedHaiTacEnemy = 2;
 
     private final int size_find = 45;
     private final double speedHaiTac = 1;
-
-    private Random random = new Random();
 
     private double moveHorizontal;
     private double moveVertical;
@@ -29,8 +25,8 @@ public class Find extends Enemy {
     private boolean canMoveU;
     private boolean canMoveD;
 
-    private int indexIMG;
-    private int setImage;
+    protected int indexIMG;
+    protected int setImage;
     public final Image[][] MY_FIND = {
             {ImageUtils.loadImage("src/main/resources/Enemy/LEFT.png"),
                     ImageUtils.loadImage("src/main/resources/Enemy/LEFT_1.png"),
@@ -54,15 +50,10 @@ public class Find extends Enemy {
                     ImageUtils.loadImage("src/main/resources/Enemy/DOWN_4.png"),},
     };
 
-    public Find(int x, int y, int orient) {
-        super(x, y, orient);
+    public Find(int x, int y) {
+        super(x, y, 0);
         setImage = 3;
         indexIMG = 0;
-    }
-
-    public Rectangle getRect() {
-        Rectangle theFind = new Rectangle(x + 10, y + 15, size_find - 10, size_find - 15);
-        return theFind;
     }
 
     public void drawEnemy(GraphicsContext gc) {
@@ -71,7 +62,8 @@ public class Find extends Enemy {
         indexIMG++;
     }
 
-    public void moveFind(MainPlayer player, ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom) {
+    @Override
+    public void moveEnemy(MainPlayer player, ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom) {
         int xEnemy = (int) ((x + size_enemy / 2) / size_enemy);
         int yEnemy = (int) ((y + size_enemy / 2) / size_enemy);
         int xPlayer = (int) ((player.getX() + size_enemy / 2) / size_enemy);
@@ -117,10 +109,12 @@ public class Find extends Enemy {
 
         x += moveHorizontal;
         y += moveVertical;
-//        if (checkCollisionFrame(x, y, size_enemy)) {
-//            x -= moveHorizontal;
-//            y -= moveVertical;
-//        }
+
+        if (checkEnemy_Player(player)) {
+            if(player.getIsDie() == false) {
+                player.setIsDie(true, System.nanoTime());
+            }
+        }
     }
 
     public void checkBomb(ArrayList<Boom> arrBoom, int xNext, int yNext) {

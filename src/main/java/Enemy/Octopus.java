@@ -60,7 +60,7 @@ public class Octopus extends Enemy{
         int yRaw = (int)yPlayer + Boom.Size/2;
         int xBoom = xRaw - xRaw % Boom.Size;
         int yBoom = yRaw - yRaw % Boom.Size;
-        Boom bomb = new Boom(xBoom, yBoom, lengthBomb, 1);
+        Boom bomb = new Boom(xBoom, yBoom, lengthBomb, 0);
         return bomb;
     }
 }

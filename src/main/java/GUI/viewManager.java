@@ -1,5 +1,5 @@
 package GUI;
-
+import MainGame.MainPlayer;
 import Others.*;
 import MainGame.GameManager;
 import Map.TileMap;
@@ -38,6 +38,8 @@ public class viewManager {
     Clip menuSongClip;
     Clip mouseClick;
 
+    private ArrayList<BombPick> bombPickArrayList;
+
     public viewManager() {
         mainPain = new AnchorPane();
         mainScene = new Scene(mainPain, WIDTH_SCREEN, HEIGHT_SCREEN);
@@ -48,19 +50,7 @@ public class viewManager {
         createButtons();
         createStartSubScene();
         createHelpSubScene();
-
         setMenuSongClip();
-    }
-
-    public void createStartSubScene() {
-        startSubScene = new SubSceneGame();
-        mainPain.getChildren().add(startSubScene);
-        startSubScene.getPane().getChildren().add(startButton());
-    }
-
-    public void createHelpSubScene() {
-        helpSubScene = new SubSceneGame();
-        mainPain.getChildren().add(helpSubScene);
     }
 
     public void setMenuSongClip() {
@@ -68,10 +58,18 @@ public class viewManager {
         menuSongClip.loop(30);
         menuSongClip.start();
     }
-    public Stage getMainStage() {
-        return this.mainStage;
+
+    public void createStartSubScene() {
+        startSubScene = new SubSceneGame();
+        mainPain.getChildren().add(startSubScene);
+        startSubScene.getPane().getChildren().add(startButton());
+        startSubScene.getPane().getChildren().add(BombToChoose());
     }
 
+    public void createHelpSubScene() {
+        helpSubScene = new SubSceneGame();
+        mainPain.getChildren().add(helpSubScene);
+    }
     private void createBackGround() {
         Image IMG = new Image(BACKGROUND_IMG, WIDTH_SCREEN, HEIGHT_SCREEN, false, false);
         BackgroundImage backgroundIMG = new BackgroundImage(IMG,BackgroundRepeat.REPEAT,
@@ -89,7 +87,6 @@ public class viewManager {
     private void createButtons() {
         listButtonMenu = new ArrayList<>();
         createStartMenu();
-//        createScoresMenu();
         createHelpMenu();
         createExitMenu();
     }
@@ -136,6 +133,7 @@ public class viewManager {
 
 
     int countScreen;
+
     public void showUpSubScene(SubSceneGame current) {
         if (currentSubScene != null) {
             countScreen += 1;
@@ -149,7 +147,6 @@ public class viewManager {
 
         if(countScreen == 2) currentSubScene = null; // Nếu 1 screen được bấm 2 lần rồi thì ta sẽ gán cho nó bằng null
     }
-
     public ButtonGame startButton() {
         ButtonGame start = new ButtonGame("Start");
         start.setLayoutX(135);
@@ -167,5 +164,37 @@ public class viewManager {
             }
         });
         return start;
+    }
+
+    private HBox BombToChoose() {
+        HBox box = new HBox();
+        bombPickArrayList = new ArrayList<>();
+
+        box.setSpacing(75);
+
+        for(TypeBomb ship : TypeBomb.values()) {
+            BombPick bombToPick = new BombPick(ship);
+            bombPickArrayList.add(bombToPick);
+            box.getChildren().add(bombToPick);
+            bombToPick.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    for(BombPick bombPicked : bombPickArrayList) {
+                        bombPicked.setIsCircleChosen(false);
+                    }
+                    bombToPick.setIsCircleChosen(true);
+                    MainPlayer.bombType = bombToPick.getTypeBomb();
+                }
+            });
+        }
+
+        box.setLayoutX(80);
+        box.setLayoutY(100);
+
+        return box;
+    }
+
+    public Stage getMainStage() {
+        return this.mainStage;
     }
 }

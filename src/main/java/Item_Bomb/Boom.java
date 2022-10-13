@@ -27,7 +27,7 @@ public class Boom extends BaseObject{
             ImageUtils.loadImage("src/main/resources/Bomb/boom_Enemy_2.png"),
 
     };
-    private final static Image[] BOOM_IMG = {
+    private final static Image[] BOOM_IMG_1 = {
             ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_1.png"),
             ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_1.png"),
             ImageUtils.loadImage("src/main/resources/Bomb/BigBoomBongMay_2.png"),
@@ -71,9 +71,13 @@ public class Boom extends BaseObject{
     public void draw(GraphicsContext gc){
         imageAnimationStt++;
         if (type == 0){
-            boomIMG = BOOM_IMG_2[imageAnimationStt/10 % BOOM_IMG_2.length];
-        } else if (type == 1) {
             boomIMG = BOOM_ENEMY_IMG[imageAnimationStt/10 % BOOM_ENEMY_IMG.length];
+        } else if (type == 1) {
+            boomIMG = BOOM_IMG_1[imageAnimationStt/10 % BOOM_IMG_1.length];
+        } else if (type == 2) {
+            boomIMG = BOOM_IMG_2[imageAnimationStt/10 % BOOM_IMG_2.length];
+        } else {
+            boomIMG = BOOM_IMG_3[imageAnimationStt/10 % BOOM_IMG_3.length];
         }
         gc.drawImage(boomIMG, x, y, Size + 3, Size);
     }

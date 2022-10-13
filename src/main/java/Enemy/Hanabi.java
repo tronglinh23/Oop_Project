@@ -2,6 +2,7 @@ package Enemy;
 
 import Item_Bomb.WaveBoom;
 import Others.ImageUtils;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
@@ -14,29 +15,27 @@ public class Hanabi extends Find {
     private Random random = new Random();
     private int length_boom = 1;
 
-    public final Image[] MY_HANABI={
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_left.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_right.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_up.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_down.png")
+    public final Image[][] MY_HANABI={
+            {ImageUtils.loadImage("src/main/resources/Enemy/TNT_LEFT_1.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/TNT_LEFT_2.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/TNT_LEFT_3.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/TNT_LEFT_4.png")},
+            {ImageUtils.loadImage("src/main/resources/Enemy/TNT_RIGHT_1.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/TNT_RIGHT_2.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/TNT_RIGHT_3.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/TNT_RIGHT_4.png")},
+            {ImageUtils.loadImage("src/main/resources/Enemy/TNT_DOWN.png")},
+            {ImageUtils.loadImage("src/main/resources/Enemy/TNT_DOWN.png")},
     };
 
-    public void createOrient() {
-        int rnd = random.nextInt(20);
-        if (rnd > 15) {
-            int newOrient = random.nextInt(4);
-            setOrient(newOrient);
-            hanabi = MY_HANABI[newOrient];
-        }
+    public Hanabi(int x, int y) {
+        super(x, y);
     }
-    public Hanabi(int x, int y, int orient) {
-        super(x, y, orient);
-        hanabi = MY_HANABI[0];
-    }
-
-    public Rectangle getRect() {
-        Rectangle theHanabi = new Rectangle(x + 10, y + 15, size_hanabi - 10, size_hanabi - 15);
-        return theHanabi;
+    @Override
+    public void drawEnemy(GraphicsContext gc) {
+        gc.drawImage(MY_HANABI[setImage][indexIMG / 10 % MY_HANABI[setImage].length],
+                x, y - 10, size_hanabi + 5, size_hanabi + 20);
+        indexIMG++;
     }
 
     public WaveBoom boomBang() {

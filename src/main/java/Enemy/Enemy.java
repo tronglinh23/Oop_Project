@@ -1,4 +1,5 @@
 package Enemy;
+import MainGame.MainPlayer;
 import Others.*;
 import Base.BaseObject;
 import Item_Bomb.Boom;
@@ -68,7 +69,7 @@ public class Enemy extends BaseObject{
         gc.drawImage(enemy, x, y, size_enemy + 10, size_enemy + 10);
     }
 
-    public void moveEnemy(ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom) {
+    public void moveEnemy(MainPlayer player, ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom) {
         double xChange = x;
         double yChange = y;
         switch (orient) {
@@ -93,13 +94,26 @@ public class Enemy extends BaseObject{
         boolean checkEnemyMap = checkCollisionMap(arrTileMap);
         boolean checkEnemyBomb = checkCollisionBomb(arrBoom);
         boolean checkEnemyFrame = checkCollisionFrame(xChange,yChange,size_enemy);
+        boolean checkEnemyPlayer = checkEnemy_Player(player);
+
         if (checkEnemyMap || checkEnemyBomb || checkEnemyFrame) {
             x = xRaw;
             y = yRaw;
             createOrient();
         }
-    }
 
+        if (checkEnemyPlayer) {
+            if(player.getIsDie() == false) {
+                player.setIsDie(true, System.nanoTime());
+            }
+        }
+    }
+    public boolean checkEnemy_Player(MainPlayer player){
+        if (getRect().getBoundsInParent().intersects(player.getRect().getBoundsInParent())){
+            return true;
+        }
+        return false;
+    }
     public void setIsDie(boolean isDie) {
         this.isDie = isDie;
     }

@@ -82,6 +82,7 @@ public class GameManager {
     private Enemy[] enemy = new Enemy[4];
 
     private Octopus octopus;
+    private Hanabi hanabi;
 
     private Find find;
 
@@ -138,7 +139,8 @@ public class GameManager {
 
         octopus = new Octopus(180, 585, 0);
         arrEnemy.add(octopus);
-
+        hanabi = new Hanabi(360, 585, 0);
+        arrEnemy.add(hanabi);
         find = new Find(945 - 45 * 7, 765-45*8, 0);
         arrEnemy.add(find);
 
@@ -270,7 +272,23 @@ public class GameManager {
                 timeWaveBoom.add(System.nanoTime());
             }
         }
+    }
 
+    public void checkTimeHanabiExplode(long time_start) {
+        int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
+        if (time != timeEnemy) {
+            timeEnemy = time;
+            if (timeEnemy % 5 == 0) {
+                for (int i = 0; i < arrEnemy.size(); i++) {
+                    if (arrEnemy.get(i) instanceof Hanabi) {
+                        WaveBoom waveBoom = hanabi.boomBang();
+                        arrEnemy.remove(i);
+                        arrWaveBoom.add(waveBoom);
+                        timeWaveBoom.add(System.nanoTime());
+                    }
+                }
+            }
+        }
     }
 
     public void bombBangTime () {
@@ -333,12 +351,12 @@ public class GameManager {
 
         OctopusAddBomb(System.nanoTime());
         octopus.moveEnemy(arrTileMap, arrBoom);
-
+        hanabi.moveFind(player, arrTileMap, arrBoom);
         find.moveFind(player, arrTileMap, arrBoom);
 
-//        if (player.checkEnemy_Player(arrEnemy) == true){
-//            player.setIsDie(true, System.nanoTime());
-//        }
+        if (player.checkEnemy_Player(arrEnemy) == true){
+            player.setIsDie(true, System.nanoTime());
+        }
 
     }
 
@@ -356,6 +374,7 @@ public class GameManager {
         }
 
         drawTileMap();
+        checkTimeHanabiExplode(System.nanoTime());
 
         checkTimeBombExplode();
 

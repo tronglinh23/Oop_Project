@@ -109,7 +109,7 @@ public class MainPlayer extends BaseObject{
         soBoom = 2;
         speed = 2;
         lengthBomb = 1;
-        kim = 0;
+        kim = 1;
         amountBomb = 2;
         imageCount = 0;
         imageDieCount = 0;

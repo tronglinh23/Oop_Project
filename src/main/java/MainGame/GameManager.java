@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -21,7 +22,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 public class GameManager {
     public final static int WIDTH_SCREEN = 945;
@@ -92,6 +92,8 @@ public class GameManager {
 
     private Find find;
 
+    private Boolean pauseGame;
+
     ArrayList<Pair<Integer,Integer>> ranDomLocate;
     Clip soundGame;
 
@@ -104,6 +106,7 @@ public class GameManager {
         this.menuStage = menuStage;
         this.menuStage.close();
         time_Start_Game = System.nanoTime();
+        pauseGame = false;
 
         run_1_time = 1;
         timeOctopus = 0;
@@ -133,11 +136,12 @@ public class GameManager {
         readTxtMap();
         createLocateRanDomItem();
         //Load sound game
-        soundGame = SoundLoad.getSoundVolume(sound_Game[level_Game], -5);
+        soundGame = SoundLoad.getSoundVolume(sound_Game[level_Game], -10);
         soundGame.loop(10);
         soundGame.start();
 
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
+
         enemy[0] = new Enemy(45 * 3, 585,0);
         enemy[1] = new Enemy(675,45 * 2, 0);
         enemy[2] = new Enemy(675,765 - 45,0);
@@ -146,10 +150,14 @@ public class GameManager {
         }
 
         octopus = new Octopus(180, 585, 0);
+        octopus.setLifeEnemy(3);
         arrEnemy.add(octopus);
+
         hanabi = new Hanabi(45*3, 5 * 45);
         arrEnemy.add(hanabi);
+
         find = new Find(945 - 45 * 3, 5 * 45);
+        find.setLifeEnemy(2);
         arrEnemy.add(find);
 
         createGameLoop();
@@ -170,20 +178,22 @@ public class GameManager {
         int x1 = autoRandomLocate();
         arrItemGame.add(new ItemGame(ranDomLocate.get(x1).getKey(),ranDomLocate.get(x1).getValue(), 0));
         ranDomLocate.remove(x1);
+
         int x2 = autoRandomLocate();
         arrItemGame.add(new ItemGame(ranDomLocate.get(x2).getKey(),ranDomLocate.get(x2).getValue(),1));
         ranDomLocate.remove(x2);
+
         int x3 = autoRandomLocate();
         arrItemGame.add(new ItemGame(ranDomLocate.get(x3).getKey(),ranDomLocate.get(x3).getValue(),2));
         ranDomLocate.remove(x3);
+
         int x4 = autoRandomLocate();
         arrItemGame.add(new ItemGame(ranDomLocate.get(x4).getKey(),ranDomLocate.get(x4).getValue(),3));
         ranDomLocate.remove(x4);
-        if(level_Game != 1) {
-            int x5 = autoRandomLocate();
-            arrItemGame.add(new ItemGame(ranDomLocate.get(x5).getKey(),ranDomLocate.get(x5).getValue(),4));
-            ranDomLocate.remove(x5);
-        }
+
+        int x5 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x5).getKey(),ranDomLocate.get(x5).getValue(),4));
+        ranDomLocate.remove(x5);
     }
     /**
      * Xử lí các thao tác trên bàn phím , các nút bấm
@@ -215,6 +225,20 @@ public class GameManager {
                       if(soundGame.isRunning()) soundGame.stop();
                       else soundGame.start();
                   }
+
+                  if (code == KeyCode.ESCAPE) {
+                      if (!pauseGame) {
+                          gameTimer.stop();
+                          soundGame.stop();
+                          pauseGame = true;
+                          Image pauseImg = ImageUtils.loadImage("src/main/resources/BackgroundGame/PausedBackground.png");
+                          gContext.drawImage(pauseImg,260,350);
+                      } else {
+                          gameTimer.start();
+                          soundGame.start();
+                          pauseGame = false;
+                      }
+                  }
               }
         });
 
@@ -244,7 +268,7 @@ public class GameManager {
 
     public void checkGameOver() {
         if(MainPlayer.gameOver == true) {
-            if(level_Game == 1) level_Game--;
+            if(level_Game != 0) level_Game = 0;
             soundGame.stop();
             mainStage.close();
             gameTimer.stop();
@@ -259,7 +283,7 @@ public class GameManager {
             soundGame.stop();
             gameTimer.stop();
             try {
-                TimeUnit.SECONDS.sleep(0); // sleep chuyen level
+                TimeUnit.SECONDS.sleep(1); // sleep chuyen level
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -267,6 +291,17 @@ public class GameManager {
             gameStage.createNewGame(mainStage);
             is_check = true;
             TileMap.levelGame++;
+        } else if (level_Game == 2) {
+            soundGame.stop();
+            Clip soundWin = SoundLoad.getSoundVolume("src/main/resources/sounds/winGame.wav", -5);
+            soundWin.start();
+            try {
+                TimeUnit.SECONDS.sleep(4);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            MainPlayer.gameOver = true;
+            checkGameOver();
         }
     }
 
@@ -357,8 +392,8 @@ public class GameManager {
      * Update Image, move, time ...
      */
     public void update() {
-        upLevelGame();
         checkGameOver();
+        upLevelGame();
 
         player.movePlayer(arrTileMap,arrBoom,keyCodes);
 

@@ -4,9 +4,12 @@ import Enemy.Enemy;
 import MainGame.MainPlayer;
 import Map.TileMap;
 import Others.ImageUtils;
+import Others.SoundLoad;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+
+import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 
 public class WaveBoom {
@@ -34,10 +37,13 @@ public class WaveBoom {
                                         ImageUtils.loadImage("src/main/resources/images/bombbang_up_2.png")
     };
 
+    private Clip soundTouch;
+
     public WaveBoom(int x, int y, int lengthWave) {
         this.x = x;
         this.y = y;
         this.lengthLeft = this.lengthRight = this.lengthDown = this.lengthUp =  lengthWave;
+        soundTouch = SoundLoad.getSoundVolume("src/main/resources/sounds/waveTouch.wav", 0);
     }
 
     public Rectangle getRect(int x, int y) {
@@ -288,56 +294,72 @@ public class WaveBoom {
     public void checkExplodeBoom_Enemy(ArrayList<Enemy> arrEnemy) {
         for (int i = 0; i < arrEnemy.size(); i++) {
             try {
-                if (getRect(x,y).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
-                    xEnemyDie = arrEnemy.get(i).getX();
-                    yEnemyDie = arrEnemy.get(i).getY();
-                    arrEnemy.get(i).setIsDie(true);
-                    arrEnemy.remove(i);
-                }
-                for (int j = 1; j <= lengthLeft; j++) {
-                    int xRaw = x - j * Boom.Size + 5;
-                    int yRaw = y + 5;
-                    if (getRect(xRaw, yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                if ((System.nanoTime() - arrEnemy.get(i).getTimeDie()) / Math.pow(10,9) >= Enemy.timeImmortality) {
+                    if (getRect(x, y).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
                         xEnemyDie = arrEnemy.get(i).getX();
                         yEnemyDie = arrEnemy.get(i).getY();
+                        soundTouch.start();
+                        arrEnemy.get(i).decreaseLife();
+                        arrEnemy.get(i).setTimeDie(System.nanoTime());
+                    } else {
+                        for (int j = 1; j <= lengthLeft; j++) {
+                            int xRaw = x - j * Boom.Size + 5;
+                            int yRaw = y + 5;
+                            if (getRect(xRaw, yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                                xEnemyDie = arrEnemy.get(i).getX();
+                                yEnemyDie = arrEnemy.get(i).getY();
+                                soundTouch.start();
+                                arrEnemy.get(i).decreaseLife();
+                                arrEnemy.get(i).setTimeDie(System.nanoTime());
+                                break;
+                            }
+                        }
+
+                        for (int j = 1; j <= lengthRight; j++) {
+                            int xRaw = x + j * Boom.Size + 5;
+                            int yRaw = y + 5;
+                            if (getRect(xRaw, yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                                xEnemyDie = arrEnemy.get(i).getX();
+                                yEnemyDie = arrEnemy.get(i).getY();
+                                soundTouch.start();
+                                arrEnemy.get(i).decreaseLife();
+                                arrEnemy.get(i).setTimeDie(System.nanoTime());
+                                break;
+                            }
+                        }
+
+                        for (int j = 1; j <= lengthUp; j++) {
+                            int xRaw = x + 5;
+                            int yRaw = y - j * Boom.Size + 5;
+                            if (getRect(xRaw, yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                                xEnemyDie = arrEnemy.get(i).getX();
+                                yEnemyDie = arrEnemy.get(i).getY();
+                                soundTouch.start();
+                                arrEnemy.get(i).decreaseLife();
+                                arrEnemy.get(i).setTimeDie(System.nanoTime());
+                                break;
+                            }
+                        }
+
+                        for (int j = 1; j <= lengthDown; j++) {
+                            int xRaw = x + 5;
+                            int yRaw = y + j * Boom.Size + 5;
+                            if (getRect(xRaw, yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
+                                xEnemyDie = arrEnemy.get(i).getX();
+                                yEnemyDie = arrEnemy.get(i).getY();
+                                soundTouch.start();
+                                arrEnemy.get(i).decreaseLife();
+                                arrEnemy.get(i).setTimeDie(System.nanoTime());
+                                break;
+                            }
+                        }
+                    }
+
+                    if (arrEnemy.get(i).getLifeEnemy() <= 0) {
                         arrEnemy.get(i).setIsDie(true);
                         arrEnemy.remove(i);
                     }
                 }
-
-                for (int j = 1; j <= lengthRight; j++) {
-                    int xRaw = x + j * Boom.Size + 5;
-                    int yRaw = y + 5;
-                    if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
-                        xEnemyDie = arrEnemy.get(i).getX();
-                        yEnemyDie = arrEnemy.get(i).getY();
-                        arrEnemy.get(i).setIsDie(true);
-                        arrEnemy.remove(i);
-                    }
-                }
-
-                for (int j = 1; j <= lengthUp; j++) {
-                    int xRaw = x + 5;
-                    int yRaw = y - j * Boom.Size + 5;
-                    if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
-                        xEnemyDie = arrEnemy.get(i).getX();
-                        yEnemyDie = arrEnemy.get(i).getY();
-                        arrEnemy.get(i).setIsDie(true);
-                        arrEnemy.remove(i);
-                    }
-                }
-
-                for (int j = 1; j <= lengthDown; j++) {
-                    int xRaw = x + 5;
-                    int yRaw = y + j * Boom.Size + 5;
-                    if (getRect(xRaw,yRaw).getBoundsInParent().intersects(arrEnemy.get(i).getRect().getBoundsInParent())) {
-                        xEnemyDie = arrEnemy.get(i).getX();
-                        yEnemyDie = arrEnemy.get(i).getY();
-                        arrEnemy.get(i).setIsDie(true);
-                        arrEnemy.remove(i);
-                    }
-                }
-
             } catch (IndexOutOfBoundsException e) {
             }
         }

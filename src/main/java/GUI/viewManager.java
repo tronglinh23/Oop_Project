@@ -7,6 +7,7 @@ import Map.TileMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -33,7 +34,8 @@ public class viewManager {
     private static final int Menu_Button_Y = 350;
 
     private boolean isMusicPlay;
-    private final static String BACKGROUND_IMG = "BackgroundGame/boom-mobile-1.jpg";
+    private final static String BACKGROUND_IMG = "BackgroundGame/BoomBackground.jpg";
+    private final static String LOGO_IMG = "BackgroundGame/TitleBackground.png";
 
     Clip menuSongClip;
     Clip mouseClick;
@@ -51,6 +53,7 @@ public class viewManager {
         createStartSubScene();
         createHelpSubScene();
         setMenuSongClip();
+        createLogo();
     }
 
     public void setMenuSongClip() {
@@ -75,6 +78,14 @@ public class viewManager {
         BackgroundImage backgroundIMG = new BackgroundImage(IMG,BackgroundRepeat.REPEAT,
                 BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
         mainPain.setBackground(new Background(backgroundIMG));
+    }
+
+    public void createLogo() {
+        Image logoIMG = new Image(LOGO_IMG, 468, 100, false, false);
+        ImageView img = new ImageView(logoIMG);
+        img.setLayoutX(250);
+        img.setLayoutY(75);
+        mainPain.getChildren().add(img);
     }
 
     private void addMenuButton(ButtonGame buttonName) {
@@ -158,7 +169,7 @@ public class viewManager {
                 Clip start = SoundLoad.getSoundVolume("src/main/resources/sounds/start.wav", 0);
                 start.start();
                 GameManager gameStage = new GameManager();
-                GameManager.level_Game = 1; // khoi tao bien static
+                GameManager.level_Game = 0; // khoi tao bien static
                 TileMap.levelGame = 0; // khoi tao bien static
                 gameStage.createNewGame(mainStage);
             }

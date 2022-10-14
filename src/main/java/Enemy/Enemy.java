@@ -25,6 +25,11 @@ public class Enemy extends BaseObject{
 
     private boolean isDie;
 
+    private int lifeEnemy;
+
+    public final static double timeImmortality = 1.5;
+    private long timeDie;
+
     public final Image[] MY_ENEMY={
             ImageUtils.loadImage("src/main/resources/Enemy/ghost_left.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/ghost_right.png"),
@@ -36,7 +41,10 @@ public class Enemy extends BaseObject{
         this.orient = orient;
         enemy = MY_ENEMY[0];
         isDie = false;
+        lifeEnemy = 1;
+        timeDie = (long)0;
     }
+
 
     public Rectangle getRect() {
         Rectangle theEnemy = new Rectangle(x + 10,y+15, size_enemy - 10, size_enemy - 10);
@@ -55,6 +63,26 @@ public class Enemy extends BaseObject{
             setOrient(newOrient);
             enemy = MY_ENEMY[newOrient];
         }
+    }
+
+    public void setLifeEnemy(int lifeEnemy) {
+        this.lifeEnemy = lifeEnemy;
+    }
+
+    public int getLifeEnemy() {
+        return lifeEnemy;
+    }
+
+    public void decreaseLife() {
+        this.lifeEnemy--;
+    }
+
+    public void setTimeDie(long timeDie) {
+        this.timeDie = timeDie;
+    }
+
+    public long getTimeDie() {
+        return timeDie;
     }
 
     public void setOrient(int orient) {

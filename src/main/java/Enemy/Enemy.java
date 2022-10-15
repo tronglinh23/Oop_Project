@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Enemy extends BaseObject{
+public abstract class Enemy extends BaseObject{
     public int speed = 2;
     private int orient;
     private Image enemy;
@@ -30,16 +30,9 @@ public class Enemy extends BaseObject{
     public final static double timeImmortality = 1.5;
     private long timeDie;
 
-    public final Image[] MY_ENEMY={
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_left.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_right.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_up.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_down.png")
-    };
-    public Enemy(int x, int y, int orient) {
+    public Enemy(int x, int y) {
         super(x,y);
-        this.orient = orient;
-        enemy = MY_ENEMY[0];
+        this.orient = 0;
         isDie = false;
         lifeEnemy = 1;
         timeDie = (long)0;
@@ -61,7 +54,6 @@ public class Enemy extends BaseObject{
         if (rnd > 15) {
             int newOrient = random.nextInt(4);
             setOrient(newOrient);
-            enemy = MY_ENEMY[newOrient];
         }
     }
 
@@ -93,9 +85,7 @@ public class Enemy extends BaseObject{
         return this.orient;
     }
 
-    public void drawEnemy(GraphicsContext gc) {
-        gc.drawImage(enemy, x, y, size_enemy + 10, size_enemy + 10);
-    }
+    public abstract void drawEnemy(GraphicsContext gc);
 
     public void moveEnemy(MainPlayer player, ArrayList<TileMap> arrTileMap, ArrayList<Boom> arrBoom) {
         double xChange = x;

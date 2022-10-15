@@ -1,6 +1,7 @@
 package Item_Bomb;
 
 import Enemy.Enemy;
+import Enemy.Present;
 import MainGame.MainPlayer;
 import Map.TileMap;
 import Others.ImageUtils;
@@ -11,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 
 import javax.sound.sampled.Clip;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class WaveBoom {
     private int x;
@@ -291,7 +293,7 @@ public class WaveBoom {
         }
     }
 
-    public void checkExplodeBoom_Enemy(ArrayList<Enemy> arrEnemy) {
+    public void checkExplodeBoom_Enemy(ArrayList<Enemy> arrEnemy, ArrayList<ItemGame> arrItemGame) {
         for (int i = 0; i < arrEnemy.size(); i++) {
             try {
                 if ((System.nanoTime() - arrEnemy.get(i).getTimeDie()) / Math.pow(10,9) >= Enemy.timeImmortality) {
@@ -357,6 +359,11 @@ public class WaveBoom {
 
                     if (arrEnemy.get(i).getLifeEnemy() <= 0) {
                         arrEnemy.get(i).setIsDie(true);
+                        if (arrEnemy.get(i) instanceof Present) {
+                            Random random = new Random();
+                            arrItemGame.add(new ItemGame((int) arrEnemy.get(i).getX()
+                                    , (int) arrEnemy.get(i).getY(), random.nextInt(4)));
+                        }
                         arrEnemy.remove(i);
                     }
                 }

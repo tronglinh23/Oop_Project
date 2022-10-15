@@ -28,8 +28,8 @@ public class Octopus extends Enemy{
             ImageUtils.loadImage("src/main/resources/Enemy/boss_down.png")
     };
 
-    public Octopus(int x, int y, int orient) {
-        super(x, y, orient);
+    public Octopus(int x, int y) {
+        super(x, y);
         octopus = MY_OCTOPUS[0];
     }
 

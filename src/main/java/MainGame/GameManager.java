@@ -85,8 +85,8 @@ public class GameManager {
     private ArrayList<ItemGame> arrItemGame;
 
     private MainPlayer player;
-    private Enemy[] enemy = new Enemy[4];
-
+    private Ghost[] ghost = new Ghost[3];
+    private Present present;
     private Octopus octopus;
     private Hanabi hanabi;
 
@@ -141,30 +141,37 @@ public class GameManager {
         soundGame.start();
 
         player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
-
-        enemy[0] = new Enemy(45 * 3, 585,0);
-        enemy[1] = new Enemy(675,45 * 2, 0);
-        enemy[2] = new Enemy(675,765 - 45,0);
-        for (int i = 0; i < 3; i++) {
-            arrEnemy.add(enemy[i]);
-        }
-
-        octopus = new Octopus(180, 585, 0);
-        octopus.setLifeEnemy(3);
-        arrEnemy.add(octopus);
-
-        hanabi = new Hanabi(45*3, 5 * 45);
-        arrEnemy.add(hanabi);
-
-        find = new Find(945 - 45 * 3, 5 * 45);
-        find.setLifeEnemy(2);
-        arrEnemy.add(find);
-
+        createEnemy();
         createGameLoop();
         createKeyListeners();
         mainStage.show();
     }
 
+    public void createEnemy() {
+        if (level_Game == 0) {
+            ghost[0] = new Ghost(135, 585);
+            ghost[1] = new Ghost(675,90);
+            ghost[2] = new Ghost(675,720);
+            for (int i = 0; i < 3; i++) {
+                arrEnemy.add(ghost[i]);
+            }
+
+            present = new Present(225, 585);
+            arrEnemy.add(present);
+        }
+        else if (level_Game == 1) {
+            octopus = new Octopus(180, 585);
+            octopus.setLifeEnemy(3);
+            arrEnemy.add(octopus);
+
+            hanabi = new Hanabi(45 * 3, 5 * 45);
+            arrEnemy.add(hanabi);
+
+            find = new Find(945 - 45 * 3, 5 * 45);
+            find.setLifeEnemy(2);
+            arrEnemy.add(find);
+        }
+    }
 
     public int autoRandomLocate() {
         Random random = new Random();
@@ -346,7 +353,7 @@ public class GameManager {
             } else {
                 for (WaveBoom waveBoom : arrWaveBoom) {
                     waveBoom.checkExplodeBoom_Boom(arrBoom, TimeBombStart);
-                    waveBoom.checkExplodeBoom_Enemy(arrEnemy);
+                    waveBoom.checkExplodeBoom_Enemy(arrEnemy, arrItemGame);
                     waveBoom.checkBoom_Player(player, System.nanoTime());
                 }
             }
@@ -401,8 +408,9 @@ public class GameManager {
         for (Enemy enemy : arrEnemy) {
             enemy.moveEnemy(player, arrTileMap, arrBoom);
         }
-
-        OctopusAddBomb(System.nanoTime());
+        if (level_Game == 1) {
+            OctopusAddBomb(System.nanoTime());
+        }
         immortalPlayerCheck();
 
     }

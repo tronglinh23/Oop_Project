@@ -16,7 +16,7 @@ public class Find extends Enemy {
 
 
     private final int size_find = 45;
-    private final double speedHaiTac = 1;
+    private final double speedHaiTac = 3;
 
     private double moveHorizontal;
     private double moveVertical;
@@ -51,7 +51,7 @@ public class Find extends Enemy {
     };
 
     public Find(int x, int y) {
-        super(x, y, 0);
+        super(x, y);
         setImage = 3;
         indexIMG = 0;
     }

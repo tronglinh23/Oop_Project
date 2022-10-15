@@ -9,10 +9,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.Random;
 
 public class Hanabi extends Find {
-    private Image hanabi;
     private final int size_hanabi = 45;
-    private final int speedhanabi = 1;
-    private Random random = new Random();
     private int length_boom = 1;
 
     public final Image[][] MY_HANABI={

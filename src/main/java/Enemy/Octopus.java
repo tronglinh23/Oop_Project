@@ -19,8 +19,6 @@ public class Octopus extends Enemy{
     private final int size_octopus = 90;
     private Random random = new Random();
 
-    private Image octopus;
-
     public final Image[] MY_OCTOPUS={
             ImageUtils.loadImage("src/main/resources/Enemy/boss_left.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/boss_right.png"),
@@ -30,17 +28,19 @@ public class Octopus extends Enemy{
 
     public Octopus(int x, int y) {
         super(x, y);
-        octopus = MY_OCTOPUS[0];
     }
 
-    public void createOrient() {
-        int rnd = random.nextInt(20);
-        if (rnd > 15) {
-            int newOrient = random.nextInt(4);
-            setOrient(newOrient);
-            octopus = MY_OCTOPUS[newOrient];
-        }
-    }
+    public final Image[] MY_OCTOPUS_DIE = {
+            ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_1.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_2.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_3.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_4.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_5.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_6.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_7.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/blurred.png")
+    };
+
 
     public Rectangle getRect() {
         Rectangle theOctopus = new Rectangle(x + 10,y+15, size_octopus - 10, size_octopus - 15);
@@ -49,7 +49,7 @@ public class Octopus extends Enemy{
 
     @Override
     public void drawEnemy(GraphicsContext gc) {
-        gc.drawImage(octopus, x, y, size_octopus + 10, size_octopus + 10);
+        gc.drawImage(MY_OCTOPUS[getOrient()], x, y, size_octopus + 10, size_octopus + 10);
     }
 
     /**

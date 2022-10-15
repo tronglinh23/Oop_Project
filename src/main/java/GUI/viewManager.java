@@ -72,6 +72,10 @@ public class viewManager {
     public void createHelpSubScene() {
         helpSubScene = new SubSceneGame();
         mainPain.getChildren().add(helpSubScene);
+        ImageView img = new ImageView("D:\\Desktop\\Bomberman_Oop_Pj\\src\\main\\resources\\BackgroundGame\\HELP.png");
+        img.setLayoutX(25);
+        img.setLayoutY(50);
+        helpSubScene.getPane().getChildren().add(img);
     }
     private void createBackGround() {
         Image IMG = new Image(BACKGROUND_IMG, WIDTH_SCREEN, HEIGHT_SCREEN, false, false);

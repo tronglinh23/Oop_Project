@@ -10,31 +10,40 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Present extends Enemy {
-
-    private Image present;
     private final int size_present = 45;
-    private Random random = new Random();
-    public final Image[] MY_GHOST={
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_left.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_right.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_up.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/ghost_down.png")
+    private int imageIndex;
+    public final Image[][] MY_ITEM_ENEMY = {
+            {
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Left_000.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Left_001.png")},
+            {
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Right_000.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Right_001.png")},
+            {
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Up_000.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Up_001.png")},
+            {
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Down_000.png"),
+                    ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Down_001.png")},
     };
+
+    public final Image[] MY_ITEM_ENEMY_DIE = {
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_000.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_001.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_002.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
+    };
+
 
     public Present(int x, int y) {
         super(x, y);
+        imageIndex = 0;
     }
 
-    public void createOrient() {
-        int rnd = random.nextInt(20);
-        if (rnd > 15) {
-            int newOrient = random.nextInt(4);
-            setOrient(newOrient);
-            present = MY_GHOST[newOrient];
-        }
-    }
     @Override
     public void drawEnemy(GraphicsContext gc) {
-        gc.drawImage(present, x, y, size_present + 10, size_present + 10);
+        imageIndex++;
+        gc.drawImage(MY_ITEM_ENEMY[getOrient()][imageIndex / 10 % MY_ITEM_ENEMY[getOrient()].length]
+                , x, y, size_present + 10, size_present + 10);
     }
 }

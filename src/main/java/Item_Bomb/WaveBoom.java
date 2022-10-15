@@ -361,8 +361,11 @@ public class WaveBoom {
                         arrEnemy.get(i).setIsDie(true);
                         if (arrEnemy.get(i) instanceof Present) {
                             Random random = new Random();
-                            arrItemGame.add(new ItemGame((int) arrEnemy.get(i).getX()
-                                    , (int) arrEnemy.get(i).getY(), random.nextInt(4)));
+                            int x = (int)arrEnemy.get(i).getX() + Boom.Size/2;
+                            int y = (int)arrEnemy.get(i).getY() + Boom.Size/2;
+                            x = x - x % Boom.Size;
+                            y = y - y % Boom.Size;
+                            arrItemGame.add(new ItemGame(x,y,random.nextInt(4)));
                         }
                         arrEnemy.remove(i);
                     }

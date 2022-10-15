@@ -27,7 +27,7 @@ public abstract class Enemy extends BaseObject{
 
     private int lifeEnemy;
 
-    public final static double timeImmortality = 1.5;
+    public final static double timeImmortality = 2;
     private long timeDie;
 
     public Enemy(int x, int y) {

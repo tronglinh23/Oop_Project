@@ -1,9 +1,9 @@
 package GUI;
-import MainGame.MainPlayer;
+
+import Player.MainPlayer;
 import Others.*;
 import MainGame.GameManager;
 import Map.TileMap;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -14,6 +14,10 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javax.sound.sampled.*;
 import java.util.ArrayList;
+
+/**
+ * Handle menu game.
+ */
 public class viewManager {
 
     private static int WIDTH_SCREEN = 1024;
@@ -39,6 +43,7 @@ public class viewManager {
 
     Clip menuSongClip;
     Clip mouseClick;
+    int countScreen;
 
     private ArrayList<BombPick> bombPickArrayList;
 
@@ -51,33 +56,23 @@ public class viewManager {
         createBackGround();
         createButtons();
         createStartSubScene();
-        //createHelpSubScene();
+        createHelpSubScene();
         setMenuSongClip();
         createLogo();
     }
 
+    /**
+     * Init sound menu game.
+     */
     public void setMenuSongClip() {
         menuSongClip = SoundLoad.getSoundVolume("src/main/resources/sounds/Happy Accident Simple Long Loop.wav", -20);
         menuSongClip.loop(30);
         menuSongClip.start();
     }
 
-    public void createStartSubScene() {
-        startSubScene = new SubSceneGame();
-        mainPain.getChildren().add(startSubScene);
-        startSubScene.getPane().getChildren().add(startButton());
-        startSubScene.getPane().getChildren().add(BombToChoose());
-    }
-
-    public void createHelpSubScene() {
-        helpSubScene = new SubSceneGame();
-        mainPain.getChildren().add(helpSubScene);
-        Image helpIMG = new Image("src/main/resources/BackgroundGame/HELP.png");
-        ImageView img = new ImageView(helpIMG);
-        img.setLayoutX(25);
-        img.setLayoutY(50);
-        helpSubScene.getPane().getChildren().add(img);
-    }
+    /**
+     * Create Background load IMG, screen width, height.
+     */
     private void createBackGround() {
         Image IMG = new Image(BACKGROUND_IMG, WIDTH_SCREEN, HEIGHT_SCREEN, false, false);
         BackgroundImage backgroundIMG = new BackgroundImage(IMG,BackgroundRepeat.REPEAT,
@@ -93,6 +88,22 @@ public class viewManager {
         mainPain.getChildren().add(img);
     }
 
+    public void createStartSubScene() {
+        startSubScene = new SubSceneGame();
+        mainPain.getChildren().add(startSubScene);
+        startSubScene.getPane().getChildren().add(startButton());
+        startSubScene.getPane().getChildren().add(BombToChoose());
+    }
+
+    public void createHelpSubScene() {
+        helpSubScene = new SubSceneGame();
+        mainPain.getChildren().add(helpSubScene);
+        ImageView img = new ImageView("BackgroundGame/HELP.png");
+        img.setLayoutX(25);
+        img.setLayoutY(50);
+        helpSubScene.getPane().getChildren().add(img);
+    }
+
     private void addMenuButton(ButtonGame buttonName) {
         buttonName.setLayoutX(Menu_Button_X);
         buttonName.setLayoutY(Menu_Button_Y + listButtonMenu.size() * 100);
@@ -102,12 +113,12 @@ public class viewManager {
 
     private void createButtons() {
         listButtonMenu = new ArrayList<>();
-        createStartMenu();
-        createHelpMenu();
-        createExitMenu();
+        createStartButton();
+        createHelpButton();
+        createExitButton();
     }
 
-    private void createStartMenu() {
+    private void createStartButton() {
         ButtonGame startButton = new ButtonGame("Start");
         addMenuButton(startButton);
         startButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -121,7 +132,7 @@ public class viewManager {
         });
     }
 
-    private void createHelpMenu() {
+    private void createHelpButton() {
         ButtonGame helpButton = new ButtonGame("Help");
         addMenuButton(helpButton);
         helpButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -134,7 +145,7 @@ public class viewManager {
         });
     }
 
-    private void createExitMenu() {
+    private void createExitButton() {
         ButtonGame exitButton = new ButtonGame("Exit");
         exitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -147,9 +158,10 @@ public class viewManager {
         addMenuButton(exitButton);
     }
 
-
-    int countScreen;
-
+    /**
+     * Handle screen.
+     * @param current current screen
+     */
     public void showUpSubScene(SubSceneGame current) {
         if (currentSubScene != null) {
             countScreen += 1;
@@ -163,6 +175,12 @@ public class viewManager {
 
         if(countScreen == 2) currentSubScene = null; // Nếu 1 screen được bấm 2 lần rồi thì ta sẽ gán cho nó bằng null
     }
+
+    /**
+     * startButton của StartSubScene.
+     * check mouseclick to start game.
+     * @return button start
+     */
     public ButtonGame startButton() {
         ButtonGame start = new ButtonGame("Start");
         start.setLayoutX(135);
@@ -174,14 +192,19 @@ public class viewManager {
                 Clip start = SoundLoad.getSoundVolume("src/main/resources/sounds/start.wav", 0);
                 start.start();
                 GameManager gameStage = new GameManager();
-                GameManager.level_Game = 0; // khoi tao bien static
-                TileMap.levelGame = 0; // khoi tao bien static
+                GameManager.level_Game = 0; // khoi tao bien static level của game
+                TileMap.levelGame = 0; // khoi tao bien static level tilemap
                 gameStage.createNewGame(mainStage);
             }
         });
         return start;
     }
 
+    /**
+     * Load array Bomb to choose.
+     * Design display.
+     * @return box
+     */
     private HBox BombToChoose() {
         HBox box = new HBox();
         bombPickArrayList = new ArrayList<>();

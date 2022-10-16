@@ -3,9 +3,7 @@ package Enemy;
 import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
 
-import java.util.Random;
 /**
  * Enemy cơ bản, không có chức năng gì đặc biệt.
  */

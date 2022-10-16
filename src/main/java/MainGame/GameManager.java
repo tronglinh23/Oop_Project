@@ -1,5 +1,6 @@
 package MainGame;
 
+import Player.MainPlayer;
 import Enemy.*;
 import Item_Bomb.*;
 import GUI.viewManager;
@@ -23,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Create Game Stage.
+ */
 public class GameManager {
     public final static int WIDTH_SCREEN = 945;
     public final static int HEIGHT_SCREEN = 855;
@@ -33,7 +37,7 @@ public class GameManager {
 
     private final static int time_Bomber_Die = 3;
 
-    private final static int timeImmortality = 2;
+    private final static double timeImmortality = 2.5; // time player can't die
 
     private static int run_1_time ;
 
@@ -90,9 +94,11 @@ public class GameManager {
     private Octopus octopus;
     private Hanabi hanabi;
     private Fast fast;
+    private Fast secondFast;
     private Find find;
 
     private Boolean pauseGame;
+    private long timePauseGame;
 
     ArrayList<Pair<Integer,Integer>> ranDomLocate;
     Clip soundGame;
@@ -102,6 +108,10 @@ public class GameManager {
 
     }
 
+    /**
+     * Init new game.
+     * @param menuStage menuStage
+     */
     public void createNewGame(Stage menuStage) {
         this.menuStage = menuStage;
         this.menuStage.close();
@@ -140,23 +150,30 @@ public class GameManager {
         soundGame.loop(10);
         soundGame.start();
 
-        player = new MainPlayer(WIDTH_SCREEN/2 - 20,HEIGHT_SCREEN- 50-TileMap.SIZE);
+        player = new MainPlayer(10 * 45,HEIGHT_SCREEN - 95);
         createEnemy();
         createGameLoop();
         createKeyListeners();
         mainStage.show();
     }
 
+    /**
+     * khởi tạo tất cả enemy trong game.
+     */
     public void createEnemy() {
         if (level_Game == 0) {
-            ghost[0] = new Ghost(135, 585);
+            ghost[0] = new Ghost(135,90);
             ghost[1] = new Ghost(675,90);
             ghost[2] = new Ghost(675,720);
             for (int i = 0; i < 3; i++) {
                 arrEnemy.add(ghost[i]);
             }
 
-            present = new Present(225, 585);
+            find = new Find(675, 405);
+            find.setLifeEnemy(2);
+            arrEnemy.add(find);
+
+            present = new Present(225, 405);
             arrEnemy.add(present);
 
             fast = new Fast(270, 630);
@@ -165,25 +182,40 @@ public class GameManager {
         }
         else if (level_Game == 1) {
             octopus = new Octopus(180, 630);
-            octopus.setLifeEnemy(3);
+            octopus.setLifeEnemy(5);
             arrEnemy.add(octopus);
 
-            hanabi = new Hanabi(45 * 3, 5 * 45);
-            arrEnemy.add(hanabi);
-
-            find = new Find(945 - 45 * 3, 5 * 45);
+            find = new Find(10*45, 3 * 45);
             find.setLifeEnemy(2);
             arrEnemy.add(find);
+
+            fast = new Fast(135, 630);
+            arrEnemy.add(fast);
+            fast.setLifeEnemy(2);
+
+            secondFast = new Fast(135, 225);
+            arrEnemy.add(secondFast);
+            secondFast.setLifeEnemy(2);
+
+            present = new Present(WIDTH_SCREEN - 45*2, 630);
+            arrEnemy.add(present);
+
         }
     }
 
+    /**
+     * lấy random vị trí cho item.
+     * @return random x
+     */
     public int autoRandomLocate() {
         Random random = new Random();
         int x = random.nextInt(ranDomLocate.size() - 1);
         return x;
-
     }
 
+    /**
+     * Khởi tạo vị trí item thêm vào list item.
+     */
     private void createLocateRanDomItem() {
         // Random vi tri cho items
         int x1 = autoRandomLocate();
@@ -205,6 +237,10 @@ public class GameManager {
         int x5 = autoRandomLocate();
         arrItemGame.add(new ItemGame(ranDomLocate.get(x5).getKey(),ranDomLocate.get(x5).getValue(),4));
         ranDomLocate.remove(x5);
+
+        int x6 = autoRandomLocate();
+        arrItemGame.add(new ItemGame(ranDomLocate.get(x6).getKey(),ranDomLocate.get(x6).getValue(),1));
+        ranDomLocate.remove(x6);
     }
     /**
      * Xử lí các thao tác trên bàn phím , các nút bấm
@@ -239,12 +275,14 @@ public class GameManager {
 
                   if (code == KeyCode.ESCAPE) {
                       if (!pauseGame) {
+                          timePauseGame = System.nanoTime();
                           gameTimer.stop();
                           soundGame.stop();
                           pauseGame = true;
                           Image pauseImg = ImageUtils.loadImage("src/main/resources/BackgroundGame/PausedBackground.png");
                           gContext.drawImage(pauseImg,260,350);
                       } else {
+                          time_Start_Game += (System.nanoTime() - timePauseGame);
                           gameTimer.start();
                           soundGame.start();
                           pauseGame = false;
@@ -263,8 +301,10 @@ public class GameManager {
         });
     }
 
+    /**
+     * Vòng lặp của game.
+     */
     private void createGameLoop() {
-        long time;
         gameTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -331,10 +371,18 @@ public class GameManager {
         }
     }
 
-    public void checkTimeHanabiExplode(long time_start) {
+    public void checkTimeHanabiRender_Explode(long time_start) {
         int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
         if (time != timeHanabi) {
             timeHanabi = time;
+            if(timeHanabi == 25) {
+                hanabi = new Hanabi(45 * 3, 5 * 45);
+                arrEnemy.add(hanabi);
+            }
+            if(timeHanabi == 5) {
+                hanabi = new Hanabi(45 * 3, 5 * 45);
+                arrEnemy.add(hanabi);
+            }
             if (timeHanabi % 10 == 0) {
                 for (int i = 0; i < arrEnemy.size(); i++) {
                     if (arrEnemy.get(i) instanceof Hanabi) {
@@ -348,6 +396,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * Thời gian wave bomb nổ, sau đó xóa wave bomb đi.
+     * Kiểm tra va chạm với các vật thể trong game.
+     */
     public void bombBangTime () {
         for(int i = 0 ; i < timeWaveBoom.size() ; i++) {
             double k = (System.nanoTime() - timeWaveBoom.get(i)) / Math.pow(10,9);
@@ -365,15 +417,23 @@ public class GameManager {
         }
     }
 
+    /**
+     * Thay đổi speed của enemy fast.
+     * @param time_start time_start
+     */
     public void changeSpeedFast(long time_start) {
         int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
-        if (time % 5 == 0) {
-            fast.setSpeed(8);
+        if (time % 3 == 0) {
+            fast.setSpeed(10);
         } else {
             fast.setSpeed(2);
         }
     }
 
+    /**
+     * Thêm bomb cho player khi ấn nút space.
+     * @param time_start time_start
+     */
     public void addBombToPlayer(long time_start) {
         if(arrBoom.size() < player.getAmountBomb()) {
             if(player.getIscoBomb(arrBoom)) {
@@ -386,6 +446,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * chức năng tự thả bomb sau 1 thời gian nhất định của enemy octopus.
+     * @param time_start time_start
+     */
     public void OctopusAddBomb(long time_start) {
         if(!octopus.getIsDie()) {
             int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
@@ -402,6 +466,9 @@ public class GameManager {
         }
     }
 
+    /**
+     * thời gian player không thể chết.
+     */
     public void immortalPlayerCheck() {
         if ((System.nanoTime() - timeUsedKim) / Math.pow(10,9) < timeImmortality) {
             player.setIsDie(false, 0);
@@ -425,10 +492,9 @@ public class GameManager {
         if (level_Game == 0 && fast != null) {
             changeSpeedFast(System.nanoTime());
         }
-        if (level_Game == 1) {
+        if (level_Game == 1 && octopus != null) {
             OctopusAddBomb(System.nanoTime());
         }
-        immortalPlayerCheck();
 
     }
 
@@ -446,7 +512,7 @@ public class GameManager {
         }
 
         drawTileMap();
-        checkTimeHanabiExplode(System.nanoTime());
+        checkTimeHanabiRender_Explode(System.nanoTime());
 
         checkTimeBombExplode();
 
@@ -464,6 +530,7 @@ public class GameManager {
             enemy1.drawEnemy(gContext);
         }
 
+        immortalPlayerCheck();
         drawPlayer();
 
     }
@@ -520,15 +587,15 @@ public class GameManager {
                 for (int chr = 0; chr < line.length(); chr++) {
                     arrTileMap.add(new TileMap(chr*TileMap.SIZE, countLine*TileMap.SIZE,
                             Integer.parseInt(String.valueOf(line.charAt(chr)))));
-//                    if(level_Game == 0 && (line.charAt(chr) == '3' || line.charAt(chr) == '4' ||
-//                            line.charAt(chr) == '5' || line.charAt(chr) == '6')) {
-//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
-//                    } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
-//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
-//                    }
-                    if (line.charAt(chr) == '0') {
+                    if(level_Game == 0 && (line.charAt(chr) == '3' || line.charAt(chr) == '4' ||
+                            line.charAt(chr) == '5' || line.charAt(chr) == '6')) {
+                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+                    } else if (level_Game == 1 && (line.charAt(chr) == '1' || line.charAt(chr) == '2')) {
                         ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
                     }
+//                    if (line.charAt(chr) == '0') {
+//                        ranDomLocate.add(new Pair<>(chr * TileMap.SIZE, countLine * TileMap.SIZE));
+//                    }
                 }
 
                 line = reader.readLine();

@@ -4,7 +4,7 @@ import Enemy.Enemy;
 import Enemy.Present;
 import Enemy.Fast;
 import Enemy.Octopus;
-import MainGame.MainPlayer;
+import Player.MainPlayer;
 import Map.TileMap;
 import Others.ImageUtils;
 import Others.SoundLoad;
@@ -16,6 +16,10 @@ import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Create class waveBomb.
+ * Handle all functions.
+ */
 public class WaveBoom {
     private int x;
     private int y;
@@ -40,7 +44,7 @@ public class WaveBoom {
                                         ImageUtils.loadImage("src/main/resources/images/bombbang_up_2.png")
     };
 
-    private Clip soundTouch;
+    private Clip soundTouch; // sound when touching enemy
 
     public WaveBoom(int x, int y, int lengthWave) {
         this.x = x;
@@ -63,6 +67,11 @@ public class WaveBoom {
         drawEnemyDie(gc);
     }
 
+    /**
+     * draw left wave, handle collision with map
+     * @param arrTileMap arrTileMap
+     * @param gc gcontext
+     */
     private void drawLeftWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
         for(int stt = 1 ; stt <= lengthLeft ; stt++) {
             int xLocate = x - stt * Boom.Size + 5;
@@ -100,6 +109,11 @@ public class WaveBoom {
         }
     }
 
+    /**
+     * draw right wave, handle collision with map
+     * @param arrTileMap arrTileMap
+     * @param gc gcontext
+     */
     private void drawRightWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
         for(int stt = 1 ; stt <= lengthRight ; stt++) {
             int xLocate = x + stt * Boom.Size + 5;
@@ -214,6 +228,12 @@ public class WaveBoom {
         }
     }
 
+    /**
+     * check collision wave bomb - player.
+     * set time player die.
+     * @param mainPlayer mainPlayer
+     * @param time time
+     */
     public void checkBoom_Player(MainPlayer mainPlayer, long time) {
         if (getRect(x  + 5,y + 5).getBoundsInParent().intersects(mainPlayer.getRect().getBoundsInParent())) {
             mainPlayer.setIsDie(true,time);
@@ -251,6 +271,12 @@ public class WaveBoom {
         }
     }
 
+    /**
+     * check wave bomb to bomb.
+     * set time Bomb explode.
+     * @param arrBomb arrBomb
+     * @param timeBombStart timeBombStart
+     */
     public void checkExplodeBoom_Boom(ArrayList<Boom> arrBomb, ArrayList<Long> timeBombStart) {
         for (int bomb = 0 ; bomb < arrBomb.size() ; bomb++) {
             if(getRect(x + 5, y + 5).getBoundsInParent().intersects(arrBomb.get(bomb).getRect().getBoundsInParent())) {
@@ -295,6 +321,11 @@ public class WaveBoom {
         }
     }
 
+    /**
+     * check wave bomb to enemy, decrease life enemy.
+     * @param arrEnemy arrEnemy
+     * @param arrItemGame arrItemGame
+     */
     public void checkExplodeBoom_Enemy(ArrayList<Enemy> arrEnemy, ArrayList<ItemGame> arrItemGame) {
         for (int i = 0; i < arrEnemy.size(); i++) {
             try {

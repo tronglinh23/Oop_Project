@@ -4,9 +4,6 @@ import Item_Bomb.WaveBoom;
 import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
-
-import java.util.Random;
 
 /**
  * tạo ra 1 loại enemy mới có thể nổ sau 1 khoảng thời gian .

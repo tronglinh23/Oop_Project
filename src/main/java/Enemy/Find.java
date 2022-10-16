@@ -1,16 +1,12 @@
 package Enemy;
 
 import Item_Bomb.Boom;
-import MainGame.MainPlayer;
+import Player.MainPlayer;
 import Map.TileMap;
 import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
-import jdk.jfr.Percentage;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * tạo ra 1 loại enemy mới có thể tìm đường đến chỗ của player.

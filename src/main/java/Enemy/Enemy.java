@@ -1,6 +1,5 @@
 package Enemy;
-import MainGame.MainPlayer;
-import Others.*;
+import Player.MainPlayer;
 import Base.BaseObject;
 import Item_Bomb.Boom;
 import Map.TileMap;

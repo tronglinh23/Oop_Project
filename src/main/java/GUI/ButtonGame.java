@@ -9,6 +9,11 @@ import javafx.scene.text.Font;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * Load a full function of Button.
+ * Effect Button, Text IMG, BACKGROUND button ...
+ * Handle the mouseclick
+ */
 public class ButtonGame extends Button {
 
     private int WIDTH = 233;

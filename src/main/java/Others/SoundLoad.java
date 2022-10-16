@@ -3,6 +3,9 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.net.URL;
 
+/**
+ * Load sound, chỉnh sửa volume .
+ */
 public class SoundLoad {
     private Clip clip_game;
     public static Clip getSoundVolume(String fileName, float minusVolume) {

@@ -89,7 +89,7 @@ public class GameManager {
     private Present present;
     private Octopus octopus;
     private Hanabi hanabi;
-
+    private Fast fast;
     private Find find;
 
     private Boolean pauseGame;
@@ -158,9 +158,13 @@ public class GameManager {
 
             present = new Present(225, 585);
             arrEnemy.add(present);
+
+            fast = new Fast(270, 630);
+            arrEnemy.add(fast);
+            fast.setLifeEnemy(2);
         }
         else if (level_Game == 1) {
-            octopus = new Octopus(180, 585);
+            octopus = new Octopus(180, 630);
             octopus.setLifeEnemy(3);
             arrEnemy.add(octopus);
 
@@ -361,6 +365,15 @@ public class GameManager {
         }
     }
 
+    public void changeSpeedFast(long time_start) {
+        int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
+        if (time % 5 == 0) {
+            fast.setSpeed(8);
+        } else {
+            fast.setSpeed(2);
+        }
+    }
+
     public void addBombToPlayer(long time_start) {
         if(arrBoom.size() < player.getAmountBomb()) {
             if(player.getIscoBomb(arrBoom)) {
@@ -407,6 +420,10 @@ public class GameManager {
 
         for (Enemy enemy : arrEnemy) {
             enemy.moveEnemy(player, arrTileMap, arrBoom);
+        }
+
+        if (level_Game == 0 && fast != null) {
+            changeSpeedFast(System.nanoTime());
         }
         if (level_Game == 1) {
             OctopusAddBomb(System.nanoTime());

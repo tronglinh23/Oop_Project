@@ -2,6 +2,8 @@ package Item_Bomb;
 
 import Enemy.Enemy;
 import Enemy.Present;
+import Enemy.Fast;
+import Enemy.Octopus;
 import MainGame.MainPlayer;
 import Map.TileMap;
 import Others.ImageUtils;
@@ -21,12 +23,11 @@ public class WaveBoom {
     private int lengthRight;
     private int lengthUp;
     private int lengthDown;
-
+    private Image[] images;
     private double xEnemyDie;
-
     private double yEnemyDie;
 
-    private int imageIndex=0;
+    private int imageIndex = 0;
 
     private final Image[] WAVE_IMG = {ImageUtils.loadImage("src/main/resources/images/bombbang_left_1.png"),
                                         ImageUtils.loadImage("src/main/resources/images/bombbang_left_2.png"),
@@ -59,6 +60,7 @@ public class WaveBoom {
         drawRightWave(arrTileMap, gc);
         drawUpWave(arrTileMap, gc);
         drawDownWave(arrTileMap, gc);
+        drawEnemyDie(gc);
     }
 
     private void drawLeftWave(ArrayList<TileMap> arrTileMap, GraphicsContext gc) {
@@ -359,7 +361,12 @@ public class WaveBoom {
 
                     if (arrEnemy.get(i).getLifeEnemy() <= 0) {
                         arrEnemy.get(i).setIsDie(true);
-                        if (arrEnemy.get(i) instanceof Present) {
+                        if (arrEnemy.get(i) instanceof Fast) {
+                            images = Fast.MY_FAST_DIE;
+                        } else if (arrEnemy.get(i) instanceof Octopus) {
+                            images = Octopus.MY_OCTOPUS_DIE;
+                        } else if (arrEnemy.get(i) instanceof Present) {
+                            images = Present.MY_ITEM_ENEMY_DIE;
                             Random random = new Random();
                             int x = (int)arrEnemy.get(i).getX() + Boom.Size/2;
                             int y = (int)arrEnemy.get(i).getY() + Boom.Size/2;
@@ -372,6 +379,12 @@ public class WaveBoom {
                 }
             } catch (IndexOutOfBoundsException e) {
             }
+        }
+    }
+    public void drawEnemyDie(GraphicsContext gc) {
+        if (images != null) {
+            gc.drawImage(images[imageIndex / 10 % images.length], xEnemyDie, yEnemyDie);
+            imageIndex++;
         }
     }
 }

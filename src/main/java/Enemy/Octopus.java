@@ -26,11 +26,7 @@ public class Octopus extends Enemy{
             ImageUtils.loadImage("src/main/resources/Enemy/boss_down.png")
     };
 
-    public Octopus(int x, int y) {
-        super(x, y);
-    }
-
-    public final Image[] MY_OCTOPUS_DIE = {
+    public static final Image[] MY_OCTOPUS_DIE = {
             ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_1.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_2.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_3.png"),
@@ -38,10 +34,10 @@ public class Octopus extends Enemy{
             ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_5.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_6.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/boss_dead_7.png"),
-            ImageUtils.loadImage("src/main/resources/Enemy/blurred.png")
     };
-
-
+    public Octopus(int x, int y) {
+        super(x, y);
+    }
     public Rectangle getRect() {
         Rectangle theOctopus = new Rectangle(x + 10,y+15, size_octopus - 10, size_octopus - 15);
         return theOctopus;

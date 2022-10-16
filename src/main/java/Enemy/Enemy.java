@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Enemy extends BaseObject{
-    public int speed = 2;
+    private int speed = 2;
     private int orient;
     private Image enemy;
     private Random random = new Random();
@@ -79,6 +79,14 @@ public abstract class Enemy extends BaseObject{
 
     public void setOrient(int orient) {
         this.orient = orient;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     public int getOrient() {

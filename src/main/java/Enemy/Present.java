@@ -27,10 +27,13 @@ public class Present extends Enemy {
                     ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Down_001.png")},
     };
 
-    public final Image[] MY_ITEM_ENEMY_DIE = {
+    public static final Image[] MY_ITEM_ENEMY_DIE = {
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_000.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_001.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_002.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
     };
 

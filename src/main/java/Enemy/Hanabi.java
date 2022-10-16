@@ -8,6 +8,11 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.Random;
 
+/**
+ * tạo ra 1 loại enemy mới có thể nổ sau 1 khoảng thời gian .
+ * được thừa kế từ lớp find
+ * cũng có các chức năng di chuyển tìm kiếm player để tăng độ khó khi tránh nó sao cho không chết.
+ */
 public class Hanabi extends Find {
     private final int size_hanabi = 45;
     private int length_boom = 1;

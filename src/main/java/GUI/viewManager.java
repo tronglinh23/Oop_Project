@@ -51,7 +51,7 @@ public class viewManager {
         createBackGround();
         createButtons();
         createStartSubScene();
-        createHelpSubScene();
+        //createHelpSubScene();
         setMenuSongClip();
         createLogo();
     }
@@ -72,7 +72,8 @@ public class viewManager {
     public void createHelpSubScene() {
         helpSubScene = new SubSceneGame();
         mainPain.getChildren().add(helpSubScene);
-        ImageView img = new ImageView("D:\\Desktop\\Bomberman_Oop_Pj\\src\\main\\resources\\BackgroundGame\\HELP.png");
+        Image helpIMG = new Image("src/main/resources/BackgroundGame/HELP.png");
+        ImageView img = new ImageView(helpIMG);
         img.setLayoutX(25);
         img.setLayoutY(50);
         helpSubScene.getPane().getChildren().add(img);

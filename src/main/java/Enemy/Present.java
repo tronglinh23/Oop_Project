@@ -9,6 +9,11 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * tạo ra 1 loại enemy mới khi chết sẽ tạo ra 1 item mới.
+ * được thừa kế từ lớp enemy để có thể dùng các hàm như moveEnemy, ...
+ * thuật toán di chuyển cũng tương tự lớp enemy: gặp các chướng ngại vật sẽ chuyển hướng.
+ */
 public class Present extends Enemy {
     private final int size_present = 45;
     private int imageIndex;
@@ -27,10 +32,13 @@ public class Present extends Enemy {
                     ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Down_001.png")},
     };
 
-    public final Image[] MY_ITEM_ENEMY_DIE = {
+    public static final Image[] MY_ITEM_ENEMY_DIE = {
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_000.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_001.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_002.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
+            ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
             ImageUtils.loadImage("src/main/resources/Enemy/enemy_item_Die_003.png"),
     };
 

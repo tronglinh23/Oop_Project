@@ -5,6 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Khởi tạo lớp tilemap.
+ * Đọc vào các kí tự rồi đổi sang hình ảnh game.
+ */
 public class TileMap extends BaseObject{
 
     public static int levelGame;

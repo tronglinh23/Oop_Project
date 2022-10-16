@@ -1,13 +1,8 @@
 package Enemy;
 
-import Item_Bomb.ItemGame;
 import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * tạo ra 1 loại enemy mới khi chết sẽ tạo ra 1 item mới.

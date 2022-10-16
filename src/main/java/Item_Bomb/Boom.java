@@ -5,7 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
-
+/**
+ * Class boom game to init a bomb.
+ * Extends BaseObject
+ */
 public class Boom extends BaseObject{
     private int length_boom;
     public static final int Size = 45;
@@ -68,6 +71,7 @@ public class Boom extends BaseObject{
         Rectangle rec = new Rectangle(x + 5,y + 15,Size - 10, Size - 15);
         return rec;
     }
+
     public void draw(GraphicsContext gc){
         imageAnimationStt++;
         if (type == 0){
@@ -84,6 +88,10 @@ public class Boom extends BaseObject{
 
     public Image getImageView() {return boomIMG;}
 
+    /**
+     * Init wave bomb when bomb bang.
+     * @return wave bomb
+     */
     public WaveBoom boomBang() {
         int locateX = (int)x - 5;
         int locateY = (int)y - 5;

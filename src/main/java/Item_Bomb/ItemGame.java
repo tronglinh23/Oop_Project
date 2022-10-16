@@ -3,7 +3,7 @@ package Item_Bomb;
 import Base.BaseObject;
 import Enemy.Enemy;
 import MainGame.GameManager;
-import MainGame.MainPlayer;
+import Player.MainPlayer;
 import Map.TileMap;
 import Others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,6 +12,9 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
+/**
+ * Init class Item game.
+ */
 public class ItemGame extends BaseObject{
 
     private int count;
@@ -53,6 +56,17 @@ public class ItemGame extends BaseObject{
 
     public int getPickItem() {return this.pickItem;}
 
+    /**
+     * Xử lí va chạm với item.
+     * item 1 : thêm bomb
+     * item 2 : tăng độ dài wave bomb
+     * item 3 : tăng speed
+     * item 4 : hồi sinh
+     *
+     * @param player player
+     * @param arrEnemy arrayEnemy
+     * @return true/false
+     */
     public boolean handLeItem(MainPlayer player, ArrayList<Enemy> arrEnemy) {
         if(getRect().getBoundsInParent().intersects(player.getRect().getBoundsInParent())) {
             if (pickItem == 0) {

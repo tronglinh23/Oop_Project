@@ -5,6 +5,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
+/**
+ * Load other screen when clicking on button.
+ * SetSize, effect, animation ...
+ */
 public class SubSceneGame extends SubScene {
     private final static String BACKGROUND_IMG_SUBSCENE = "Button_img/green_panel.png";
 

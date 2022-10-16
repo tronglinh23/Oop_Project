@@ -1,6 +1,6 @@
-package MainGame;
+package Player;
+
 import Base.BaseObject;
-import Enemy.Enemy;
 import Item_Bomb.Boom;
 import Map.TileMap;
 import Others.ImageUtils;
@@ -11,6 +11,10 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 
 
+/**
+ * Create class mainPlayer.
+ * Handle movement, collision, info...
+ */
 public class MainPlayer extends BaseObject{
     public static boolean gameOver;
 
@@ -159,7 +163,11 @@ public class MainPlayer extends BaseObject{
     public boolean isRun() {
         return isPlayerRun;
     }
-    
+
+    /**
+     * animation to draw player die.
+     * @param gc
+     */
     public void drawBomberDie(GraphicsContext gc) {
         gc.drawImage(IMG_BOMBER_DIE[imageDieCount / 10 % IMG_BOMBER_DIE.length], x - 5, y - 5);
         if(IMG_BOMBER_DIE[imageDieCount / 10 % IMG_BOMBER_DIE.length] ==
@@ -168,10 +176,16 @@ public class MainPlayer extends BaseObject{
         }
         imageDieCount++;
     }
+
+    /**
+     * Draw IMG player - wait item to resurrect.
+     * @param gc gc
+     */
     public void drawBomberDie_WaitItem(GraphicsContext gc) {
         gc.drawImage(IMG_BOMBER_DIE_TIME[imageCount / 10 % IMG_BOMBER_DIE_TIME.length], x - 5, y - 5);
         imageCount++;
     }
+
     public void drawMainPlayer(GraphicsContext gc) {
 
         switch (event) {
@@ -214,6 +228,13 @@ public class MainPlayer extends BaseObject{
         imageCount++;
     }
 
+    /**
+     * di chuyển player nhận thao tác từ bán phím.
+     * di chuyển kiểm tra va chạm với map và bomb, frame.
+     * @param arrTileMap arrTileMap
+     * @param arrBomb arrBomb
+     * @param keyCodes keyCodes
+     */
     public void movePlayer(ArrayList<TileMap>arrTileMap, ArrayList<Boom> arrBomb, ArrayList<KeyCode> keyCodes) {
         if(!isDie) {
             double xChange = this.x;
@@ -286,7 +307,6 @@ public class MainPlayer extends BaseObject{
      * Lần sau khi va chạm thì sẽ k đi qua được
      * @param arrBoom true/false
      */
-
     public void setMoveBomb(ArrayList<Boom> arrBoom) {
         for (Boom boom : arrBoom) {
             if(!getRect().getBoundsInParent().intersects(boom.getRect().getBoundsInParent())) {

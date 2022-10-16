@@ -6,6 +6,10 @@ import Map.TileMap;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 
+/**
+ * Lớp abstract BaseObject lưu các giá trị tọa độ x, y của các object trong game.
+ * Các methods set, get, xử lí các thao tác chung của object như getRect, xử lí collision ...
+ */
 public abstract class BaseObject {
     protected double x;
     protected double y;
@@ -67,9 +71,9 @@ public abstract class BaseObject {
     }
 
     /**
-     * check va cham giua Bomb voi cac vat the trong game
+     * check va cham giua Bomb voi cac vat the trong game.
      * @param arrBoom
-     * @return
+     * @return true/false
      */
     public boolean checkCollisionBomb(ArrayList<Boom> arrBoom) {
         for (Boom boom : arrBoom) {
@@ -79,9 +83,17 @@ public abstract class BaseObject {
         }
         return false;
     }
+
+    /**
+     * check va chạm giữa object với screen.
+     * @param xChange xchange
+     * @param yChange ychange
+     * @param SIZE SIZE
+     * @return true or false
+     */
     public boolean checkCollisionFrame(double xChange, double yChange, double SIZE) {
-        if(xChange <= 0 || xChange > (GameManager.WIDTH_SCREEN - SIZE)
-                || yChange <= 0 || yChange > (GameManager.HEIGHT_SCREEN - SIZE)) {
+        if(xChange <= -5 || xChange > (GameManager.WIDTH_SCREEN - SIZE)
+                || yChange <= -5 || yChange > (GameManager.HEIGHT_SCREEN - SIZE)) {
             return true;
         }
         return false;

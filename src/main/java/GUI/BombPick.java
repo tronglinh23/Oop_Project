@@ -6,9 +6,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
- * Create ShipPicker class to pick one ship each time.
- * Extends Vbox to arrange locate of imageview.
- * Vbox and Hbox can use setSpacing, setAlignment ...
+ * Create BombPick to Menu to pick array bomb.
+ * Extends Vbox to load Circle at the same time
  */
 public class BombPick extends VBox{
 
@@ -43,6 +42,10 @@ public class BombPick extends VBox{
         return this.isCircleChosen;
     }
 
+    /**
+     * load chosenCircle or not chosenCircle.
+     * @param isCircleChosen isCircleChosen
+     */
     public void setIsCircleChosen(boolean isCircleChosen) {
         this.isCircleChosen = isCircleChosen;
         String imageToSet = this.isCircleChosen ? circleChosen : circleNotChosen;

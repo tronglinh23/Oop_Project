@@ -8,6 +8,11 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * tạo ra 1 loại enemy mới có thể thay đổi tốc độ.
+ * được thừa kế từ lớp enemy để có thể dùng các hàm như moveEnemy, ...
+ * thuật toán di chuyển cũng tương tự lớp enemy: gặp các chướng ngại vật sẽ chuyển hướng.
+ */
 public class Fast extends Enemy {
     private Image fast;
     private final int size_fast = 45;

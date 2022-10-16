@@ -12,8 +12,13 @@ import jdk.jfr.Percentage;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * tạo ra 1 loại enemy mới có thể tìm đường đến chỗ của player.
+ * được kế thừa từ Enemy nhưng sẽ viết lại hàm move vì cần thuật toán tìm kiếm
+ * thuật toán di chuyển sẽ nếu vị trí của player đang không trùng với enemy thì
+ * sẽ thay đôi vị trí enemy cho đến khi gặp.
+ */
 public class Find extends Enemy {
-
 
     private final int size_find = 45;
     private final double speedHaiTac = 3;

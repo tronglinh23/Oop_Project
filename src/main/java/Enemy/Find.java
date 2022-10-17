@@ -86,6 +86,7 @@ public class Find extends Enemy {
             } else if (xPlayer > xEnemy && canMoveR) {
                 moveHorizontal = speedHaiTac;
             }
+
             if (yPlayer == yEnemy) {
                 moveVertical = 0;
             } else if (yPlayer < yEnemy && canMoveU) {

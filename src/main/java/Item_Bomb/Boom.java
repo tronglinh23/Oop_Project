@@ -64,8 +64,6 @@ public class Boom extends BaseObject{
 
     public void setIsCheckBomb(int k) {this.isCheckBomb = k;}
     public int getIsCheckBomb() { return this.isCheckBomb;}
-    public void setLength_boom(int length_boom) { this.length_boom = length_boom; }
-    public int getLength_boom() { return this.length_boom;}
 
     public Rectangle getRect() {
         Rectangle rec = new Rectangle(x + 5,y + 15,Size - 10, Size - 15);

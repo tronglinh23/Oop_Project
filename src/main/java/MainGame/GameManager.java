@@ -52,8 +52,8 @@ public class GameManager {
     private final static String Title_game = "Boom Online";
 
     // khoi tao scene theo level
-    public static int level_Game = 0;
-    public static boolean is_check = false;
+    public static int level_Game;
+    public static boolean is_check;
     private final String[] sound_Game = {
             "src/main/resources/sounds/gameplay1.wav",
             "src/main/resources/sounds/gameplay2.wav"
@@ -117,6 +117,7 @@ public class GameManager {
         this.menuStage.close();
         time_Start_Game = System.nanoTime();
         pauseGame = false;
+        is_check = false;
 
         run_1_time = 1;
         timeOctopus = 0;
@@ -421,12 +422,12 @@ public class GameManager {
      * Thay đổi speed của enemy fast.
      * @param time_start time_start
      */
-    public void changeSpeedFast(long time_start) {
+    public void changeSpeedFast(long time_start, Fast current) {
         int time = (int) ((time_start - time_Start_Game) / Math.pow(10,9));
         if (time % 3 == 0) {
-            fast.setSpeed(10);
+            current.setSpeed(10);
         } else {
-            fast.setSpeed(2);
+            current.setSpeed(2);
         }
     }
 
@@ -489,9 +490,15 @@ public class GameManager {
             enemy.moveEnemy(player, arrTileMap, arrBoom);
         }
 
-        if (level_Game == 0 && fast != null) {
-            changeSpeedFast(System.nanoTime());
+        if (fast != null) {
+            changeSpeedFast(System.nanoTime(),fast);
         }
+
+        if(level_Game == 1 && secondFast != null) {
+            changeSpeedFast(System.nanoTime(),secondFast);
+        }
+
+
         if (level_Game == 1 && octopus != null) {
             OctopusAddBomb(System.nanoTime());
         }
@@ -512,6 +519,7 @@ public class GameManager {
         }
 
         drawTileMap();
+
         checkTimeHanabiRender_Explode(System.nanoTime());
 
         checkTimeBombExplode();

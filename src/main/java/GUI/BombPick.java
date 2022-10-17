@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 public class BombPick extends VBox{
 
     private ImageView circleImage;
-    private ImageView shipImage;
+    private ImageView bombImage;
 
     private  String circleNotChosen = "Button_img/grey_box.png";
     private  String circleChosen = "Button_img/green_boxCheckmark.png";
@@ -23,14 +23,14 @@ public class BombPick extends VBox{
 
     public BombPick(TypeBomb bomb) {
         circleImage = new ImageView(circleNotChosen);
-        shipImage = new ImageView(bomb.getPath());
-        shipImage.setFitWidth(60);
-        shipImage.setFitHeight(60);
+        bombImage = new ImageView(bomb.getPath());
+        bombImage.setFitWidth(60);
+        bombImage.setFitHeight(60);
         this.bomb = bomb;
         isCircleChosen = false;
         this.setAlignment(Pos.CENTER);
         this.setSpacing(30);
-        this.getChildren().add(shipImage);
+        this.getChildren().add(bombImage);
         this.getChildren().add(circleImage);
     }
 

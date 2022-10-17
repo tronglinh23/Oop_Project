@@ -88,7 +88,7 @@ public class ItemGame extends BaseObject{
             } else {
                 // phai giet het dc enemy moi qua man
                 if(arrEnemy.size() == 0) {
-                    GameManager.level_Game += 1;
+                    GameManager.level_Game++;
                     return true;
                 }
             }

@@ -1,8 +1,8 @@
-package Enemy;
-import Player.MainPlayer;
-import Base.BaseObject;
-import Item_Bomb.Boom;
-import Map.TileMap;
+package enemy;
+import player.MainPlayer;
+import base.BaseObject;
+import item_Game.Boom;
+import map.TileMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;

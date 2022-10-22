@@ -1,7 +1,7 @@
-package Enemy;
+package enemy;
 
-import Item_Bomb.Boom;
-import Others.ImageUtils;
+import item_Game.Boom;
+import others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;

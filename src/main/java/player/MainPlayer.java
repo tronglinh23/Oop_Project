@@ -1,9 +1,9 @@
-package Player;
+package player;
 
-import Base.BaseObject;
-import Item_Bomb.Boom;
-import Map.TileMap;
-import Others.ImageUtils;
+import base.BaseObject;
+import item_Game.Boom;
+import map.TileMap;
+import others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;

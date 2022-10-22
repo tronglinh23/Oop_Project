@@ -1,9 +1,7 @@
-package Others;
+package others;
 import java.io.File;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.WritableImage;
 
 /**
  * Load image to screen.

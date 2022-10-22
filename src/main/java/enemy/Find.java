@@ -1,9 +1,9 @@
-package Enemy;
+package enemy;
 
-import Item_Bomb.Boom;
-import Player.MainPlayer;
-import Map.TileMap;
-import Others.ImageUtils;
+import item_Game.Boom;
+import player.MainPlayer;
+import map.TileMap;
+import others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import java.util.ArrayList;

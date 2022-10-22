@@ -1,8 +1,8 @@
-package Base;
+package base;
 
-import Item_Bomb.Boom;
-import MainGame.GameManager;
-import Map.TileMap;
+import item_Game.Boom;
+import maingame.GameManager;
+import map.TileMap;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 

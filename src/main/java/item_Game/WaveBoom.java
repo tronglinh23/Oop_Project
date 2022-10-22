@@ -1,13 +1,13 @@
-package Item_Bomb;
+package item_Game;
 
-import Enemy.Enemy;
-import Enemy.Present;
-import Enemy.Fast;
-import Enemy.Octopus;
-import Player.MainPlayer;
-import Map.TileMap;
-import Others.ImageUtils;
-import Others.SoundLoad;
+import enemy.Enemy;
+import enemy.Present;
+import enemy.Fast;
+import enemy.Octopus;
+import player.MainPlayer;
+import map.TileMap;
+import others.ImageUtils;
+import others.SoundLoad;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;

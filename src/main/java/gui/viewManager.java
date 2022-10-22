@@ -1,9 +1,9 @@
-package GUI;
+package gui;
 
-import Player.MainPlayer;
-import Others.*;
-import MainGame.GameManager;
-import Map.TileMap;
+import player.MainPlayer;
+import others.*;
+import maingame.GameManager;
+import map.TileMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;

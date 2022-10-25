@@ -1,6 +1,6 @@
-package Enemy;
+package enemy;
 
-import Others.ImageUtils;
+import others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import java.util.Random;

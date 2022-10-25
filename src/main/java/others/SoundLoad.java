@@ -1,7 +1,6 @@
-package Others;
+package others;
 import javax.sound.sampled.*;
 import java.io.File;
-import java.net.URL;
 
 /**
  * Load sound, chỉnh sửa volume .

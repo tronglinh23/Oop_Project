@@ -1,11 +1,11 @@
-package MainGame;
+package maingame;
 
-import Player.MainPlayer;
-import Enemy.*;
-import Item_Bomb.*;
-import GUI.viewManager;
-import Map.TileMap;
-import Others.*;
+import player.MainPlayer;
+import enemy.*;
+import item_Game.*;
+import gui.viewManager;
+import map.TileMap;
+import others.*;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;

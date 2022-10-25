@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 public enum TypeBomb {
     BOMBMAY("Bomb/BigBoomBongMay_2.png", 1),

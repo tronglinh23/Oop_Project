@@ -1,7 +1,7 @@
-package Enemy;
+package enemy;
 
-import Item_Bomb.WaveBoom;
-import Others.ImageUtils;
+import item_Game.WaveBoom;
+import others.ImageUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
